@@ -1,0 +1,5 @@
+iGalileo is a Galileo kernel for use alongside the Jupyter framework
+
+This allows users to experiment with Galileo using powerful Jupyter notebooks
+
+![](doc/jupyter_1.png?raw=true)
