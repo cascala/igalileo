@@ -16,21 +16,23 @@ case class ShellBus( socket: Socket, kernel: Kernel ) extends Bus {
             case "kernel_info_request" => send( KernelInfoReply( message ) ) // 
             case "execute_request" => {
                 send( ExecuteInput( message, true ) ) // Increment, should just be send
-                send( ExecuteReply( message ) )  // should just be send
-                
+
                 var status: String = "ok"
-                var output: List[String] = List()
                 
                 import parser.{ Success, NoSuccess }
                 val code = message.content( "code").asInstanceOf[String]
-                parser.parse( code ) match {   
-                    case Success( expressions, _ ) => output = expressions.map( expression => handler.eval( kernel.environment, expression ) )
-                    case err: NoSuccess   => { status = "error"; output :+ err }
+                val output = parser.parse( code ) match {   
+                    case Success( expressions, _ ) => expressions.map( expression => handler.eval( kernel.environment, expression ) ).mkString( "\n" )
+                    case err: NoSuccess   => { status = "error"; err.toString() }
                 }
-                
-                kernel.publish( ExecuteResult( message, status, output.mkString( "\n" ) ) ) // execute_result on iopub
+
+                send( ExecuteReply( message, status, output ) )  // send on shell
+
+                val silent = message.content( "silent" ).asInstanceOf[ Boolean ]
+                if( !silent )    
+                    kernel.publish( ExecuteResult( message, output ) )// send on iopub
             }
-        }//case _ => Unit // for now
+        }
         
         kernel.publish( Status( "idle" ) )  
     }
