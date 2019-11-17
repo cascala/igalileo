@@ -14,15 +14,15 @@ Prerequisites:
 * A scala and java environment including the sbt build tool
 * Jupyter
 * Download this repo from git and ensure the package can be built without error:
-** `git clone https://github.com/cascala/igalileo.git`
-** `cd igalileo`
-** `sbt package`
+    * `git clone https://github.com/cascala/igalileo.git`
+    * `cd igalileo`
+    * `sbt package`
 
 A small file `kernel.json` has to be placed in a new folder galileo in your home or user directory:
 * Mac:`~/Library/Jupyter/kernels/galileo/kernel.json`
 * Linux: `~/.local/share/jupyter/kernels\galileo\kernel.json`
 * Windows: `%APPDATA%\jupyter\kernels\galileo\kernel.json`
-
+with the following contents:
 ```
 {
     "argv": [
@@ -42,5 +42,5 @@ If all goes will, galileo should be listed as part of the available Jupyter kern
 jupyter kernelspec list
 ```
 
-Launch Jupyter as usual (`jupyter notebook`)
+Launch Jupyter as usual (`jupyter notebook`).
 Good luck - don't hesitate to share any feedback as an issue
