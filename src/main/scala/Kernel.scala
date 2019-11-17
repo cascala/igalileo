@@ -1,4 +1,7 @@
-package galileokernel
+package igalileo
+
+import galileo.environment.Environment
+import galileo.constants._
 
 import scala.io.Source
 
@@ -128,5 +131,15 @@ case class Kernel(
         shellSocket.close()
         iopubSocket.close()
         stdinSocket.close()
+    }
+
+    
+    var environment:Environment = {
+        val genv = new Environment( None ) // Global env
+        genv.set( "pi", new ConstantPi )
+        genv.set( "e", new ConstantE )
+        genv.set( "j", new ConstantJ )
+        genv.set( "i", new ConstantJ )
+        new Environment( Some( genv ) ) 
     }
 }

@@ -1,4 +1,4 @@
-package galileokernel
+package igalileo
 
 object KernelInfoReply {
     def apply( message : Message ) : Message = {
@@ -6,7 +6,7 @@ object KernelInfoReply {
             "msg_type" -> "kernel_info_reply"/*,
             
             //"protocol_version" -> "5.3",
-            "implementation" -> "galileokernel",
+            "implementation" -> "galileo.kernel",
             "language_info" -> Map(
                 "name" -> "galileo",
                 "version" -> "1.2.0",
@@ -19,7 +19,7 @@ object KernelInfoReply {
         val content = Map(
             "status" -> "ok",
             "protocol_version" -> "5.3",
-            "implementation" -> "galileokernel",
+            "implementation" -> "galileo.kernel",
             "implementation_version" -> "0.1.2",
             "language_info" -> Map(
                 "name" -> "galileo",
@@ -29,7 +29,10 @@ object KernelInfoReply {
             ),
             //"language" -> "galileo",
             "banner" -> "Galileo kernel\nGalileo is a symbolic mathematics tool written in Scala",//,
-            "help_links" -> Array( Map( "text" -> "Galileo Reference", "url" -> "https://github.com/cascala/galileo/blob/master/docs/language.md" ) )
+            "help_links" -> Array( 
+                Map( "text" -> "Galileo Reference", "url" -> "https://github.com/cascala/galileo/blob/master/docs/language.md" ),
+                Map( "text" -> "Galileo Kernel Reference", "url" -> "https://github.com/cascala/igalileo" )
+            )
         )
         Message( message.idents, header, message.header /* the received message's header is the parent header */, content )
     }

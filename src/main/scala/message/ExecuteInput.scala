@@ -1,4 +1,4 @@
-package galileokernel
+package igalileo
 
 object ExecuteInput {
     def apply( message: Message, increment: Boolean ) : Message = {

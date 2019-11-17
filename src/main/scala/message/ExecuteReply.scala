@@ -1,4 +1,4 @@
-package galileokernel
+package igalileo
 
 object ExecuteReply {
     def apply( message: Message ) : Message = {

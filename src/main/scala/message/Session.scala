@@ -1,4 +1,4 @@
-package galileokernel
+package igalileo
 
 object Session {
     var sessionString = java.util.UUID.randomUUID.toString()

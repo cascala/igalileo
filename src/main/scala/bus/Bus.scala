@@ -1,4 +1,4 @@
-package galileokernel
+package igalileo
 
 import java.time.Instant
 

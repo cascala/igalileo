@@ -1,4 +1,4 @@
-package galileokernel
+package igalileo
 
 object Status{
     def apply( execution_state: String ) : Message = {

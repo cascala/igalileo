@@ -1,9 +1,8 @@
-package galileokernel
+package igalileo
 
 import org.zeromq.ZMQ
 import org.zeromq.ZMQ.Context
 import org.zeromq.ZMQ.Socket
-
 
 /* We will instantiate five Sockets:
     heartbeat of kind REP
@@ -24,5 +23,3 @@ object SocketCreator{
     // TODO: Terminate context appropriately
     // context.term()
 }
-
-//case class Socket( val: ) {}

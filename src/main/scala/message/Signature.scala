@@ -1,4 +1,4 @@
-package galileokernel
+package igalileo
 
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec

@@ -1,4 +1,4 @@
-package galileokernel
+package igalileo
 
 case class Message(
     idents: List[ String ],

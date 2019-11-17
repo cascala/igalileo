@@ -1,4 +1,4 @@
-package galileokernel
+package igalileo
 
 import org.zeromq.ZMQ.Socket
 
