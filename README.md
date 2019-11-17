@@ -17,6 +17,7 @@ Prerequisites:
     * `git clone https://github.com/cascala/igalileo.git`
     * `cd igalileo`
     * `sbt package`
+    * Change `scripts/run.sh` to reflect the correct path (again, I will make that easier in the future)
 
 A small file `kernel.json` has to be placed in a new folder galileo in your home or user directory:
 * Mac:`~/Library/Jupyter/kernels/galileo/kernel.json`
