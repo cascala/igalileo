@@ -2,5 +2,6 @@
 .ipynb_checkpoints
 *.DS_Store
 *.ipynb
-project
+project/project/
+project/target/
 target
