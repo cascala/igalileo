@@ -23,8 +23,8 @@ object Signature {
             case "hmac-sha256" => new SecretKeySpec( key.getBytes, "hmacsha256" )
         }
     }
-    def setKey( k: String ) { key = k }
-    def setAlgo( a: String ) { algo = a }
+    def setKey( k: String ) : Unit = { key = k }
+    def setAlgo( a: String ) : Unit = { algo = a }
     
     def apply( args: String* ) = sign( args )
     //def apply( args: java.lang.String* ) = sign( args.toSeq.map( x => x.toString() ) )
@@ -36,7 +36,7 @@ object Signature {
 
         mac synchronized {
             args.map( _.getBytes ).foreach( mac.update )
-            hex( mac.doFinal() )
+            hex( mac.doFinal().toIndexedSeq )
         }
     }
 }

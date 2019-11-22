@@ -92,7 +92,7 @@ case class Kernel(
     private lazy val shellBus = ShellBus( shellSocket, this )
     private lazy val stdinBus = StdinBus( stdinSocket, this )
     
-    def start() { 
+    def start() : Unit = { 
         try {
             iopubBus.send( Status( "starting" ) )
             
@@ -111,11 +111,11 @@ case class Kernel(
         } //return
     }
 
-    def publish( message: Message ) {
+    def publish( message: Message ) : Unit = {
         iopubBus.send( message )
     }
 
-    def stop() {
+    def stop() : Unit = {
         hbBus.stopThread()
         shellBus.stopThread()
         controlBus.stopThread()
@@ -124,7 +124,7 @@ case class Kernel(
         System.exit( 0 )
     }
 
-    def closeSockets() {
+    def closeSockets() : Unit = {
         println( "Closing sockets" )
         hbSocket.close()
         controlSocket.close()

@@ -6,6 +6,7 @@ object ExecuteResult {
             "msg_type" -> "execute_result"// Not execute reply!
         )
         val content = Map(
+            "status" -> "ok",
             "execution_count" -> ExecutionCount(), 
             "data" -> Map( 
                 //"application/json" -> "{ \"json\":\"data\" }",

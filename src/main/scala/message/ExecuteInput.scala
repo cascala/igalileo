@@ -6,6 +6,7 @@ object ExecuteInput {
             "msg_type" -> "execute_input"
         )
         val content = Map(
+            "status" -> "code",
             "code" -> message.content( "code").asInstanceOf[String],
             "execution_count" -> ExecutionCount( increment )
         )

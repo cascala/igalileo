@@ -15,7 +15,7 @@ case class ShellBus( socket: Socket, kernel: Kernel ) extends Bus {
         message.header( "msg_type" ) match {
             case "kernel_info_request" => send( KernelInfoReply( message ) ) // 
             case "execute_request" => {
-                send( ExecuteInput( message, true ) ) // Increment, should just be send
+                send( ExecuteInput( message, true ) ) // Increment, send on shell
 
                 var status: String = "ok"
                 
@@ -31,6 +31,12 @@ case class ShellBus( socket: Socket, kernel: Kernel ) extends Bus {
                 val silent = message.content( "silent" ).asInstanceOf[ Boolean ]
                 if( !silent )    
                     kernel.publish( ExecuteResult( message, output ) )// send on iopub
+            }
+            case "history_request" => send( HistoryReply( message ) )
+            case "is_complete_request" => { send( IsCompleteReply( message ) ) }
+            case "shutdown_request" => {
+                send( ShutdownReply( message ) )
+                kernel.stop()
             }
         }
         

@@ -16,7 +16,7 @@ trait Bus extends Thread {
     // Message contain six pieces
     def recv(): Option[ Message ] = {
         val (idents, signature, header, parent_header, metadata, content) = socket.synchronized {
-            (Stream.continually { socket.recvStr() }.takeWhile(_ != DELIMITER).toList,
+            (LazyList.continually { socket.recvStr() }.takeWhile(_ != DELIMITER).toList,
              socket.recvStr(),
              socket.recvStr(),
              socket.recvStr(),
@@ -40,7 +40,7 @@ trait Bus extends Thread {
         ) )
     }
 
-    def send( message: Message ) {
+    def send( message: Message ) : Unit = {
         //require( message.idents.nonEmpty ) // 0mq does not work without idents 
         
         val mapper = new ObjectMapper() with ScalaObjectMapper
@@ -73,7 +73,7 @@ trait Bus extends Thread {
         }
     }
 
-    override def run() {
+    override def run() : Unit = {
         try {
             while ( running ) {
                 recv().foreach( dispatch )
@@ -87,7 +87,7 @@ trait Bus extends Thread {
 
     def dispatch( messsage: Message ) : Unit
 
-    def stopThread() {
+    def stopThread() : Unit = {
         running = false
         interrupt()
     }

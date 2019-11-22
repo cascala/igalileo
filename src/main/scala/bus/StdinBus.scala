@@ -7,7 +7,7 @@ case class StdinBus( socket: Socket, kernel: Kernel ) extends Bus {
         println( "Received " + message + " in ControlListener dispatch" )
 
         message.header( "msg_type" ) match {
-            case "adsfadsf" => Unit 
+            case "adsfadsf" => () 
         }
     }
 }
