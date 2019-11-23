@@ -8,8 +8,34 @@ This allows users to experiment with Galileo using powerful Jupyter notebooks
 
 ## Installation
 
-Currently, you can only run this by building it from source. If there's interest I will build an easier way (send me an issue in the issue tracker to express interest)
+The galileo kernel can be run in two ways: Using Docker or by building it from source. For either approach, a small file `kernel.json` has to be placed in a new folder galileo in your home or user directory:
+* Mac:`~/Library/Jupyter/kernels/igalileo/kernel.json`
+* Linux: `~/.local/share/jupyter/kernels\igalileo\kernel.json`
+* Windows: `%APPDATA%\jupyter\kernels\igalileo\kernel.json`
+A sample kernel.json file is in the igalileo folder, containing:
+```
+{
+    "argv": [
+        "<PATH_TO_GALILEO>/run_{docker|sbt}.sh",
+        "{connection_file}"
+    ],
+    "display_name": "iGalileo",
+    "language": "galileo"
+}
+```
+Replace <PATH_TO_GALILEO> with the absolute path to the kernel folder (the one containing the kernel.json file, created above), and point to either `run_docker.sh` or `run_sbt.sh`.
+If all goes will, iGalileo should be listed as part of the available Jupyter kernels. You can see that list with the command
+```
+jupyter kernelspec list
+```
 
+### Using Docker
+This is the easiest route and should only take a few minutes.
+Having a working docker environment is the only prerequisite.
+
+Select `run_docker.sh` above as the script, and copy `run_docker.sh` from the igalileo folder here to the kernel folder.
+
+### Building from source
 Prerequisites:
 * A scala and java environment including the sbt build tool
 * Jupyter
@@ -19,29 +45,9 @@ Prerequisites:
     * `sbt package`
     * Change `scripts/run.sh` to reflect the correct path (again, I will make that easier in the future)
 
-A small file `kernel.json` has to be placed in a new folder galileo in your home or user directory:
-* Mac:`~/Library/Jupyter/kernels/galileo/kernel.json`
-* Linux: `~/.local/share/jupyter/kernels\galileo\kernel.json`
-* Windows: `%APPDATA%\jupyter\kernels\galileo\kernel.json`
-with the following contents:
-```
-{
-    "argv": [
-        "<PATH_TO_THIS_REPO>/scripts/run.sh", 
-        "-m",
-        "Galileo.kernel",
-        "-f", 
-        "{connection_file}"
-    ],
-    "display_name": "Galileo",
-    "language": "galileo"
-}
-```
-Replace <PATH_TO_THIS_REPO> with the absolute path to your repo.
-If all goes will, galileo should be listed as part of the available Jupyter kernels. You can see that list with the command
-```
-jupyter kernelspec list
-```
+Select `run_sbt.sh` above as the script, and copy `run_sbt.sh` from the igalileo folder here to the kernel folder.
+
+## Running iGalileo
 
 Launch Jupyter as usual (`jupyter notebook`).
 Good luck - don't hesitate to share any feedback as an issue
