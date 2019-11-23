@@ -4,7 +4,7 @@ iGalileo is a [Galileo](https://github.com/cascala/galileo) kernel for use along
 
 This allows users to experiment with Galileo using powerful Jupyter notebooks
 
-![Illustration](doc/jupyter_1.png)
+![Screenshot of a Jupyter notebook running Galileo](doc/jupyter_1.png)
 
 ## Installation
 
@@ -47,5 +47,5 @@ Select `run_sbt.sh` above as the script, and copy `run_sbt.sh` from the igalileo
 
 ## Running iGalileo
 
-Launch Jupyter as usual (`jupyter notebook`).
-Good luck - don't hesitate to share any feedback as an issue
+Launch Jupyter as usual (`jupyter notebook`), and select the Galileo kernel.
+Good luck - don't hesitate to share any feedback as an [issue](https://github.com/cascala/igalileo/issues/new).
