@@ -8,11 +8,11 @@ This allows users to experiment with Galileo using powerful Jupyter notebooks
 
 ## Installation
 
-The galileo kernel can be run in two ways: Using Docker or by building it from source. For either approach, a small file `kernel.json` has to be placed in a new folder galileo in your home or user directory:
+The galileo kernel can be run in two ways: Using Docker or by building it from source. For either approach, a small file `kernel.json` has to be placed in a new folder in your home or user directory:
 * Mac:`~/Library/Jupyter/kernels/igalileo/kernel.json`
 * Linux: `~/.local/share/jupyter/kernels\igalileo\kernel.json`
 * Windows: `%APPDATA%\jupyter\kernels\igalileo\kernel.json`
-A sample kernel.json file is in the igalileo folder, containing:
+A sample `kernel.json` file is in the `igalileo` folder, containing:
 ```
 {
     "argv": [
@@ -33,17 +33,15 @@ jupyter kernelspec list
 This is the easiest route and should only take a few minutes.
 Having a working docker environment is the only prerequisite.
 
-Select `run_docker.sh` above as the script, and copy `run_docker.sh` from the igalileo folder here to the kernel folder.
+Select `run_docker.sh` above as the script, and copy `run_docker.sh` from the `igalileo` folder here to the kernel folder.
 
 ### Building from source
 Prerequisites:
 * A scala and java environment including the sbt build tool
-* Jupyter
 * Download this repo from git and ensure the package can be built without error:
     * `git clone https://github.com/cascala/igalileo.git`
     * `cd igalileo`
     * `sbt package`
-    * Change `scripts/run.sh` to reflect the correct path (again, I will make that easier in the future)
 
 Select `run_sbt.sh` above as the script, and copy `run_sbt.sh` from the igalileo folder here to the kernel folder.
 
