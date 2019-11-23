@@ -9,8 +9,9 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
 import com.fasterxml.jackson.module.scala.experimental.ScalaObjectMapper
 
-import org.zeromq.ZMQ
+//import org.zeromq.ZMQ
 import org.zeromq.ZMQ.Socket
+import org.zeromq.SocketType
 
 object Kernel {
     private lazy val usage ="""
@@ -66,11 +67,11 @@ object Kernel {
         val transport = connection( "transport" ).asInstanceOf[ String ]
         val ip = connection( "ip" ).asInstanceOf[ String ] 
         
-        val hb = SocketCreator( transport, ip, connection( "hb_port" ).asInstanceOf[ Int ], ZMQ.REP )
-        val control = SocketCreator( transport, ip, connection( "control_port" ).asInstanceOf[ Int ], ZMQ.ROUTER )
-        val shell = SocketCreator( transport, ip, connection( "shell_port" ).asInstanceOf[ Int ], ZMQ.ROUTER )
-        val iopub = SocketCreator( transport, ip, connection( "iopub_port" ).asInstanceOf[ Int ], ZMQ.PUB )
-        val stdin = SocketCreator( transport, ip, connection( "stdin_port" ).asInstanceOf[ Int ], ZMQ.ROUTER )
+        val hb = SocketCreator( transport, ip, connection( "hb_port" ).asInstanceOf[ Int ], SocketType.REP )
+        val control = SocketCreator( transport, ip, connection( "control_port" ).asInstanceOf[ Int ], SocketType.ROUTER )
+        val shell = SocketCreator( transport, ip, connection( "shell_port" ).asInstanceOf[ Int ], SocketType.ROUTER )
+        val iopub = SocketCreator( transport, ip, connection( "iopub_port" ).asInstanceOf[ Int ], SocketType.PUB )
+        val stdin = SocketCreator( transport, ip, connection( "stdin_port" ).asInstanceOf[ Int ], SocketType.ROUTER )
         
         // Prepare for message signature later
         Signature.setKey( connection( "key" ).asInstanceOf[ String ] )
@@ -106,7 +107,7 @@ case class Kernel(
         catch {
             case e:Throwable => {
                 println( e )
-                closeSockets()
+                stop()
             }
         } //return
     }
@@ -116,23 +117,9 @@ case class Kernel(
     }
 
     def stop() : Unit = {
-        hbBus.stopThread()
-        shellBus.stopThread()
-        controlBus.stopThread()
-        stdinBus.stopThread()
-
+        SocketCreator.destroyContext()
         System.exit( 0 )
     }
-
-    def closeSockets() : Unit = {
-        println( "Closing sockets" )
-        hbSocket.close()
-        controlSocket.close()
-        shellSocket.close()
-        iopubSocket.close()
-        stdinSocket.close()
-    }
-
     
     var environment:Environment = {
         val genv = new Environment( None ) // Global env

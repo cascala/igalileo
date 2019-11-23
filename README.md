@@ -1,4 +1,4 @@
-## iGalileo
+# iGalileo
 
 iGalileo is a [Galileo](https://github.com/cascala/galileo) kernel for use alongside the Jupyter framework
 
