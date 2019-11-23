@@ -51,7 +51,7 @@ object Kernel {
 
         // Parse the json blob inside filename
         val connection = jsonParser( arguments.filename )
-        require( connection( "kernel_name" ) == "galileo" )
+        //require( connection( "kernel_name" ) == "galileo" )
 
         // Create the event loop, listening to the three sockets on mq
         // 1/ heartbeat, 2/ control, 3/ shell

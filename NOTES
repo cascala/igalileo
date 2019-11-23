@@ -1,0 +1,10 @@
+(Developer's private notes - enjoy)
+
+For Docker:
+>docker build -t cascala/igalileo:latest . 
+>docker run cascala/igalileo:latest
+
+To upload the Docker image to Docker hub:
+https://ropenscilabs.github.io/r-docker-tutorial/04-Dockerhub.html
+This step, however, is now automatically taken care of by Docker hub
+
