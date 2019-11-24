@@ -1,5 +1,7 @@
 # iGalileo
 
+[![](https://images.microbadger.com/badges/version/cascala/igalileo:0.1.3.svg)](https://microbadger.com/images/cascala/igalileo:0.1.3 "Get your own version badge on microbadger.com")
+
 iGalileo is a [Galileo](https://github.com/cascala/galileo) kernel for use alongside the Jupyter framework
 
 This allows users to experiment with Galileo using powerful Jupyter notebooks
