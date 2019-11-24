@@ -1,9 +1,7 @@
-# iGalileo
-
-[![](https://images.microbadger.com/badges/version/cascala/igalileo:0.1.3.svg)](https://microbadger.com/images/cascala/igalileo:0.1.3 "Get your own version badge on microbadger.com")
+[![Docker version](https://images.microbadger.com/badges/version/cascala/igalileo:0.1.3.svg)](https://microbadger.com/images/cascala/igalileo:0.1.3)
 [![GitHub issues](https://img.shields.io/github/issues/cascala/igalileo.svg)](https://github.com/cascala/igalileo/issues)
-[![GitHub tag](https://img.shields.io/github/tag/cascala/igalileo.svg)](https://github.com/cascala/igalileo)
-[![GitHub release](https://img.shields.io/github/release/cascala/igalileo.svg)](https://github.com/cascala/igalileo)
+
+# iGalileo
 
 iGalileo is a [Galileo](https://github.com/cascala/galileo) kernel for use alongside the Jupyter framework
 
