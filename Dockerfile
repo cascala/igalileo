@@ -19,7 +19,7 @@ ADD . /igalileo
 RUN sbt docker:stage
 
 FROM openjdk:8-jre
-#ENV VERSION 0.1.3
+#ENV VERSION 0.1.4-SNAPSHOT
 COPY --from=build igalileo/target/docker/stage .
 ENTRYPOINT [ "/opt/docker/bin/igalileo" ]
 
