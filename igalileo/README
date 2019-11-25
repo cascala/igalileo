@@ -1,6 +1,6 @@
 Place all these files (including the .sh files) in a new folder galileo in your home or user directory:
 * Mac:`~/Library/Jupyter/kernels/galileo/kernel.json`
-* Linux: `~/.local/share/jupyter/kernels\galileo\kernel.json`
+* Linux: `~/.local/share/jupyter/kernels/galileo/kernel.json`
 * Windows: `%APPDATA%\jupyter\kernels\galileo\kernel.json`
 
 Edit kernel.json to point to either run_docker of run_sbt.

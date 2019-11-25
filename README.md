@@ -3,7 +3,7 @@
 
 # iGalileo
 
-iGalileo is a [Galileo](https://github.com/cascala/galileo) kernel for use alongside the Jupyter framework
+[iGalileo](https://github.com/cascala/igalileo) is a [Galileo](https://github.com/cascala/galileo) kernel for use alongside the Jupyter framework
 
 This allows users to experiment with Galileo using powerful Jupyter notebooks
 
@@ -13,7 +13,7 @@ This allows users to experiment with Galileo using powerful Jupyter notebooks
 
 The galileo kernel can be run in two ways: Using Docker or by building it from source. For either approach, a small file `kernel.json` has to be placed in a new folder in your home or user directory:
 * Mac:`~/Library/Jupyter/kernels/igalileo/kernel.json`
-* Linux: `~/.local/share/jupyter/kernels\igalileo\kernel.json`
+* Linux: `~/.local/share/jupyter/kernels/igalileo/kernel.json`
 * Windows: `%APPDATA%\jupyter\kernels\igalileo\kernel.json`
 A sample `kernel.json` file is in the `igalileo` folder, containing:
 ```
