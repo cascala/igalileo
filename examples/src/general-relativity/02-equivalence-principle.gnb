@@ -1,0 +1,110 @@
+%md
+# General relativity 2: The equivalence principle
+
+*Learning path: general relativity, part 2 of 9.* [Index](README.md) · Previous: [Spacetime](01-spacetime.ipynb) · Next: [Einstein's equations](03-einstein-equations.ipynb)
+
+In 1907 Einstein had "the happiest thought of my life": a person falling freely does not feel their own weight. Gravity
+can be made to disappear, locally, by falling with it. This notebook follows that idea to the conclusion that gravity is
+geometry. You will learn
+
+* why an accelerating rocket is indistinguishable from a gravitational field,
+* that such a field can be produced in flat spacetime just by changing coordinates,
+* how Newton's law of gravity comes out of the time part of the metric,
+* why clocks run slower lower down, and why tides are the real signature of curvature.
+
+%md
+## 1. Gravity in a rocket
+
+A rocket accelerating at $g$ far from any star: everything inside "falls" to the floor at $g$, exactly as on Earth. The
+spacetime is still flat Minkowski space; only the coordinates, those of the accelerating crew, are new. In the crew's
+coordinates (the *Rindler* coordinates, for small heights $x$ above the floor),
+
+$$ds^2 = -(1 + g x)^2\,dt^2 + dx^2$$
+
+%code
+rindler = metric([t x], [-(1+g*x)^2 0; 0 1])
+riemannsecond(rindler)
+
+%md
+The Riemann tensor is zero: no curvature at all. Yet the Christoffel symbols are not zero:
+
+%code
+christoffel(rindler)
+
+%md
+The geodesic equation gives $\ddot x = -\Gamma^x{}_{tt}\,\dot t^2 \approx -g$: free objects fall towards the floor.
+Drop a ball at height 1 with $g = 1$, and draw height against time:
+
+%code
+g = 1;
+geodesic(rindler, [0 1], [1 0], 1.2, [t x])
+
+%md
+So a "gravitational field" can be nothing but the coordinates of an accelerating observer, carried by the
+Christoffel symbols. This is the **equivalence principle**: locally, gravity and acceleration cannot be told apart.
+
+## 2. Newton from the metric
+
+Near a planet of mass $M$ and for slow motion, the metric is approximately
+
+$$ds^2 = -\left(1 - \frac{2GM}{r}\right)dt^2 + dr^2 + r^2\,d\Omega^2$$
+
+(with $c = 1$; $-GM/r$ is the Newtonian potential). Its Christoffel symbols:
+
+%code
+clear
+weak = metric([t r theta phi], [-(1-2*G*M/r) 0 0 0; 0 1 0 0; 0 0 r^2 0; 0 0 0 r^2*sin(theta)^2])
+christoffel(weak)
+
+%md
+$\Gamma^r{}_{tt} = GM/r^2$. For a slowly moving object $\dot t \approx 1$, so the geodesic equation says
+
+$$\ddot r = -\Gamma^r{}_{tt} = -\frac{GM}{r^2}$$
+
+**Newton's law of gravitation**, from nothing but the $g_{tt}$ part of the metric. Gravity, for everyday purposes, is
+the fact that time runs at different rates at different heights.
+
+## 3. Clocks run slower lower down
+
+A clock at rest at radius $r$ has $d\tau = \sqrt{1 - 2GM/(rc^2)}\;dt$: the deeper in the potential, the slower it
+ticks. On the Earth's surface the effect is about 7 parts in $10^{10}$, which adds up to roughly 22 milliseconds per
+year compared with a clock far away:
+
+%code
+GMe = 3.986004418e14;
+c = 299792458;
+Re = 6.371e6;
+eval(GMe/(Re*c^2))
+eval(GMe/(Re*c^2)*365.25*86400*1000)
+
+%md
+Clocks this good exist: optical atomic clocks have measured the difference over a height change of a few
+centimetres. Part 7 shows why GPS has to correct for it.
+
+## 4. What cannot be transformed away: tides
+
+The equivalence principle is local. A freely falling lab that is large enough sees two dropped balls side by side drift
+together (both fall towards the Earth's centre) and two balls one above the other drift apart. These **tidal** effects
+cannot be removed by any choice of coordinates. They are the curvature: the Riemann tensor, which is exactly zero for
+the rocket but not for a planet.
+
+The full spacetime outside a spherical mass is the Schwarzschild metric (part 4). Its Riemann tensor shows the tide:
+
+%code
+S = metric.generate(schwarzschild)
+riemannsecond(S)
+
+%md
+For large $r$ the component $R^r{}_{ttr} \approx r_s/r^3 = 2GM/r^3$. The *geodesic deviation equation* says that two
+free objects a small distance $\ell$ apart in the radial direction accelerate apart at $R^r{}_{ttr}\,\ell = 2GM\ell/r^3$:
+exactly Newton's tidal acceleration, the one that raises two tidal bulges in the oceans. Gravity's honest signature is
+curvature.
+
+## Summary
+
+* Free fall cancels gravity locally; an accelerating frame mimics it (the equivalence principle).
+* Rindler coordinates produce "gravity" in flat spacetime through the Christoffel symbols alone.
+* With $g_{tt} = -(1 + 2\Phi)$, the geodesic equation gives Newton's law $\ddot r = -\nabla\Phi$.
+* Clocks run slower deeper in a potential; tides, the Riemann tensor, are what make gravity real.
+
+Next: [Einstein's equations](03-einstein-equations.ipynb), which tell spacetime how to curve.

@@ -1,0 +1,141 @@
+%md
+# General relativity 1: Spacetime and special relativity
+
+*Learning path: general relativity, part 1 of 9.* [Index](README.md) · Next: [The equivalence principle](02-equivalence-principle.ipynb)
+
+General relativity describes gravity as the curvature of **spacetime**. Before we curve it, we need flat spacetime,
+the stage of special relativity. You will learn
+
+* how time and space combine into one four-dimensional spacetime with a metric,
+* light cones, and what the sign of $ds^2$ means,
+* Lorentz transformations as the "rotations" of spacetime,
+* proper time, time dilation and the twin paradox, computed from the metric.
+
+We use units in which the speed of light is $c = 1$: time in years, distance in light years, for example.
+
+If you are new to metrics, the [differential geometry path](../differential-geometry/README.md) explains them; parts 1
+to 3 are enough to start here.
+
+%md
+## 1. The Minkowski metric
+
+In spacetime an *event* has coordinates $(t, x, y, z)$. Einstein and Minkowski discovered that observers moving
+relative to each other disagree about time intervals and distances, but all agree on the **interval**
+
+$$ds^2 = -dt^2 + dx^2 + dy^2 + dz^2$$
+
+It is a metric like those in the geometry path, except for the minus sign in front of $dt^2$.
+
+%code
+eta = metric.generate(minkowski)
+
+%md
+Spacetime is flat: every component of the Riemann tensor vanishes.
+
+%code
+riemannsecond(eta)
+
+%md
+## 2. Light cones
+
+The sign of $ds^2$ sorts pairs of events into three kinds:
+
+* $ds^2 < 0$, **timelike**: a massive object can travel from one to the other;
+* $ds^2 = 0$, **lightlike** (null): only light connects them;
+* $ds^2 > 0$, **spacelike**: nothing can; their order in time depends on the observer.
+
+The light rays through an event form its **light cone**. Here it is with time pointing up and one space dimension
+dropped. Inside the upper cone is the future of the event, inside the lower one its past. The red line is a
+rocket moving at half the speed of light; it stays inside the cone.
+
+%code
+cone = surface(q*cos(p), q*sin(p), q, q, -1, 1, p, 0, 2*pi);
+rocket = parametric3d(0.5*t*0.82, -0.5*t*0.57, t, t, -1, 1);
+show(cone, rocket)
+
+%md
+## 3. Lorentz transformations
+
+A rotation keeps $x^2 + y^2$ unchanged. A **Lorentz boost**, the change to an observer moving at speed $v$, keeps
+$-t^2 + x^2$ unchanged:
+
+$$t' = \gamma\,(t - v x), \qquad x' = \gamma\,(x - v t), \qquad \gamma = \frac{1}{\sqrt{1 - v^2}}$$
+
+For $v = 0.6$, $\gamma = 1.25$. As a matrix $\Lambda$ acting on $(t, x)$, the condition is
+$\Lambda^T \eta\, \Lambda = \eta$, with $\eta$ the Minkowski metric:
+
+%code
+L = [1.25, -0.75; -0.75, 1.25];
+eta2 = [-1 0; 0 1];
+transpose(L)*eta2*L
+
+%md
+Take the event $t = 5$, $x = 2$. The moving observer gives it different coordinates, but the same interval:
+
+%code
+t1 = 1.25*(5 - 0.6*2)
+x1 = 1.25*(2 - 0.6*5)
+2^2 - 5^2
+x1^2 - t1^2
+
+%md
+## 4. Proper time
+
+A clock carried along a path through spacetime measures its **proper time** $\tau$, with $d\tau^2 = -ds^2$. For a clock
+moving at speed $v$,
+
+$$d\tau = \sqrt{dt^2 - dx^2} = \sqrt{1 - v^2}\;dt = dt/\gamma$$
+
+Moving clocks run slow by the factor $\gamma$. It is small at everyday speeds and grows without bound as $v \to 1$:
+
+%code
+plot(1/sqrt(1 - v^2), v, 0, 0.995)
+
+%md
+### Muons from the sky
+
+Cosmic rays make muons about 15 km up. A muon lives about 2.2 microseconds, and at $v = 0.9995\,c$ it would cover only
+660 m in that time, yet many reach the ground. Their clocks run slow by $\gamma$:
+
+%code
+gam = eval(1/sqrt(1 - 0.9995^2))
+eval(gam*2.2e-6*0.9995*299792458)
+
+%md
+They live about 32 times longer and can travel about 21 km, more than enough.
+
+## 5. The twin paradox
+
+One twin stays home; the other flies out and back over 10 years, at speed $v(t) = 0.8\sin(\pi t/5)$. The traveller's
+position is $x(t) = \tfrac{4}{\pi}\big(1 - \cos(\pi t/5)\big)$. In a spacetime diagram (time up):
+
+%code
+home = parametric(0, t, t, 0, 10);
+trip = parametric(4/pi*(1 - cos(pi*t/5)), t, t, 0, 10);
+show(home, trip)
+
+%md
+The stay-at-home twin ages 10 years. The traveller's age is the proper time along the curved worldline,
+$\int_0^{10}\sqrt{1 - v(t)^2}\,dt$:
+
+%code
+odesolve([sqrt(1 - (0.8*sin(pi*t/5))^2)], [tau], t, [0], 0, 10)
+
+%md
+The traveller comes back about two years younger. There is no paradox: the two paths through spacetime are different,
+and the traveller's one is not straight (the traveller feels the accelerations).
+
+In geometry a straight line is the *shortest* path; in spacetime, because of the minus sign, the straight worldline is
+the one with the **longest** proper time. That is the principle general relativity builds on: free objects follow
+the paths of longest proper time, the geodesics of spacetime.
+
+## Summary
+
+* Spacetime has the metric $ds^2 = -dt^2 + dx^2 + dy^2 + dz^2$; all observers agree on $ds^2$.
+* Light cones separate timelike, null and spacelike directions.
+* Lorentz boosts satisfy $\Lambda^T\eta\Lambda = \eta$.
+* Proper time $d\tau = \sqrt{-ds^2}$; moving clocks run slow; straight worldlines maximise proper time.
+
+**Try it:** make the trip faster, `0.95*sin(pi*t/5)`, and recompute the traveller's age.
+
+Next: [The equivalence principle](02-equivalence-principle.ipynb), where gravity enters.

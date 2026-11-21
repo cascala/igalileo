@@ -1,0 +1,117 @@
+%md
+# General relativity 3: Einstein's equations
+
+*Learning path: general relativity, part 3 of 9.* [Index](README.md) · Previous: [The equivalence principle](02-equivalence-principle.ipynb) · Next: [Black holes](04-black-holes.ipynb)
+
+"Spacetime tells matter how to move; matter tells spacetime how to curve" (John Wheeler). Part 2 covered the first
+half: free objects follow geodesics. This notebook covers the second half, **Einstein's field equations**. You will
+learn
+
+* what the equations say, and what the Einstein tensor has to do with energy and momentum,
+* how to find the spacetime outside a star by guessing and checking with Galileo,
+* how electric charge and the cosmological constant change the answer,
+* why Einstein added the cosmological constant in 1917.
+
+%md
+## 1. The equations
+
+$$G_{ab} + \Lambda\, g_{ab} = 8\pi G\, T_{ab}$$
+
+* $G_{ab} = R_{ab} - \tfrac12 R\,g_{ab}$ is the **Einstein tensor**, built from the curvature of the metric;
+* $T_{ab}$ is the **energy–momentum tensor** of matter: $T_{tt}$ is the energy density, the spatial diagonal entries
+  the pressure;
+* $\Lambda$ is the **cosmological constant** (zero for now).
+
+These are ten coupled differential equations for the metric. In empty space ($T_{ab} = 0$, $\Lambda = 0$) they reduce
+to $R_{ab} = 0$: the Ricci tensor vanishes, though the full Riemann tensor need not.
+
+## 2. Guess and check: the field of a star
+
+Outside a spherical star, we look for a static, spherically symmetric metric. A natural guess, with one unknown
+function $f(r)$:
+
+$$ds^2 = -f(r)\,dt^2 + \frac{dr^2}{f(r)} + r^2\,d\Omega^2$$
+
+Far from the star $f \to 1$ (flat spacetime), and from part 2, $f \approx 1 - 2GM/r$. Let us test two candidates of the
+form $f = 1 - k/r^n$. First $n = 2$:
+
+%code
+f2 = metric([t r theta phi], [-(1-k/r^2) 0 0 0; 0 1/(1-k/r^2) 0 0; 0 0 r^2 0; 0 0 0 r^2*sin(theta)^2])
+riccitensor(f2)
+
+%md
+Not empty space. Now $n = 1$:
+
+%code
+f1 = metric([t r theta phi], [-(1-k/r) 0 0 0; 0 1/(1-k/r) 0 0; 0 0 r^2 0; 0 0 0 r^2*sin(theta)^2])
+riccitensor(f1)
+
+%md
+All zero: $f = 1 - k/r$ solves Einstein's vacuum equations for any $k$, and matching Newton far away fixes
+$k = 2GM/c^2 = r_s$, the **Schwarzschild radius**. Karl Schwarzschild found this solution in 1915, weeks after
+Einstein published the equations, while serving at the Russian front. Birkhoff's theorem says it is the *only*
+spherically symmetric vacuum solution: outside any round star, collapsing or not, spacetime is Schwarzschild.
+
+It is curved, though; the Riemann tensor and the Kretschmann scalar are not zero:
+
+%code
+kretschmann(f1)
+
+%md
+## 3. Adding electric charge
+
+A charged star (or black hole) has an electric field around it, whose energy curves spacetime. The
+**Reissner–Nordström** solution has $f = 1 - r_s/r + Q^2/r^2$, with $Q$ the charge in geometric units:
+
+%code
+rn = metric([t r theta phi], [-(1-r_s/r+Q^2/r^2) 0 0 0; 0 1/(1-r_s/r+Q^2/r^2) 0 0; 0 0 r^2 0; 0 0 0 r^2*sin(theta)^2])
+einsteintensor(rn)
+
+%md
+The Einstein tensor is no longer zero. Raising one index, $G^t{}_t = g^{tt}G_{tt} = -Q^2/r^4$: an energy density
+$Q^2/(8\pi r^4)$, which is exactly the energy density $E^2/8\pi$ of the electric field $E = Q/r^2$. Its trace vanishes,
+like that of any electromagnetic field:
+
+%code
+ricciscalar(rn)
+
+%md
+## 4. The cosmological constant
+
+With $\Lambda \neq 0$, empty space has $R_{ab} = \Lambda\, g_{ab}$. Writing $\Lambda = 3/\ell^2$, the solution outside
+a star becomes $f = 1 - r_s/r - r^2/\ell^2$ (Schwarzschild–de Sitter):
+
+%code
+sds = metric([t r theta phi], [-(1-r_s/r-r^2/l^2) 0 0 0; 0 1/(1-r_s/r-r^2/l^2) 0 0; 0 0 r^2 0; 0 0 0 r^2*sin(theta)^2])
+riccitensor(sds)
+
+%md
+Each component is $(3/\ell^2)\,g_{ab}$; for example $R_{\theta\theta} = 3r^2/\ell^2 = \Lambda\,g_{\theta\theta}$. The
+$-r^2/\ell^2$ term is a repulsion that grows with distance. In our universe $\ell$ is about 16 billion light years, so it
+is irrelevant for the Solar System but dominates cosmology today (part 9).
+
+## 5. Einstein's static universe
+
+In 1917 Einstein applied his equations to the whole universe, assumed to be static and closed: space a 3-sphere of
+radius $a$ (see part 7 of the geometry path), time unchanging:
+
+%code
+esu = metric([t psi theta phi], [-1 0 0 0; 0 a^2 0 0; 0 0 a^2*sin(psi)^2 0; 0 0 0 a^2*sin(psi)^2*sin(theta)^2])
+einsteintensor(esu)
+
+%md
+$G_{tt} = 3/a^2$ gives the matter density; but the spatial components $G_{\psi\psi} = -1$ would need *negative*
+pressure. Dust has zero pressure, so Einstein added the term $\Lambda g_{ab}$ with $\Lambda = 1/a^2$ to balance it.
+When Hubble found in 1929 that the universe expands, Einstein dropped $\Lambda$. It came back in 1998, when the
+expansion was found to be accelerating.
+
+## Summary
+
+* Einstein's equations $G_{ab} + \Lambda g_{ab} = 8\pi G\,T_{ab}$ relate curvature to energy and momentum.
+* In vacuum, $R_{ab} = 0$; `riccitensor(g)` checks a candidate metric.
+* $f = 1 - r_s/r$ (Schwarzschild) is the unique spherical vacuum solution; charge adds $+Q^2/r^2$, $\Lambda$ adds
+  $-\Lambda r^2/3$.
+
+**Try it:** check that $f = 1 - r_s/r + Q^2/r^2 - r^2/\ell^2$ gives $R = 4\Lambda$ with `ricciscalar`.
+
+Next: [Black holes](04-black-holes.ipynb), where $r_s$ stops being inside a star.

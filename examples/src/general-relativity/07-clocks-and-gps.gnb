@@ -1,0 +1,112 @@
+%md
+# General relativity 7: Clocks, redshift and GPS
+
+*Learning path: general relativity, part 7 of 9.* [Index](README.md) · Previous: [Light](06-light.ipynb) · Next: [Gravitational waves](08-gravitational-waves.ipynb)
+
+The $g_{tt}$ component of the metric says that time runs at different rates in different places. This is the most
+practical prediction of general relativity: your phone's GPS depends on it. You will learn
+
+* how gravitational time dilation and redshift follow from the metric,
+* the Pound–Rebka experiment in a 22.5 m tower, and the redshift of a white dwarf,
+* why GPS satellite clocks gain 38 microseconds per day, and at what height the effects cancel.
+
+%md
+## 1. Time dilation from the metric
+
+A clock at rest at radius $r$ in the Schwarzschild spacetime has $d\tau^2 = -g_{tt}\,dt^2$:
+
+%code
+S = metric.generate(schwarzschild)
+
+%md
+so $d\tau = \sqrt{1 - r_s/r}\;dt$. Clocks deeper down tick slower. Light climbing out of the potential arrives with its
+frequency lowered by the same factor: the **gravitational redshift**,
+
+$$\frac{f_\text{received}}{f_\text{emitted}} = \sqrt{\frac{1 - r_s/r_\text{emit}}{1 - r_s/r_\text{receive}}} \approx 1 - \frac{GM}{c^2}\left(\frac{1}{r_\text{emit}} - \frac{1}{r_\text{receive}}\right)$$
+
+Here is $\sqrt{1 - r_s/r}$, the rate of a clock at $r$ relative to one far away:
+
+%code
+r_s = 1;
+plot(sqrt(1 - r_s/r), r, 1, 20)
+
+%md
+## 2. Pound and Rebka, 1959
+
+Near the Earth's surface the fractional shift over a height $h$ is $gh/c^2$. Robert Pound and Glen Rebka sent gamma rays
+down the 22.5 m tower of Harvard's physics building and measured it:
+
+%code
+clear
+c = 299792458;
+eval(9.81*22.5/c^2)
+
+%md
+A shift of 2.5 parts in $10^{15}$, measured to 10% (later 1%) with the Mössbauer effect. Today's optical atomic clocks
+see the shift for a height difference of one centimetre:
+
+%code
+eval(9.81*0.01/c^2)
+
+%md
+## 3. A white dwarf
+
+Sirius B packs the mass of the Sun into a ball the size of the Earth, so light leaving its surface is noticeably
+redshifted. Astronomers quote the shift as a velocity, $c\,GM/(Rc^2)$, in km/s:
+
+%code
+G = 6.674e-11;
+M = 1.018*1.989e30;
+R = 5.8e6;
+eval(G*M/(R*c^2)*c/1000)
+
+%md
+About 78 km/s. The Hubble Space Telescope measured $80 \pm 5$ km/s in 2005.
+
+## 4. GPS
+
+GPS satellites orbit at 26 561 km from the Earth's centre. Two effects change their clocks relative to clocks on the
+ground:
+
+* weaker gravity up there makes them run **faster**, by $\frac{GM}{c^2}\left(\frac{1}{R_E} - \frac{1}{r}\right)$;
+* their orbital speed $v^2 = GM/r$ makes them run **slower** (special relativity, part 1), by $\frac{v^2}{2c^2} = \frac{GM}{2rc^2}$.
+
+In microseconds per day:
+
+%code
+GMe = 3.986004418e14;
+Re = 6.371e6;
+rgps = 2.6561e7;
+day = 86400;
+gravity = eval(GMe/c^2*(1/Re-1/rgps)*day*1e6)
+speed = eval(-GMe/(2*rgps*c^2)*day*1e6)
+eval(gravity + speed)
+
+%md
+The clocks gain about 38 microseconds per day. Light travels 11 km in that time, so without the correction GPS positions
+would drift by kilometres every day. The satellites' clocks are deliberately tuned slow before launch, by 4.465 parts in
+$10^{10}$, to compensate.
+
+### Where the effects cancel
+
+The net rate depends on the orbit radius. Low orbits are dominated by speed (clocks run slow), high orbits by gravity
+(clocks run fast). With $x$ the orbit radius in thousands of km:
+
+%code
+plot((GMe/c^2*(1/Re - 1/(x*1e6)) - GMe/(2*x*1e6*c^2))*day*1e6, x, 6.6, 45)
+
+%md
+The curve crosses zero at $r = \tfrac32 R_E \approx 9\,560$ km, about 3 200 km above the ground. The International Space
+Station, at 6 780 km, is on the slow side: astronauts there age about 25 microseconds less per day.
+
+%code
+eval((GMe/c^2*(1/Re - 1/6.78e6) - GMe/(2*6.78e6*c^2))*day*1e6)
+
+%md
+## Summary
+
+* $d\tau = \sqrt{-g_{tt}}\,dt$: clocks run slower deeper in a potential, and light is redshifted climbing out.
+* Measured in a 22.5 m tower (1959), in white dwarf light, and today over a centimetre.
+* GPS clocks gain $+45.7$ µs/day from gravity and lose $7.2$ µs/day from speed: $+38.5$ µs/day in all.
+
+Next: [Gravitational waves](08-gravitational-waves.ipynb): ripples in spacetime itself.

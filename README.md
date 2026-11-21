@@ -46,6 +46,7 @@ The full language is described in the [Galileo language reference](https://githu
 ### Learning paths
 
 * [Differential geometry](examples/differential-geometry/README.md), seven notebooks: curves, metrics, surfaces, Gaussian curvature, parallel transport, geodesics and the Riemann tensor
+* [General relativity](examples/general-relativity/README.md), nine notebooks: spacetime, the equivalence principle, Einstein's equations, black holes, Mercury's orbit, light bending, GPS, gravitational waves and cosmology
 
 More notebooks go in [examples/](examples/), and the Docker image includes all of them. The learning-path notebooks are generated from the text sources in [examples/src](examples/src) with `python3 examples/src/build.py`, then executed with `examples/src/execute.sh` so that their results and plots are stored with them.
 

@@ -1,0 +1,130 @@
+%md
+# General relativity 5: Orbits and the precession of Mercury
+
+*Learning path: general relativity, part 5 of 9.* [Index](README.md) · Previous: [Black holes](04-black-holes.ipynb) · Next: [Light](06-light.ipynb)
+
+Planets follow geodesics of the Schwarzschild spacetime. Far from the Sun these are almost Newton's ellipses, but not
+quite, and the difference was the first triumph of general relativity. You will learn
+
+* how the effective potential describes orbits, in Newton's theory and in Einstein's,
+* why there is an innermost stable circular orbit around a black hole,
+* why orbits in general relativity do not close but trace rosettes,
+* how to compute the 43 arcseconds per century of Mercury's perihelion precession.
+
+%md
+## 1. The effective potential
+
+For a particle with angular momentum $L$ per unit mass, the Schwarzschild geodesic equations reduce to one equation
+for the radius, like a ball rolling in a potential:
+
+$$\left(\frac{dr}{d\tau}\right)^2 + V(r) = E^2, \qquad V(r) = \left(1 - \frac{r_s}{r}\right)\left(1 + \frac{L^2}{r^2}\right)$$
+
+Multiplying out, $V = 1 - \dfrac{r_s}{r} + \dfrac{L^2}{r^2} - \dfrac{r_s L^2}{r^3}$. The first three terms are Newton's:
+gravity pulling in, and the centrifugal barrier $L^2/r^2$ pushing out. The last term is new, and it wins at small $r$.
+Here $V$ is for $r_s = 1$ and several values of $L$:
+
+%code
+r_s = 1;
+v1 = plot((1-r_s/r)*(1+1.6^2/r^2), r, 1.2, 20);
+v2 = plot((1-r_s/r)*(1+3/r^2), r, 1.2, 20);
+v3 = plot((1-r_s/r)*(1+2^2/r^2), r, 1.2, 20);
+v4 = plot((1-r_s/r)*(1+2.3^2/r^2), r, 1.2, 20);
+show(v1, v2, v3, v4)
+
+%md
+A circular orbit sits at a minimum of $V$. For large $L$ (the top curves) there is a minimum, and a maximum closer in.
+As $L$ decreases they merge, at $L^2 = 3r_s^2$, at radius $r = 3r_s$: the **innermost stable circular orbit** (ISCO).
+Closer in, nothing can orbit stably; matter spirals into the black hole. The inner edge of the glowing accretion disc
+around a black hole sits at the ISCO. In Newton's theory, by contrast, the barrier $L^2/r^2$ always wins at small $r$:
+
+%code
+show(plot((1-r_s/r)*(1+2^2/r^2), r, 1.2, 20), plot(1 - r_s/r + 2^2/r^2, r, 1.2, 20))
+
+%md
+## 2. Rosettes
+
+With $u = 1/r$ as a function of the angle $\phi$, the orbit equations are (with $c = 1$, so $GM = r_s/2$):
+
+* Newton: $\;u'' + u = \dfrac{GM}{h^2}$, whose solutions are ellipses that close on themselves;
+* Einstein: $\;u'' + u = \dfrac{GM}{h^2} + 3GM\,u^2$.
+
+For Mercury the extra term is tiny. To *see* it, take an orbit close to a black hole: perihelion at $20\,r_s$, aphelion
+at $60\,r_s$. `odeplot` solves both equations and draws $x = \cos\phi/u$, $y = \sin\phi/u$:
+
+%code
+r_s = 1;
+h = sqrt(15);
+rp = 20;
+newton = odeplot([w, r_s/(2*h^2)-u], [u w], phi, [1/rp 0], 0, 10*pi, [cos(phi)/u sin(phi)/u]);
+einstein = odeplot([w, r_s/(2*h^2)+1.5*r_s*u^2-u], [u w], phi, [1/rp 0], 0, 10*pi, [cos(phi)/u sin(phi)/u]);
+show(newton, einstein)
+
+%md
+The Newtonian ellipse retraces itself; the relativistic orbit turns a little further each time. The predicted shift per
+orbit is $\Delta\phi = 6\pi GM/\big(c^2 a(1 - e^2)\big) = 3\pi r_s/p$, with $p = h^2/GM$ the semi-latus rectum, here
+$30\,r_s$. In degrees:
+
+%code
+p = 2*h^2/r_s
+eval(3*pi*r_s/p*180/pi)
+
+%md
+## 3. Straight from the metric
+
+The orbit equation above came from the geodesic equations, but we can also integrate the full four-dimensional
+geodesic equations directly. The planet starts at perihelion with $\dot\phi = L/r^2$ and $\dot t$ fixed so that
+$g_{ab}\dot x^a\dot x^b = -1$. This time we draw the orbit on Flamm's paraboloid from part 4, the shape of space around
+the mass:
+
+%code
+S = metric.generate(schwarzschild);
+L = h;
+ut = sqrt((1+L^2/rp^2)/(1-r_s/rp));
+orbit = geodesic(S, [0 rp pi/2 0], [ut 0 0 L/rp^2], 11000, [r*cos(phi) r*sin(phi) 2*sqrt(r_s*(r-r_s))], 20000);
+well = surface(r*cos(phi), r*sin(phi), 2*sqrt(r_s*(r-r_s)), r, 1, 65, phi, 0, 2*pi);
+show(well, orbit)
+
+%md
+The same rosette, now as a path on the curved surface.
+
+## 4. Mercury
+
+Now the real numbers, in SI units: the Sun's $GM$, the speed of light, and Mercury's semi-major axis, eccentricity and
+orbital period in days.
+
+%code
+clear
+GM = 1.32712440018e20;
+c = 299792458;
+A = 5.7909e10;
+ecc = 0.2056;
+T = 87.969;
+dphi = eval(6*pi*GM/(c^2*A*(1-ecc^2)))
+
+%md
+That is the shift per orbit, in radians. Mercury goes around $36525/T$ times per century. In arcseconds per century:
+
+%code
+eval(dphi*(36525/T)*(180/pi)*3600)
+
+%md
+**43 arcseconds per century.** Astronomers had measured Mercury's perihelion advancing by about 575″ per century, of
+which 532″ is caused by the pull of the other planets. The remaining 43″ were a mystery for half a century (Le Verrier
+even proposed an unseen planet, Vulcan). In November 1915 Einstein computed this number from his new theory, and later
+said he was beside himself with joy for days.
+
+> **A note on "retrograde".** Mercury's *retrograde* motion, when it seems to move backwards across the sky for a few
+> weeks, is a different thing: a line-of-sight effect as Earth overtakes it or it overtakes Earth. Copernicus and
+> Newton explain that fully.
+
+The same effect is much larger in binary pulsars: for the Hulse–Taylor pulsar it is 4.2° per *year*.
+
+## Summary
+
+* Orbits follow from the effective potential $V = (1 - r_s/r)(1 + L^2/r^2)$; the extra $-r_sL^2/r^3$ is relativistic.
+* No stable circular orbits exist inside $3r_s$ (the ISCO).
+* Relativistic orbits precess by $6\pi GM/(c^2a(1-e^2))$ per orbit: 43″ per century for Mercury.
+
+**Try it:** set `rp = 10` (perihelion at $10r_s$) in section 2. How fast does the rosette turn now?
+
+Next: [Light](06-light.ipynb): bending, the photon sphere, and the shadow of a black hole.
