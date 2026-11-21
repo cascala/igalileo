@@ -6,7 +6,9 @@
 
 ![JupyterLab running Galileo, with plots](doc/jupyterlab_plot.png)
 
-Each line of a cell is one Galileo statement, and every result is shown. `plot(...)` and `parametric(...)` render as SVG charts. Tab completion covers Galileo's functions and the variables you defined. A tour is in [examples/galileo-tour.ipynb](examples/galileo-tour.ipynb).
+![An interactive 3D surface](doc/plot3d.png)
+
+Each line of a cell is one Galileo statement, and every result is shown. Plots are interactive in JupyterLab (zoom, pan, and rotate in 3D): `plot`, `parametric`, `plot3d`, `surface` and `parametric3d`, overlaid with `show(...)`. Notebooks also keep an SVG copy of every plot, so they display on GitHub and in other viewers. Tab completion covers Galileo's functions and the variables you defined. A tour is in [examples/galileo-tour.ipynb](examples/galileo-tour.ipynb).
 
 ## Quick start: JupyterLab in Docker
 

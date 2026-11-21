@@ -5,7 +5,8 @@
 #   docker build --build-context galileo=https://github.com/cascala/galileo.git -t cascala/igalileo .
 
 # ---- Build stage: JDK 21 + sbt ----
-FROM eclipse-temurin:21-jdk AS build
+# The build stage runs on the build machine's own platform: the jars it makes run anywhere
+FROM --platform=$BUILDPLATFORM eclipse-temurin:21-jdk AS build
 
 ARG SBT_VERSION=1.10.7
 RUN apt-get update && apt-get install -y --no-install-recommends curl ca-certificates && \
@@ -30,7 +31,7 @@ FROM eclipse-temurin:21-jre
 RUN apt-get update && apt-get install -y --no-install-recommends python3 python3-venv tini && \
     rm -rf /var/lib/apt/lists/* && \
     python3 -m venv /opt/jupyter && \
-    /opt/jupyter/bin/pip install --no-cache-dir jupyterlab notebook && \
+    /opt/jupyter/bin/pip install --no-cache-dir jupyterlab notebook plotly && \
     /opt/jupyter/bin/jupyter labextension disable --level=system "@jupyterlab/apputils-extension:announcements"
 
 COPY --from=build /src/igalileo/target/universal/stage /opt/igalileo

@@ -17,6 +17,12 @@ object Kernel {
     |  --ip ADDRESS     listen on ADDRESS instead of the ip in the connection file
     |                   (use 0.0.0.0 inside a Docker container; IGALILEO_IP does the same)""".stripMargin
 
+  // JSON MIME types (e.g. application/vnd.plotly.v1+json) must be sent as JSON objects, not strings
+  def mimeData( bundle: Map[ String, String ] ): Map[ String, Any ] = bundle.map {
+    case ( k, v ) if k.endsWith( "json" ) => k -> Json.read( v )
+    case kv => kv
+  }
+
   def main( args: Array[ String ] ): Unit = {
     def parse( list: List[ String ], file: Option[ String ], ip: Option[ String ] ): ( Option[ String ], Option[ String ] ) = list match {
       case Nil => ( file, ip )
@@ -178,7 +184,7 @@ class Kernel( connection: Map[ String, Any ], ipOverride: Option[ String ] = Non
       }
       outputs.foreach {
         case TextOutput( t ) => texts += t
-        case RichOutput( bundle ) => { flushText(); publish( Some( request ), "display_data", Map( "data" -> bundle, "metadata" -> Map(), "transient" -> Map() ) ) }
+        case RichOutput( bundle ) => { flushText(); publish( Some( request ), "display_data", Map( "data" -> Kernel.mimeData( bundle ), "metadata" -> Map(), "transient" -> Map() ) ) }
         case ErrorOutput( _, _ ) => ()
       }
       flushText()
