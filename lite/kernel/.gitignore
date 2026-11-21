@@ -1,0 +1,5 @@
+node_modules/
+lib/
+build/
+src/galileo.wasm
+tsconfig.tsbuildinfo

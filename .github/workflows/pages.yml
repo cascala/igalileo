@@ -1,0 +1,56 @@
+# Builds the web site (landing page, playground, JupyterLite) and publishes it to GitHub Pages.
+# Runs only when the site, the notebooks or this workflow change, or by hand (Actions >
+# "Web site" > Run workflow) after an engine release in cascala/galileo-rs.
+name: Web site
+
+on:
+  push:
+    branches: [master]
+    paths: [site/**, lite/**, examples/**, .github/workflows/pages.yml]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: cascala/galileo-rs
+          path: lite/.work/galileo-rs
+      - run: rustup target add wasm32-unknown-unknown
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: lite/kernel/package-lock.json
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: lite/requirements.txt
+      - run: pip install -r lite/requirements.txt
+      - run: lite/build.sh lite/.work/galileo-rs
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

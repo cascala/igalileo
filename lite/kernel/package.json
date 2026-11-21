@@ -1,0 +1,48 @@
+{
+  "name": "@galileo/jupyterlite-kernel",
+  "version": "0.3.0",
+  "private": true,
+  "description": "Galileo kernel for JupyterLite: the Rust engine compiled to WebAssembly, running in a web worker",
+  "license": "Apache-2.0",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "files": [
+    "lib/*.js",
+    "lib/*.d.ts",
+    "lib/*.wasm",
+    "style/*"
+  ],
+  "scripts": {
+    "build": "tsc && cp src/galileo.wasm lib/ && jupyter-builder build ."
+  },
+  "dependencies": {
+    "@jupyterlab/application": "^4.6.0",
+    "@jupyterlab/services": "^7.6.0",
+    "@jupyterlite/kernel": "~0.8.7",
+    "@jupyterlite/services": "~0.8.7"
+  },
+  "devDependencies": {
+    "@jupyter/builder": "^1.3.0",
+    "katex": "^0.16.11",
+    "marked": "^12.0.2",
+    "plotly.js-dist-min": "^2.35.3",
+    "typescript": "~5.9.0"
+  },
+  "jupyterlab": {
+    "extension": true,
+    "outputDir": "build/labextensions/@galileo/jupyterlite-kernel",
+    "sharedPackages": {
+      "@jupyterlite/kernel": {
+        "bundled": false,
+        "singleton": true
+      },
+      "@jupyterlite/services": {
+        "bundled": false,
+        "singleton": true
+      }
+    }
+  },
+  "jupyterlite": {
+    "liteExtension": true
+  }
+}

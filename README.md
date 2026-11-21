@@ -8,6 +8,13 @@ iGalileo is a Jupyter kernel for [Galileo](https://github.com/cascala/galileo-rs
 
 ![An interactive 3D surface](doc/plot3d.png)
 
+## Try it in your browser, no install
+
+**[cascala.github.io/igalileo](https://cascala.github.io/igalileo/)** runs Galileo entirely in your browser: the Rust engine is compiled to WebAssembly, so nothing is installed and nothing is sent to a server.
+
+* [Playground](https://cascala.github.io/igalileo/playground/): a light REPL with the learning paths as interactive lessons. Works on a phone, and the Share button makes a link that replays your session.
+* [Notebooks](https://cascala.github.io/igalileo/lab/lab/index.html): JupyterLite (JupyterLab in the browser) with the Galileo kernel and all the example notebooks. Notebooks you create are saved in your browser's storage.
+
 ## Quick start: JupyterLab in Docker
 
 The `cascala/igalileo` image bundles JupyterLab and the Galileo kernel. It runs natively on Intel (amd64) and Apple Silicon (arm64), and Docker is all you need:
@@ -86,6 +93,18 @@ docker build --build-context galileo=https://github.com/cascala/galileo-rs.git -
 ```
 
 To build and push for Intel and Apple Silicon at once, see [NOTES](NOTES). The image's entry point takes `lab` (the default), `notebook`, or `kernel CONNECTION_FILE`, which `run_docker.sh` uses.
+
+## The web site
+
+The site lives in `site/` (landing page and playground) and `lite/` (the JupyterLite kernel extension and build). `lite/build.sh` builds the engine for WebAssembly from [galileo-rs](https://github.com/cascala/galileo-rs), runs every example notebook through it, builds the kernel extension and JupyterLite, and writes the static site to `_site/`:
+
+```
+pip install -r lite/requirements.txt          # needs Rust with wasm32-unknown-unknown and Node 20+
+lite/build.sh ../galileo-rs                   # or no argument to clone galileo-rs
+python3 -m http.server -d _site 8000
+```
+
+The `Web site` GitHub Actions workflow runs the same script and publishes to GitHub Pages when `site/`, `lite/` or `examples/` change on master. After a galileo-rs change, run it by hand from the Actions tab.
 
 ## How it works
 

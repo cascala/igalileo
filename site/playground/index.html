@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Galileo Playground</title>
+<meta name="description" content="Symbolic math, plots and general relativity in your browser. Galileo is a small computer algebra system written in Rust and compiled to WebAssembly.">
+<meta property="og:title" content="Galileo Playground">
+<meta property="og:description" content="Derivatives, matrices, curvature tensors and 3D plots, computed in your browser. No install.">
+<link rel="icon" href="../logo.svg" type="image/svg+xml">
+<link rel="stylesheet" href="vendor/katex/katex.min.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="bar">
+  <a class="brand" href="../"><img src="../logo.svg" alt="" width="28" height="28"><span>Galileo</span></a>
+  <nav>
+    <a href="#" data-nav="repl">Playground</a>
+    <a href="#lessons" data-nav="lessons">Lessons</a>
+    <a href="../lab/lab/index.html" class="hide-sm">Notebooks</a>
+    <a href="https://github.com/cascala/galileo-rs" class="hide-sm">GitHub</a>
+  </nav>
+  <span id="status" class="status" title="Engine status">loading engine…</span>
+</header>
+
+<main id="repl" class="view">
+  <div id="transcript" class="transcript" aria-live="polite">
+    <section class="welcome" id="welcome">
+      <h1>Math that runs in your browser</h1>
+      <p>Type an expression and press <kbd>Enter</kbd>. <kbd>Shift</kbd>+<kbd>Enter</kbd> adds a line, <kbd>Tab</kbd> completes a name, <kbd>↑</kbd> recalls history. Try one:</p>
+      <div class="chips" id="examples"></div>
+      <p class="muted">New here? <a href="#lessons">Start a lesson</a>, or type <code>help</code>.</p>
+    </section>
+  </div>
+  <form class="prompt" id="prompt" autocomplete="off">
+    <textarea id="input" rows="1" spellcheck="false" autocapitalize="off" autocorrect="off" placeholder="diff(sin(x)^2, x)" aria-label="Galileo input"></textarea>
+    <div class="prompt-actions">
+      <button type="button" id="share" class="ghost" title="Copy a link that replays this session">Share</button>
+      <button type="button" id="clear" class="ghost" title="Clear variables and output">Reset</button>
+      <button type="submit" class="primary">Run</button>
+    </div>
+    <div id="completions" class="completions" hidden></div>
+  </form>
+</main>
+
+<main id="lessons" class="view" hidden>
+  <div class="page">
+    <h1>Lessons</h1>
+    <p class="lead">Interactive notebooks: read, edit the code, press Run. Everything is computed on your device.</p>
+    <div id="lesson-index"></div>
+  </div>
+</main>
+
+<main id="lesson" class="view" hidden>
+  <div class="page">
+    <div class="lesson-head">
+      <a href="#lessons" class="crumb" id="lesson-group">Lessons</a>
+      <div class="lesson-tools">
+        <button type="button" class="ghost" id="run-all">Run all</button>
+        <a class="ghost button" id="open-lab" title="Open this lesson in JupyterLite">Open as notebook</a>
+      </div>
+    </div>
+    <article id="lesson-body"></article>
+    <nav class="pager" id="pager"></nav>
+  </div>
+</main>
+
+<div id="toast" class="toast" hidden></div>
+
+<script src="vendor/katex/katex.min.js"></script>
+<script src="vendor/marked.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
