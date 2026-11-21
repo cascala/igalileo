@@ -67,4 +67,15 @@ class EngineTest extends AnyFunSuite {
     assert( matches == List( "simon", "simplify", "sin" ) )
     assert( ( start, end ) == ( 4, 6 ) )
   }
+
+  test( "help is shown as Markdown, and Shift+Tab finds the command under the cursor" ) {
+    val engine = new Engine()
+    engine.execute( "help(plot3d)" ) match {
+      case List( RichOutput( bundle ) ) => assert( bundle( "text/markdown" ).contains( "plot3d(f, x, a, b, y, c, d)" ) )
+      case other => fail( "unexpected " + other )
+    }
+    assert( engine.inspect( "y = gausscurvature(g)", 8 )( "text/plain" ).contains( "Gaussian" ) )
+    assert( engine.inspect( "plot(", 5 )( "text/plain" ).startsWith( "plot(" ) )
+    assert( engine.inspect( "nothing here", 3 ).isEmpty )
+  }
 }

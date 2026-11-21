@@ -33,6 +33,7 @@ Options:
   * `surface(fx, fy, fz, u, a, b, v, c, d)` draws a parametric surface, and `parametric3d(fx, fy, fz, t, a, b)` draws a space curve
   * plots are values (`p = plot(...)`), and `show(p, q, ...)` overlays them
 * Notebooks also store an SVG copy of each plot, so they display on GitHub and in other viewers.
+* `help` lists all commands, and `help(name)` explains one. Shift+Tab on a name shows the same text.
 * Tab completes Galileo's functions and the variables you defined.
 
 The full language is described in the [Galileo language reference](https://github.com/cascala/galileo/blob/master/docs/language.md).

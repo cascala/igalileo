@@ -125,7 +125,11 @@ class Kernel( connection: Map[ String, Any ], ipOverride: Option[ String ] = Non
           val ( matches, start, end ) = engine.complete( request.string( "code" ), request.int( "cursor_pos", 0 ) )
           reply( ch, request, "complete_reply", Map( "status" -> "ok", "matches" -> matches, "cursor_start" -> start, "cursor_end" -> end, "metadata" -> Map() ) )
         }
-        case "inspect_request" => reply( ch, request, "inspect_reply", Map( "status" -> "ok", "found" -> false, "data" -> Map(), "metadata" -> Map() ) )
+        case "inspect_request" => {
+          // Shift+Tab in a notebook: the help text of the command under the cursor
+          val data = engine.inspect( request.string( "code" ), request.int( "cursor_pos", 0 ) )
+          reply( ch, request, "inspect_reply", Map( "status" -> "ok", "found" -> data.nonEmpty, "data" -> data, "metadata" -> Map() ) )
+        }
         case "is_complete_request" => reply( ch, request, "is_complete_reply", Map( "status" -> "complete" ) )
         case "history_request" => reply( ch, request, "history_reply", Map( "status" -> "ok", "history" -> List() ) )
         case "comm_info_request" => reply( ch, request, "comm_info_reply", Map( "status" -> "ok", "comms" -> Map() ) )

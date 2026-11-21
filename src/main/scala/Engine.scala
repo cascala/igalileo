@@ -83,7 +83,7 @@ class Engine {
 
   // Tab completion: builtin names plus the variables defined so far
   val keywords: List[ String ] = List(
-    "acos", "and", "asin", "atan", "christof", "clear", "complexity", "cos", "cottontensor", "deriv",
+    "help", "acos", "and", "asin", "atan", "christof", "clear", "complexity", "cos", "cottontensor", "deriv",
     "einsteinscalar", "einsteintensor", "eval", "exp", "expand", "eye", "factor", "info", "inv", "kron",
     "lanczostensor", "linspace", "log", "logspace", "lu", "min", "minkowski", "norm", "not", "ones", "or",
     "parametric", "plot", "prove", "rand", "ricciscalar", "riccitensor", "riemannfirst", "riemannsecond",
@@ -92,6 +92,26 @@ class Engine {
     // differential geometry and differential equations
     "christoffel", "christoffelfirst", "christoffelsecond", "gausscurvature", "geodesic", "geodesics",
     "inducedmetric", "inverse", "kretschmann", "metric", "odeplot", "odesolve" )
+
+  // Help for the name under (or just before) the cursor, as a MIME bundle; empty when there is none
+  def inspect( code: String, cursor: Int ): Map[ String, String ] = {
+    def isName( c: Char ) = c.isLetterOrDigit || c == '_'
+    val pos = math.max( 0, math.min( cursor, code.length ) )
+    var start = pos
+    while ( start > 0 && isName( code( start - 1 ) ) ) start -= 1
+    var end = pos
+    while ( end < code.length && isName( code( end ) ) ) end += 1
+    // cursor right after "name(": use the name before the parenthesis
+    val word = if ( start == end && pos > 0 && code( pos - 1 ) == '(' ) {
+      var s0 = pos - 1
+      while ( s0 > 0 && isName( code( s0 - 1 ) ) ) s0 -= 1
+      code.substring( s0, pos - 1 )
+    } else code.substring( start, end )
+    galileo.help.Help.entry( word ) match {
+      case Some( e ) => Map( "text/plain" -> galileo.help.Help.plain( e ), "text/markdown" -> galileo.help.Help.markdown( e ) )
+      case None => Map()
+    }
+  }
 
   def complete( code: String, cursor: Int ): ( List[ String ], Int, Int ) = {
     val end = math.max( 0, math.min( cursor, code.length ) )
