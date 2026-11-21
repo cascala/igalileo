@@ -61,7 +61,7 @@ If Jupyter already runs on your machine, you can install just the kernel. It sta
 
 You need JDK 17 or later and [sbt](https://www.scala-sbt.org/).
 
-iGalileo needs Galileo 0.1.4, which isn't on Maven Central yet, so publish Galileo locally first:
+iGalileo needs Galileo 0.2.1, which isn't on Maven Central yet, so publish Galileo locally first:
 
 ```
 git clone https://github.com/cascala/galileo.git && (cd galileo && sbt publishLocal)
