@@ -1,8 +1,8 @@
 {
     "argv": [
-        "./run_docker.sh",
+        "/ABSOLUTE/PATH/TO/run_docker.sh",
         "{connection_file}"
     ],
-    "display_name": "Dockerized Galileo",
+    "display_name": "Galileo (Docker)",
     "language": "galileo"
 }

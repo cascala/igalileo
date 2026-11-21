@@ -1,41 +1,28 @@
 #!/usr/bin/env bash
+# Start the iGalileo kernel in Docker, for a Jupyter that runs on this machine.
+# Jupyter calls this with the path of its connection file (see kernel.json).
+set -euo pipefail
 
 if [ $# -lt 1 ]; then
-    echo "Missing the connection file as first parameter"
+    echo "Usage: $0 CONNECTION_FILE" >&2
     exit 1
 fi
 
-# Script settings
-DOCKER_IMAGE=cascala/igalileo:latest
+IMAGE="${IGALILEO_IMAGE:-cascala/igalileo:latest}"
+connection_file="$1"
 
-# This thing should be a full path by Jupyter
-connection_file=$1
+# Read the five ports from the connection file (python3 is always there when Jupyter is)
+ports=$(python3 -c 'import json,sys; c=json.load(open(sys.argv[1])); print(" ".join(str(c[k]) for k in ("shell_port","iopub_port","stdin_port","control_port","hb_port")))' "$connection_file")
 
-# Get the port number out
-# Here we assume the local machine has JQ installed
-CONTROL_PORT=$(jq '.control_port' < $connection_file)
-SHELL_PORT=$(jq '.shell_port' < $connection_file)
-STDIN_PORT=$(jq '.stdin_port' < $connection_file)
-HB_PORT=$(jq '.hb_port' < $connection_file)
-IOPUB_PORT=$(jq '.iopub_port' < $connection_file)
+publish=()
+for port in $ports; do
+    publish+=( -p "127.0.0.1:${port}:${port}" )
+done
 
-echo control ${CONTROL_PORT}
-echo shell ${SHELL_PORT}
-echo stdin ${STDIN_PORT}
-echo hb ${HB_PORT}
-echo iopub ${IOPUB_PORT}
-
-#sed -i.bu 's;127.0.0.1;0.0.0.0;' "${connection_file}"
-
-cat $connection_file
-
-# Run docker image with the connection file mounted in, and ports forwarded
-docker run --rm \
-    -v $connection_file:$connection_file:ro \
-    -p $CONTROL_PORT:$CONTROL_PORT \
-    -p $SHELL_PORT:$SHELL_PORT \
-    -p $STDIN_PORT:$STDIN_PORT \
-    -p $HB_PORT:$HB_PORT \
-    -p $IOPUB_PORT:$IOPUB_PORT \
-    $DOCKER_IMAGE \
-    -f $connection_file
+# The kernel listens on 0.0.0.0 inside the container; ports are only published on localhost.
+# It runs as your user so it can read the connection file, which Jupyter makes private.
+exec docker run --rm -i \
+    --user "$(id -u):$(id -g)" \
+    -v "${connection_file}:/connection.json:ro" \
+    "${publish[@]}" \
+    "$IMAGE" kernel /connection.json
