@@ -1,9 +1,9 @@
 (Developer notes)
 
 Docker images (see README for details):
->docker build --build-context galileo=../galileo -t cascala/igalileo:0.1.4 -t cascala/igalileo:latest .
->docker push cascala/igalileo:0.1.4 && docker push cascala/igalileo:latest
+>docker build --build-context galileo=../galileo -t cascala/igalileo:0.2.1 -t cascala/igalileo:latest .
+>docker push cascala/igalileo:0.2.1 && docker push cascala/igalileo:latest
 
 Multi-architecture (Intel and Apple Silicon) in one go:
 >docker buildx build --platform linux/amd64,linux/arm64 --build-context galileo=../galileo \
-   -t cascala/igalileo:0.1.4 -t cascala/igalileo:latest --push .
+   -t cascala/igalileo:0.2.1 -t cascala/igalileo:latest --push .
