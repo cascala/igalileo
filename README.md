@@ -2,46 +2,64 @@
 
 # iGalileo
 
-[iGalileo](https://github.com/cascala/igalileo) is a [Galileo](https://github.com/cascala/galileo) kernel for Jupyter, so you can use Galileo, a computer algebra system written in Scala, in notebooks: symbolic algebra, calculus, matrices, tensors and plots.
+iGalileo is a Jupyter kernel for [Galileo](https://github.com/cascala/galileo), a computer algebra system written in Scala. In a notebook you can do symbolic algebra, calculus, matrices, tensors and differential geometry, with interactive 2D and 3D plots.
 
 ![JupyterLab running Galileo, with plots](doc/jupyterlab_plot.png)
 
 ![An interactive 3D surface](doc/plot3d.png)
 
-Each line of a cell is one Galileo statement, and every result is shown. Plots are interactive in JupyterLab (zoom, pan, and rotate in 3D): `plot`, `parametric`, `plot3d`, `surface` and `parametric3d`, overlaid with `show(...)`. Notebooks also keep an SVG copy of every plot, so they display on GitHub and in other viewers. Tab completion covers Galileo's functions and the variables you defined. A tour is in [examples/galileo-tour.ipynb](examples/galileo-tour.ipynb).
-
 ## Quick start: JupyterLab in Docker
 
-The `cascala/igalileo` image contains JupyterLab with the Galileo kernel. Nothing else is needed besides Docker:
+The `cascala/igalileo` image bundles JupyterLab and the Galileo kernel. It runs natively on Intel (amd64) and Apple Silicon (arm64), and Docker is all you need:
 
 ```
 docker run --rm -p 8888:8888 -v "$PWD:/home/galileo/notebooks/work" cascala/igalileo
 ```
 
-Open the `http://127.0.0.1:8888/lab?token=...` link that it prints. The tour notebook is in the file browser; your current directory is mounted as `work/`, so notebooks you save there stay on your machine.
+Open the `http://127.0.0.1:8888/lab?token=...` link it prints. The example notebooks appear in the file browser. Your current directory is mounted as `work/`, so notebooks you save there stay on your machine.
 
 Options:
-* a fixed token instead of a random one: add `-e JUPYTER_TOKEN=mysecret` before the image name
-* the classic Notebook interface: add `notebook` after the image name
+* For a fixed token instead of a random one, add `-e JUPYTER_TOKEN=mysecret` before the image name.
+* For the classic Notebook interface, add `notebook` after the image name.
+* To get the latest image, run `docker pull cascala/igalileo`.
+
+## Using Galileo in a notebook
+
+* Each line of a cell is one Galileo statement, and each result is shown.
+* Plots are interactive: you can zoom, pan, and rotate 3D plots.
+  * `plot(f, g, ..., x, a, b)` draws curves, and `parametric(fx, fy, t, a, b)` draws a parametric curve
+  * `plot3d(f, x, a, b, y, c, d)` draws a surface z = f(x, y)
+  * `surface(fx, fy, fz, u, a, b, v, c, d)` draws a parametric surface, and `parametric3d(fx, fy, fz, t, a, b)` draws a space curve
+  * plots are values (`p = plot(...)`), and `show(p, q, ...)` overlays them
+* Notebooks also store an SVG copy of each plot, so they display on GitHub and in other viewers.
+* Tab completes Galileo's functions and the variables you defined.
+
+The full language is described in the [Galileo language reference](https://github.com/cascala/galileo/blob/master/docs/language.md).
+
+### Example notebooks
+
+* [A tour of Galileo](examples/galileo-tour.ipynb): numbers, simplification, calculus, 2D and 3D plotting, matrices
+
+More notebooks go in [examples/](examples/), and the Docker image includes all of them.
 
 ## Using your own Jupyter, with the kernel in Docker
 
-If you already run Jupyter on your machine, you can install just the kernel. It starts in a container each time a notebook opens:
+If Jupyter already runs on your machine, you can install just the kernel. It starts in a container each time a notebook opens.
 
-1. Copy [igalileo/kernel.json](igalileo/kernel.json) to a new folder `galileo` in your Jupyter kernels directory:
+1. Copy [igalileo/kernel.json](igalileo/kernel.json) into a new folder named `galileo` in your Jupyter kernels directory:
    * Mac: `~/Library/Jupyter/kernels/galileo/kernel.json`
    * Linux: `~/.local/share/jupyter/kernels/galileo/kernel.json`
    * Windows: `%APPDATA%\jupyter\kernels\galileo\kernel.json`
-2. Edit it so the first argument is the absolute path of [igalileo/run_docker.sh](igalileo/run_docker.sh) (keep that script executable).
-3. `jupyter kernelspec list` should now show `galileo`. Start Jupyter and pick "Galileo (Docker)".
+2. Edit it so the first argument is the absolute path to [igalileo/run_docker.sh](igalileo/run_docker.sh). Keep that script executable.
+3. Check that `jupyter kernelspec list` shows `galileo`, then start Jupyter and pick "Galileo (Docker)".
 
-`run_docker.sh` uses `cascala/igalileo:latest`; set `IGALILEO_IMAGE` to use another tag.
+`run_docker.sh` uses `cascala/igalileo:latest`. Set `IGALILEO_IMAGE` to use a different tag. For interactive plots in your own JupyterLab, also run `pip install plotly`. Without it you get the SVG version.
 
 ## Building from source
 
-Requirements: JDK 17 or later and [sbt](https://www.scala-sbt.org/).
+You need JDK 17 or later and [sbt](https://www.scala-sbt.org/).
 
-iGalileo needs Galileo 0.2.0, which is not on Maven Central yet, so publish it locally first:
+iGalileo needs Galileo 0.2.0, which isn't on Maven Central yet, so publish Galileo locally first:
 
 ```
 git clone https://github.com/cascala/galileo.git && (cd galileo && sbt publishLocal)
@@ -49,11 +67,11 @@ git clone https://github.com/cascala/igalileo.git && cd igalileo
 sbt test stage
 ```
 
-This produces `target/universal/stage/bin/igalileo`. To use it with your Jupyter, point `kernel.json` at [igalileo/run_sbt.sh](igalileo/run_sbt.sh) or straight at that launcher, with `"{connection_file}"` as the second argument.
+This produces `target/universal/stage/bin/igalileo`. To use it with your own Jupyter, point `kernel.json` at [igalileo/run_sbt.sh](igalileo/run_sbt.sh), or straight at that launcher, with `"{connection_file}"` as the second argument.
 
 ### Building the Docker image
 
-The image builds Galileo from source, passed in as a named build context:
+The image builds Galileo from source, which it receives as a named build context:
 
 ```
 docker build --build-context galileo=../galileo -t cascala/igalileo .
@@ -61,10 +79,10 @@ docker build --build-context galileo=../galileo -t cascala/igalileo .
 docker build --build-context galileo=https://github.com/cascala/galileo.git -t cascala/igalileo .
 ```
 
-The image's entry point takes `lab` (default), `notebook`, or `kernel CONNECTION_FILE` (used by `run_docker.sh`).
+To build and push for Intel and Apple Silicon at once, see [NOTES](NOTES). The image's entry point takes `lab` (the default), `notebook`, or `kernel CONNECTION_FILE`, which `run_docker.sh` uses.
 
 ## How it works
 
-The kernel is a JVM process that speaks the [Jupyter messaging protocol](https://jupyter-client.readthedocs.io/en/latest/messaging.html) (version 5.3) over ZeroMQ, using [JeroMQ](https://github.com/zeromq/jeromq), and evaluates code with Galileo's parser and expression handler in-process. Plots are sent as `display_data` with `image/svg+xml` and a text fallback.
+The kernel is a JVM process. It speaks the [Jupyter messaging protocol](https://jupyter-client.readthedocs.io/en/latest/messaging.html) (version 5.3) over ZeroMQ using [JeroMQ](https://github.com/zeromq/jeromq), and evaluates code in-process with Galileo's parser and expression handler. Plots go out as `display_data` with three representations: a Plotly figure (`application/vnd.plotly.v1+json`), an SVG image, and a text fallback.
 
 Feedback and bug reports are welcome as [issues](https://github.com/cascala/igalileo/issues/new).
