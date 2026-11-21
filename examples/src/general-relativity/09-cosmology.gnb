@@ -6,7 +6,7 @@
 On the largest scales the universe looks the same everywhere and in every direction. General relativity then allows
 only one kind of metric, one in which space as a whole expands. You will learn
 
-* the Friedmann–Lemaître–Robertson–Walker (FLRW) metric and the scale factor $a(t)$,
+* the Friedmann–Lemaître–Robertson–Walker (FLRW) metric and the scale factor $a(t)$ [1],
 * what radiation, matter and a cosmological constant each do to the expansion, checked with Einstein's equations,
 * how to compute the age of the universe, 13.8 billion years, from three numbers,
 * when the cosmic microwave background was released.
@@ -61,11 +61,12 @@ einsteintensor(ds)
 %md
 $8\pi G\rho = 3H^2$, constant, and $8\pi G\,p = G_{xx}/g_{xx} = -3H^2$: **negative pressure**, $p = -\rho$. This is a
 cosmological constant (part 3), or *dark energy*: its density does not thin out at all, so once it dominates, the
-expansion speeds up exponentially. Since about 5 billion years ago, it does.
+expansion speeds up exponentially. It has been accelerating for about 6 billion years [2] (by the Friedmann equation
+below, since redshift 0.65).
 
 ## 5. Our universe
 
-Today's measured values: the Hubble constant $H_0 = 67.7$ km/s/Mpc, and the fractions of the critical density in
+Today's measured values [3]: the Hubble constant $H_0 = 67.7$ km/s/Mpc, and the fractions of the critical density in
 matter, $\Omega_m = 0.31$, and dark energy, $\Omega_\Lambda = 0.69$ (radiation is $\Omega_r \approx 9\times10^{-5}$).
 The Friedmann equation becomes
 
@@ -87,7 +88,7 @@ age = odesolve([1/(a*sqrt(9e-5/a^4 + 0.31/a^3 + 0.69))], [t], a, [0], 1e-8, 1)
 eval(age*tH)
 
 %md
-**13.8 billion years**, the value quoted by the Planck satellite team.
+**13.8 billion years**, the value quoted by the Planck satellite team (13.787 ± 0.020) [3].
 
 ### The history of the expansion
 
@@ -103,7 +104,7 @@ show(ours, matteronly)
 %md
 Our universe (first curve) reaches $a = 1$, today, at 13.8 billion years; at first the expansion slows down, like the
 matter-only universe, then it bends upward and accelerates. The matter-only universe would be only 9.6 billion years old
-today, younger than the oldest stars. That conflict was one of the hints that led to dark energy.
+today, younger than the oldest stars [4]. That conflict was one of the hints that led to dark energy.
 
 ### Looking back in time
 
@@ -117,8 +118,8 @@ eval(13.8 - then)
 %md
 ### The cosmic microwave background
 
-The universe was opaque until it cooled enough for hydrogen atoms to form, at $z \approx 1090$. The light released then
-reaches us today as the cosmic microwave background, at 2.725 K. Its temperature scales as $1/a$, so at release, in
+The universe was opaque until it cooled enough for hydrogen atoms to form, at $z \approx 1090$ [3]. The light released then
+reaches us today as the cosmic microwave background, at 2.725 K [5]. Its temperature scales as $1/a$, so at release, in
 kelvin, and the age of the universe at that moment, in years:
 
 %code
@@ -126,7 +127,7 @@ eval(2.725*1091)
 eval(odesolve([1/(a*sqrt(9e-5/a^4 + 0.31/a^3 + 0.69))], [t], a, [0], 1e-8, 1/1091)*tH*1e9)
 
 %md
-About 3 000 K, as hot as the surface of a cool star, about 370 000 years after the Big Bang.
+About 3 000 K, as hot as the surface of a cool star, about 370 000 years after the Big Bang (by this simple calculation).
 
 ## Summary
 
@@ -139,3 +140,15 @@ About 3 000 K, as hot as the surface of a cool star, about 370 000 years after t
 **This is the end of the general relativity path.** Everything here came from one idea, that gravity is the geometry
 of spacetime, worked out with metrics, Christoffel symbols, geodesics and curvature: the tools of the
 [differential geometry path](../differential-geometry/README.md).
+
+%md
+## Sources
+
+Numbers in square brackets in the text refer to this list.
+
+1. A. Friedmann, "Über die Krümmung des Raumes", *Zeitschrift für Physik* **10**, 377–386 (1922), [doi:10.1007/BF01332580](https://doi.org/10.1007/BF01332580); G. Lemaître, *Annales de la Société Scientifique de Bruxelles* **47A**, 49–59 (1927); H. P. Robertson, *Astrophysical Journal* **82**, 284 (1935); A. G. Walker, *Proc. London Math. Soc.* **42**, 90 (1937).
+2. A. G. Riess et al., *Astronomical Journal* **116**, 1009 (1998), [doi:10.1086/300499](https://doi.org/10.1086/300499); S. Perlmutter et al., *Astrophysical Journal* **517**, 565 (1999), [doi:10.1086/307221](https://doi.org/10.1086/307221).
+3. Planck Collaboration, "Planck 2018 results. VI. Cosmological parameters", *Astronomy & Astrophysics* **641**, A6 (2020): H₀ = 67.66, Ω_m = 0.3111, Ω_Λ = 0.6889, age 13.787 Gyr, z* = 1089.9. [doi:10.1051/0004-6361/201833910](https://doi.org/10.1051/0004-6361/201833910)
+4. L. M. Krauss and B. Chaboyer, "Age estimates of globular clusters in the Milky Way: constraints on cosmology", *Science* **299**, 65–69 (2003): oldest clusters at least 11.2 Gyr. [doi:10.1126/science.1075631](https://doi.org/10.1126/science.1075631)
+5. D. J. Fixsen, "The temperature of the cosmic microwave background", *Astrophysical Journal* **707**, 916 (2009): 2.72548 ± 0.00057 K. [doi:10.1088/0004-637X/707/2/916](https://doi.org/10.1088/0004-637X/707/2/916)
+6. S. M. Carroll, *Spacetime and Geometry: An Introduction to General Relativity*, Addison-Wesley (2004). Chapter 8 (cosmology).

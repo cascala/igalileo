@@ -4,7 +4,7 @@
 *Learning path: differential geometry, part 7 of 7.* [Index](README.md) · Previous: [Geodesics](06-geodesics.ipynb) · Then: [General relativity](../general-relativity/README.md)
 
 A surface has one curvature number at each point, $K$. In three or more dimensions, a space can curve differently in
-different planes, so one number is not enough. Riemann found the full answer in 1854: the **Riemann curvature tensor**
+different planes, so one number is not enough. Riemann found the full answer in 1854 [1]: the **Riemann curvature tensor**
 $R^a{}_{bcd}$. You will learn
 
 * what the Riemann tensor measures, and how it relates to $K$,
@@ -41,7 +41,7 @@ components that are not related to others by symmetry.
 
 ## 3. Ricci tensor and Ricci scalar
 
-Summing over one pair of indices gives the **Ricci tensor** $R_{bd} = R^a{}_{bad}$; tracing again with the inverse
+Summing over one pair of indices gives the **Ricci tensor** [2] $R_{bd} = R^a{}_{bad}$; tracing again with the inverse
 metric gives the **Ricci scalar** $R = g^{bd}R_{bd}$. In 2D, $R = 2K$:
 
 %code
@@ -50,7 +50,7 @@ ricciscalar(g)
 
 %md
 The Ricci tensor measures how a small ball of geodesics changes its *volume*; the parts of the Riemann tensor it
-leaves out (the **Weyl tensor**) measure how the ball changes *shape*. That split is exactly the split between matter
+leaves out (the **Weyl tensor** [3]) measure how the ball changes *shape*. That split is exactly the split between matter
 and tidal forces in general relativity.
 
 ## 4. Is this space flat?
@@ -106,7 +106,7 @@ Only the sphere directions carry curvature; the $z$ direction is flat.
 ## 7. An invariant that cannot be fooled
 
 Components of tensors depend on coordinates, but full contractions do not. The **Kretschmann scalar**
-$R_{abcd}R^{abcd}$ is the standard test for whether a singularity is real or just a bad choice of coordinates:
+$R_{abcd}R^{abcd}$ [4] is the standard test for whether a singularity is real or just a bad choice of coordinates:
 
 %code
 kretschmann(g)
@@ -134,3 +134,14 @@ where the [general relativity path](../general-relativity/README.md) begins.
 * Ricci tensor, Ricci scalar and Einstein tensor are its traces: `riccitensor`, `ricciscalar`, `einsteintensor`.
 * All components zero is the coordinate-free test for flatness.
 * Invariants like the Kretschmann scalar do not depend on coordinates.
+
+%md
+## Sources
+
+Numbers in square brackets in the text refer to this list.
+
+1. B. Riemann, "Ueber die Hypothesen, welche der Geometrie zu Grunde liegen" (habilitation lecture, 1854), *Abhandlungen der Königlichen Gesellschaft der Wissenschaften zu Göttingen* **13**, 133–150 (1868).
+2. G. Ricci and T. Levi-Civita, "Méthodes de calcul différentiel absolu et leurs applications", *Mathematische Annalen* **54**, 125–201 (1900). [doi:10.1007/BF01454201](https://doi.org/10.1007/BF01454201)
+3. H. Weyl, "Reine Infinitesimalgeometrie", *Mathematische Zeitschrift* **2**, 384–411 (1918).
+4. E. Kretschmann, "Über die prinzipielle Bestimmbarkeit der berechtigten Bezugssysteme beliebiger Relativitätstheorien", *Annalen der Physik* **48**, 907–942 (1915).
+5. S. M. Carroll, *Spacetime and Geometry: An Introduction to General Relativity*, Addison-Wesley (2004). Chapter 3 (curvature).

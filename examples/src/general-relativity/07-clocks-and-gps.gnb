@@ -33,7 +33,7 @@ plot(sqrt(1 - r_s/r), r, 1, 20)
 %md
 ## 2. Pound and Rebka, 1959
 
-Near the Earth's surface the fractional shift over a height $h$ is $gh/c^2$. Robert Pound and Glen Rebka sent gamma rays
+Near the Earth's surface the fractional shift over a height $h$ is $gh/c^2$. Robert Pound and Glen Rebka [1] sent gamma rays
 down the 22.5 m tower of Harvard's physics building and measured it:
 
 %code
@@ -42,8 +42,8 @@ c = 299792458;
 eval(9.81*22.5/c^2)
 
 %md
-A shift of 2.5 parts in $10^{15}$, measured to 10% (later 1%) with the Mössbauer effect. Today's optical atomic clocks
-see the shift for a height difference of one centimetre:
+A shift of 2.5 parts in $10^{15}$, measured to 10% (later 1% [2]) with the Mössbauer effect. Optical atomic clocks have measured it over 33 cm [3]
+and, in 2022, across a millimetre-sized cloud of atoms [4]. For one centimetre:
 
 %code
 eval(9.81*0.01/c^2)
@@ -51,7 +51,7 @@ eval(9.81*0.01/c^2)
 %md
 ## 3. A white dwarf
 
-Sirius B packs the mass of the Sun into a ball the size of the Earth, so light leaving its surface is noticeably
+Sirius B packs the mass of the Sun [5] into a ball the size of the Earth [6], so light leaving its surface is noticeably
 redshifted. Astronomers quote the shift as a velocity, $c\,GM/(Rc^2)$, in km/s:
 
 %code
@@ -61,7 +61,7 @@ R = 5.8e6;
 eval(G*M/(R*c^2)*c/1000)
 
 %md
-About 78 km/s. The Hubble Space Telescope measured $80 \pm 5$ km/s in 2005.
+About 78 km/s. The Hubble Space Telescope measured $80 \pm 5$ km/s in 2005 [7].
 
 ## 4. GPS
 
@@ -71,7 +71,7 @@ ground:
 * weaker gravity up there makes them run **faster**, by $\frac{GM}{c^2}\left(\frac{1}{R_E} - \frac{1}{r}\right)$;
 * their orbital speed $v^2 = GM/r$ makes them run **slower** (special relativity, part 1), by $\frac{v^2}{2c^2} = \frac{GM}{2rc^2}$.
 
-In microseconds per day:
+In microseconds per day [8]:
 
 %code
 GMe = 3.986004418e14;
@@ -110,3 +110,17 @@ eval((GMe/c^2*(1/Re - 1/6.78e6) - GMe/(2*6.78e6*c^2))*day*1e6)
 * GPS clocks gain $+45.7$ µs/day from gravity and lose $7.2$ µs/day from speed: $+38.5$ µs/day in all.
 
 Next: [Gravitational waves](08-gravitational-waves.ipynb): ripples in spacetime itself.
+
+%md
+## Sources
+
+Numbers in square brackets in the text refer to this list.
+
+1. R. V. Pound and G. A. Rebka Jr., "Apparent weight of photons", *Physical Review Letters* **4**, 337 (1960). [doi:10.1103/PhysRevLett.4.337](https://doi.org/10.1103/PhysRevLett.4.337)
+2. R. V. Pound and J. L. Snider, "Effect of gravity on gamma radiation", *Physical Review* **140**, B788 (1965). [doi:10.1103/PhysRev.140.B788](https://doi.org/10.1103/PhysRev.140.B788)
+3. C. W. Chou, D. B. Hume, T. Rosenband and D. J. Wineland, "Optical clocks and relativity", *Science* **329**, 1630–1633 (2010). [doi:10.1126/science.1192720](https://doi.org/10.1126/science.1192720)
+4. T. Bothwell et al., "Resolving the gravitational redshift across a millimetre-scale atomic sample", *Nature* **602**, 420–424 (2022). [doi:10.1038/s41586-021-04349-7](https://doi.org/10.1038/s41586-021-04349-7)
+5. H. E. Bond et al., "The Sirius system and its astrophysical puzzles", *Astrophysical Journal* **840**, 70 (2017): mass 1.018 solar masses. [arXiv:1703.10625](https://arxiv.org/abs/1703.10625)
+6. J. B. Holberg et al., "Sirius B: a new, more accurate view", *Astrophysical Journal* **497**, 935 (1998): radius 0.0084 solar radii. [doi:10.1086/305489](https://doi.org/10.1086/305489)
+7. M. A. Barstow et al., "Hubble Space Telescope spectroscopy of the Balmer lines in Sirius B", *MNRAS* **362**, 1134 (2005): 80.42 ± 4.83 km/s. [arXiv:astro-ph/0506600](https://arxiv.org/abs/astro-ph/0506600)
+8. N. Ashby, "Relativity in the Global Positioning System", *Living Reviews in Relativity* **6**, 1 (2003): the 38.6 µs/day net effect and the −4.465 × 10⁻¹⁰ factory frequency offset. [doi:10.12942/lrr-2003-1](https://doi.org/10.12942/lrr-2003-1)

@@ -26,7 +26,7 @@ $$K = \kappa_1 \kappa_2$$
 
 ## 2. Curvature from inside: the Theorema Egregium
 
-Gauss proved in 1827 that $K$ depends only on the metric, even though the definition above uses the surrounding
+Gauss proved in 1827 [1] that $K$ depends only on the metric, even though the definition above uses the surrounding
 space. He called it his "remarkable theorem". `gausscurvature(g)` computes $K$ from a 2D metric:
 
 %code
@@ -98,7 +98,7 @@ $u = 0$ is the outer equator and $u = \pi$ the inner one. The curvature is zero 
 
 Here is the most surprising fact in this notebook. Add up the curvature over a whole closed surface,
 $\iint K\,dA$, and you get $2\pi\chi$, where $\chi$ is a whole number that only depends on how many holes the surface
-has: $\chi = 2$ for a sphere, $0$ for a torus. Squash or stretch the surface as much as you like; the total does not
+has: $\chi = 2$ for a sphere, $0$ for a torus [2][3]. Squash or stretch the surface as much as you like; the total does not
 change.
 
 Try it with ellipsoids $\big(a\sin\theta\cos\phi,\; a\sin\theta\sin\phi,\; c\cos\theta\big)$:
@@ -145,3 +145,12 @@ exactly cancels the negative curvature inside.
 **Try it:** compute the curvature of the paraboloid `[u v u^2+v^2]` and of the Enneper surface from part 3.
 
 Next: [Parallel transport](05-parallel-transport.ipynb), where curvature shows up as a vector that comes back turned.
+
+%md
+## Sources
+
+Numbers in square brackets in the text refer to this list.
+
+1. C. F. Gauss, "Disquisitiones generales circa superficies curvas", *Commentationes Societatis Regiae Scientiarum Gottingensis Recentiores* **6**, 99–146 (1828; presented October 1827). English: *General Investigations of Curved Surfaces*, Dover (2005).
+2. O. Bonnet, "Mémoire sur la théorie générale des surfaces", *Journal de l'École Polytechnique* **19**, 1–146 (1848).
+3. M. P. do Carmo, *Differential Geometry of Curves and Surfaces*, 2nd ed., Dover (2016). Sections 3-3 (Gaussian curvature), 4-3 (Theorema Egregium) and 4-5 (Gauss–Bonnet).

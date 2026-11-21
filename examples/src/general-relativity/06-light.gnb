@@ -23,7 +23,7 @@ plot((1 - r_s/r)/r^2, r, 1, 10)
 
 %md
 The potential has a single peak, at $r = 1.5\,r_s$, of height $4/(27r_s^2)$. Light can circle the black hole there, on an
-unstable orbit: the **photon sphere**. Light coming in with $1/b^2$ above the peak, that is $b < b_c = \tfrac{3\sqrt3}{2}r_s$,
+unstable orbit: the **photon sphere** [1]. Light coming in with $1/b^2$ above the peak, that is $b < b_c = \tfrac{3\sqrt3}{2}r_s$,
 falls in; with $b > b_c$ it swings around and escapes.
 
 %code
@@ -78,7 +78,7 @@ show(rays, horizon, photonsphere)
 ## 4. Eddington's eclipse
 
 Far from the mass, a ray with impact parameter $b$ is deflected by $\delta = 2r_s/b = 4GM/(c^2b)$, twice what a
-Newtonian argument gives. For starlight grazing the Sun, in arcseconds:
+Newtonian argument gives [2]. For starlight grazing the Sun, in arcseconds:
 
 %code
 clear
@@ -89,15 +89,15 @@ eval(4*GM/(c^2*Rsun)*(180/pi)*3600)
 
 %md
 1.75 arcseconds. During the total eclipse of 29 May 1919, expeditions led by Arthur Eddington photographed stars near
-the darkened Sun and found them shifted by about this amount. Newspapers around the world reported that light had
-"gone all askew in the heavens", and Einstein became a celebrity overnight. Today the same effect, *gravitational
+the darkened Sun and found them shifted by about this amount [3]. "Lights all askew in the heavens", ran the *New York Times* headline
+[4], and Einstein became a celebrity overnight. Today the same effect, *gravitational
 lensing*, is used to weigh galaxy clusters and map dark matter.
 
 ## 5. The shadow of a black hole
 
 Rays with $b < b_c$ fall in, so a black hole in front of a bright background appears as a dark disc of radius $b_c$,
 larger than the horizon. For the black hole in the galaxy M87, with mass 6.5 billion Suns at a distance of 16.8
-megaparsecs, the shadow's angular diameter $2b_c/D$ in microarcseconds is
+megaparsecs [5], the shadow's angular diameter $2b_c/D$ in microarcseconds is
 
 %code
 G = 6.674e-11;
@@ -107,9 +107,9 @@ rs = eval(2*G*M/c^2);
 eval(2*(3*sqrt(3)/2)*rs/D*(180/pi)*3600*1e6)
 
 %md
-About 40 microarcseconds: the size of an orange on the Moon, seen from Earth. In 2019 the Event Horizon Telescope, a
+About 40 microarcseconds: an 8 cm orange at the distance of the Moon looks about this big. In 2019 the Event Horizon Telescope, a
 network of radio telescopes the size of the Earth, imaged a ring of diameter 42 ± 3 microarcseconds around a dark
-centre. General relativity passed another test, in a regime far stronger than the Sun's.
+centre [5]. General relativity passed another test, in a regime far stronger than the Sun's.
 
 ## Summary
 
@@ -120,3 +120,14 @@ centre. General relativity passed another test, in a regime far stronger than th
 **Try it:** in section 2, try $b = 2.61$ and $b = 2.6$. Near $b_c$ the ray can circle the black hole several times.
 
 Next: [Clocks and GPS](07-clocks-and-gps.ipynb).
+
+%md
+## Sources
+
+Numbers in square brackets in the text refer to this list.
+
+1. C. W. Misner, K. S. Thorne and J. A. Wheeler, *Gravitation*, W. H. Freeman (1973). Section 25.6 (photon orbits and capture cross-section).
+2. A. Einstein, "Erklärung der Perihelbewegung des Merkur aus der allgemeinen Relativitätstheorie", *Sitzungsberichte der Preußischen Akademie der Wissenschaften*, 831–839 (1915): light deflection 1.7″ at the Sun's limb.
+3. F. W. Dyson, A. S. Eddington and C. Davidson, "A determination of the deflection of light by the Sun's gravitational field, from observations made at the total eclipse of May 29, 1919", *Philosophical Transactions of the Royal Society A* **220**, 291–333 (1920). [doi:10.1098/rsta.1920.0009](https://doi.org/10.1098/rsta.1920.0009)
+4. "Lights all askew in the heavens; men of science more or less agog over results of eclipse observations", *The New York Times*, 10 November 1919, p. 17.
+5. Event Horizon Telescope Collaboration, "First M87 Event Horizon Telescope results. I. The shadow of the supermassive black hole", *Astrophysical Journal Letters* **875**, L1 (2019), [doi:10.3847/2041-8213/ab0ec7](https://doi.org/10.3847/2041-8213/ab0ec7); "... VI. The shadow and mass of the central black hole", **875**, L6 (2019), [doi:10.3847/2041-8213/ab1141](https://doi.org/10.3847/2041-8213/ab1141).

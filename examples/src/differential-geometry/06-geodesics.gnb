@@ -78,7 +78,7 @@ fan = geodesic(h, [0 1], [0 1; 1 0; 1 1; 1, -1; 1 3; 1, -3; -1 1; -1, -1; -1 0],
 
 %md
 Here infinitely many "lines" through a point miss a given line: the hyperbolic plane is the geometry where Euclid's
-fifth postulate fails the other way. Its discovery, by Gauss, Bolyai and Lobachevsky, showed that geometry need not be
+fifth postulate fails the other way. Its discovery, by Gauss, Bolyai and Lobachevsky [1][2], showed that geometry need not be
 Euclidean, and paved the way for Einstein.
 
 ## 5. The cone
@@ -110,7 +110,7 @@ show(ring, paths)
 %md
 The geodesic that winds slowly ($\dot v = 0.05$) cannot get past the inner equator: it bounces between two circles,
 like a ball rolling in a valley. Geodesics on surfaces of revolution conserve a quantity like angular momentum
-(Clairaut's relation), and the same conservation law will govern planetary orbits in general relativity.
+(Clairaut's relation [3]), and the same conservation law will govern planetary orbits in general relativity.
 
 ## Summary
 
@@ -122,3 +122,12 @@ like a ball rolling in a valley. Geodesics on surfaces of revolution conserve a 
 **Try it:** on the torus, start on the *inner* equator, `[pi 0]`, with the same velocities. What changes?
 
 Next: [The Riemann tensor](07-riemann-tensor.ipynb), curvature in any number of dimensions.
+
+%md
+## Sources
+
+Numbers in square brackets in the text refer to this list.
+
+1. N. I. Lobachevsky, "On the principles of geometry", *Kazan Messenger* (1829–1830).
+2. J. Bolyai, *Appendix scientiam spatii absolute veram exhibens*, appendix to F. Bolyai, *Tentamen* (1832). English: R. Bonola, *Non-Euclidean Geometry*, Dover (1955), which also documents Gauss's unpublished work.
+3. M. P. do Carmo, *Differential Geometry of Curves and Surfaces*, 2nd ed., Dover (2016). Section 4-4 (geodesics, Clairaut's relation, geodesics of surfaces of revolution).
