@@ -25,7 +25,8 @@ Options:
 
 ## Using Galileo in a notebook
 
-* Each line of a cell is one Galileo statement, and each result is shown.
+* Each line of a cell is one Galileo statement, and each result is shown. End a line with `;` to hide its result.
+* Symbolic results, metrics and curvature tensors are typeset with LaTeX.
 * Plots are interactive: you can zoom, pan, and rotate 3D plots.
   * `plot(f, g, ..., x, a, b)` draws curves, and `parametric(fx, fy, t, a, b)` draws a parametric curve
   * `plot3d(f, x, a, b, y, c, d)` draws a surface z = f(x, y)
@@ -39,6 +40,7 @@ The full language is described in the [Galileo language reference](https://githu
 ### Example notebooks
 
 * [A tour of Galileo](examples/galileo-tour.ipynb): numbers, simplification, calculus, 2D and 3D plotting, matrices
+* [Differential geometry and physics](examples/differential-geometry-tour.ipynb): curvature of surfaces, geodesics in 3D, the Schwarzschild black hole, Mercury's perihelion precession, light bending, GPS clocks, the pendulum and the Lorenz attractor
 
 More notebooks go in [examples/](examples/), and the Docker image includes all of them.
 
