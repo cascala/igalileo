@@ -1,0 +1,5 @@
+{
+    "argv": [ "/opt/igalileo/bin/igalileo", "{connection_file}" ],
+    "display_name": "Galileo",
+    "language": "galileo"
+}

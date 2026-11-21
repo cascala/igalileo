@@ -1,42 +1,52 @@
-# Start from openjdk and name this stage 'build'
-FROM openjdk:8 AS build
+# iGalileo: JupyterLab with the Galileo kernel, in one image.
+#
+# Galileo itself is built from source, passed in as a named build context:
+#   docker build --build-context galileo=../galileo -t cascala/igalileo .
+#   docker build --build-context galileo=https://github.com/cascala/galileo.git -t cascala/igalileo .
 
-ENV SBT_VERSION 1.3.3
+# ---- Build stage: JDK 21 + sbt ----
+FROM eclipse-temurin:21-jdk AS build
 
-RUN \
-  curl -L -o sbt-$SBT_VERSION.deb http://dl.bintray.com/sbt/debian/sbt-$SBT_VERSION.deb && \
-  dpkg -i sbt-$SBT_VERSION.deb && \
-  rm sbt-$SBT_VERSION.deb && \
-  apt-get update && \
-  apt-get install sbt && \
-  sbt sbtVersion
+ARG SBT_VERSION=1.10.7
+RUN apt-get update && apt-get install -y --no-install-recommends curl ca-certificates && \
+    curl -fsSL "https://github.com/sbt/sbt/releases/download/v${SBT_VERSION}/sbt-${SBT_VERSION}.tgz" | tar xz -C /opt && \
+    ln -s /opt/sbt/bin/sbt /usr/local/bin/sbt && \
+    rm -rf /var/lib/apt/lists/*
 
-WORKDIR /igalileo
+# Galileo, published to the local ivy repository so iGalileo can depend on it
+COPY --from=galileo . /src/galileo
+RUN cd /src/galileo && sbt -batch publishLocal
 
-ADD . /igalileo
+WORKDIR /src/igalileo
+COPY build.sbt ./
+COPY project/build.properties project/native-packager.sbt project/
+RUN sbt -batch update
+COPY src src
+RUN sbt -batch stage
 
-# Build a regular, slim jar (because sbt assembly has duplicates I can't resolve)
-RUN sbt docker:stage
+# ---- Run stage: JRE + JupyterLab ----
+FROM eclipse-temurin:21-jre
 
-FROM openjdk:8-jre
-#ENV VERSION 0.1.4-SNAPSHOT
-COPY --from=build igalileo/target/docker/stage .
-ENTRYPOINT [ "/opt/docker/bin/igalileo" ]
+RUN apt-get update && apt-get install -y --no-install-recommends python3 python3-venv tini && \
+    rm -rf /var/lib/apt/lists/* && \
+    python3 -m venv /opt/jupyter && \
+    /opt/jupyter/bin/pip install --no-cache-dir jupyterlab notebook && \
+    /opt/jupyter/bin/jupyter labextension disable --level=system "@jupyterlab/apputils-extension:announcements"
 
-# This is very painful
-# assembly does not work properly, so we are copying all required jars into a jars folder
-# then launch java/scala against those jars
-#COPY --from=build \
-#    /igalileo/libs libs
+COPY --from=build /src/igalileo/target/universal/stage /opt/igalileo
+COPY docker/kernel.json /usr/local/share/jupyter/kernels/galileo/kernel.json
+COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
+COPY examples /opt/igalileo/examples
 
-#COPY --from=build \
-#    /igalileo/target/scala-2.13/igalileo_2.13-$VERSION.jar igalileo.jar
+# The base image already has a user with uid 1000 (ubuntu); rename it for clarity
+RUN usermod -l galileo -d /home/galileo -m ubuntu && groupmod -n galileo ubuntu && \
+    mkdir -p /home/galileo/notebooks && cp /opt/igalileo/examples/*.ipynb /home/galileo/notebooks/ && \
+    chown -R galileo:galileo /home/galileo && chmod 755 /usr/local/bin/entrypoint.sh /opt/igalileo/bin/igalileo
 
-#RUN mkdir jars
-#RUN find libs -name '*jar' -exec mv '{}' jars \;
-#RUN rm -fR libs
+USER galileo
+WORKDIR /home/galileo/notebooks
+ENV PATH=/opt/jupyter/bin:$PATH
+EXPOSE 8888
 
-# Use ENTRYPOINT instead of CMD since ENTRYPOINT passes through arguments
-#ENTRYPOINT [ "java", "-cp jars igalileo.Kernel.main" ] 
-
-
+ENTRYPOINT [ "/usr/bin/tini", "--", "/usr/local/bin/entrypoint.sh" ]
+CMD [ "lab" ]

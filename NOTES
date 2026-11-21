@@ -1,10 +1,9 @@
-(Developer's private notes - enjoy)
+(Developer notes)
 
-For Docker:
->docker build -t cascala/igalileo:latest . 
->docker run cascala/igalileo:latest
+Docker images (see README for details):
+>docker build --build-context galileo=../galileo -t cascala/igalileo:0.2.0 -t cascala/igalileo:latest .
+>docker push cascala/igalileo:0.2.0 && docker push cascala/igalileo:latest
 
-To upload the Docker image to Docker hub:
-https://ropenscilabs.github.io/r-docker-tutorial/04-Dockerhub.html
-This step, however, is now automatically taken care of by Docker hub
-
+Multi-architecture (Intel and Apple Silicon) in one go:
+>docker buildx build --platform linux/amd64,linux/arm64 --build-context galileo=../galileo \
+   -t cascala/igalileo:0.2.0 -t cascala/igalileo:latest --push .
