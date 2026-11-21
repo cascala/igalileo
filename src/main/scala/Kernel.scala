@@ -10,7 +10,7 @@ import org.zeromq.{SocketType, ZContext, ZMQ}
 // A Jupyter kernel for Galileo.
 // Jupyter starts it with a connection file that lists the ports and the signing key.
 object Kernel {
-  val version = "0.2.0"
+  val version = "0.1.4"
 
   private val usage = """Usage: igalileo [--ip ADDRESS] [-f] CONNECTION_FILE
     |  CONNECTION_FILE  the JSON file written by Jupyter ({connection_file} in kernel.json)
