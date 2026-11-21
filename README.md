@@ -4,7 +4,7 @@
 
 [iGalileo](https://github.com/cascala/igalileo) is a [Galileo](https://github.com/cascala/galileo) kernel for Jupyter, so you can use Galileo, a computer algebra system written in Scala, in notebooks: symbolic algebra, calculus, matrices, tensors and plots.
 
-![Screenshot of a Jupyter notebook running Galileo](doc/jupyter_1.png)
+![JupyterLab running Galileo, with plots](doc/jupyterlab_plot.png)
 
 Each line of a cell is one Galileo statement, and every result is shown. `plot(...)` and `parametric(...)` render as SVG charts. Tab completion covers Galileo's functions and the variables you defined. A tour is in [examples/galileo-tour.ipynb](examples/galileo-tour.ipynb).
 
