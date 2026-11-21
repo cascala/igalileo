@@ -1,0 +1,136 @@
+%md
+# Differential geometry 7: The Riemann tensor
+
+*Learning path: differential geometry, part 7 of 7.* [Index](README.md) · Previous: [Geodesics](06-geodesics.ipynb) · Then: [General relativity](../general-relativity/README.md)
+
+A surface has one curvature number at each point, $K$. In three or more dimensions, a space can curve differently in
+different planes, so one number is not enough. Riemann found the full answer in 1854: the **Riemann curvature tensor**
+$R^a{}_{bcd}$. You will learn
+
+* what the Riemann tensor measures, and how it relates to $K$,
+* its simpler summaries: the Ricci tensor, the Ricci scalar and the Einstein tensor,
+* how to test whether a space is flat, whatever the coordinates,
+* curvature of the 3-sphere and of other higher-dimensional spaces, ready for general relativity.
+
+%md
+## 1. What it measures
+
+In part 5 a vector carried around a small loop came back rotated by the enclosed curvature. In higher dimensions
+the loop can lie in many planes, and the vector can rotate in many planes. The Riemann tensor collects all of it: for
+a small loop spanned by directions $c$ and $d$, the vector $V$ changes by
+
+$$\delta V^a = -R^a{}_{bcd}\, V^b\, (\text{area in the } cd \text{ plane})$$
+
+It is built from the Christoffel symbols and their derivatives:
+
+$$R^a{}_{bcd} = \partial_c\Gamma^a{}_{db} - \partial_d\Gamma^a{}_{cb} + \Gamma^a{}_{ce}\Gamma^e{}_{db} - \Gamma^a{}_{de}\Gamma^e{}_{cb}$$
+
+## 2. On a surface it is just $K$
+
+For a 2D surface the Riemann tensor has only one independent component, and it is the Gaussian curvature times the
+metric. For the sphere:
+
+%code
+g = metric.generate(two-sphere)
+riemannsecond(g)
+gausscurvature(g)
+
+%md
+$R^\theta{}_{\phi\theta\phi} = \sin^2\theta = K\,g_{\phi\phi}$ with $K = 1/r^2$. Galileo lists only the non-zero
+components that are not related to others by symmetry.
+
+## 3. Ricci tensor and Ricci scalar
+
+Summing over one pair of indices gives the **Ricci tensor** $R_{bd} = R^a{}_{bad}$; tracing again with the inverse
+metric gives the **Ricci scalar** $R = g^{bd}R_{bd}$. In 2D, $R = 2K$:
+
+%code
+riccitensor(g)
+ricciscalar(g)
+
+%md
+The Ricci tensor measures how a small ball of geodesics changes its *volume*; the parts of the Riemann tensor it
+leaves out (the **Weyl tensor**) measure how the ball changes *shape*. That split is exactly the split between matter
+and tidal forces in general relativity.
+
+## 4. Is this space flat?
+
+The plane in polar coordinates had non-zero Christoffel symbols, but it is flat. The Riemann tensor is the honest test:
+a space is flat exactly when every component vanishes. Ordinary space in spherical coordinates:
+
+%code
+s = metric.generate(spherical)
+riemannsecond(s)
+
+%md
+And a space that looks innocent but is curved: three-dimensional hyperbolic space, $ds^2 = (dx^2 + dy^2 + dz^2)/z^2$:
+
+%code
+hyp = metric([x y z], [1/z^2 0 0; 0 1/z^2 0; 0 0 1/z^2])
+ricciscalar(hyp)
+
+%md
+## 5. The 3-sphere
+
+The 3-sphere is the set of points at distance $r$ from the origin in four-dimensional space. It cannot be drawn, but its
+metric is easy to write down, with three angles $\psi, \theta, \phi$:
+
+%code
+s3 = metric.generate(three-sphere)
+riccitensor(s3)
+ricciscalar(s3)
+
+%md
+Every plane through every point has the same curvature $1/r^2$, so the Ricci scalar is $3\cdot2/r^2 = 6/r^2$. A closed
+universe in cosmology has exactly this shape (see the cosmology notebook in the general relativity path).
+
+The **Einstein tensor** $G_{ab} = R_{ab} - \tfrac12 R\,g_{ab}$ is the combination that appears in Einstein's
+equations:
+
+%code
+einsteintensor(s3)
+
+%md
+## 6. Mixed curvature: sphere times line
+
+A space can be curved in some directions and flat in others. The product of a sphere and a line, $S^2\times\mathbb R$:
+
+%code
+sl = metric([theta phi z], [r^2 0 0; 0 r^2*sin(theta)^2 0; 0 0 1])
+riemannsecond(sl)
+riccitensor(sl)
+
+%md
+Only the sphere directions carry curvature; the $z$ direction is flat.
+
+## 7. An invariant that cannot be fooled
+
+Components of tensors depend on coordinates, but full contractions do not. The **Kretschmann scalar**
+$R_{abcd}R^{abcd}$ is the standard test for whether a singularity is real or just a bad choice of coordinates:
+
+%code
+kretschmann(g)
+kretschmann(s3)
+
+%md
+## Where this leads
+
+Einstein's insight was that spacetime is a four-dimensional space with a metric, that matter curves it through the
+Ricci part of the Riemann tensor, and that free particles move on its geodesics. You now have every tool for that
+story: metrics, Christoffel symbols, geodesics and curvature. As a preview, the spacetime outside the Sun:
+
+%code
+S = metric.generate(schwarzschild)
+riccitensor(S)
+kretschmann(S)
+
+%md
+Its Ricci tensor is zero (empty space), yet it is curved: the Weyl part, which produces tides and bends light. That is
+where the [general relativity path](../general-relativity/README.md) begins.
+
+## Summary
+
+* The Riemann tensor $R^a{}_{bcd}$ is the full curvature; in 2D it reduces to $K$.
+* Ricci tensor, Ricci scalar and Einstein tensor are its traces: `riccitensor`, `ricciscalar`, `einsteintensor`.
+* All components zero is the coordinate-free test for flatness.
+* Invariants like the Kretschmann scalar do not depend on coordinates.

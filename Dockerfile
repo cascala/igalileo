@@ -41,7 +41,7 @@ COPY examples /opt/igalileo/examples
 
 # The base image already has a user with uid 1000 (ubuntu); rename it for clarity
 RUN usermod -l galileo -d /home/galileo -m ubuntu && groupmod -n galileo ubuntu && \
-    mkdir -p /home/galileo/notebooks && cp /opt/igalileo/examples/*.ipynb /home/galileo/notebooks/ && \
+    mkdir -p /home/galileo/notebooks && cp -r /opt/igalileo/examples/. /home/galileo/notebooks/ && rm -rf /home/galileo/notebooks/src && \
     chown -R galileo:galileo /home/galileo && chmod 755 /usr/local/bin/entrypoint.sh /opt/igalileo/bin/igalileo
 
 USER galileo

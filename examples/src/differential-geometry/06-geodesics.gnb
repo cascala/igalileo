@@ -1,0 +1,124 @@
+%md
+# Differential geometry 6: Geodesics
+
+*Learning path: differential geometry, part 6 of 7.* [Index](README.md) · Previous: [Parallel transport](05-parallel-transport.ipynb) · Next: [The Riemann tensor](07-riemann-tensor.ipynb)
+
+A **geodesic** is the straightest possible curve in a curved space: the path you trace if you walk straight ahead
+without ever turning. Geodesics are also (locally) the shortest paths. In general relativity, planets and light rays
+follow geodesics of spacetime, so this notebook is the bridge to physics. You will learn
+
+* the geodesic equation and how Galileo writes it out,
+* how to compute geodesics numerically and draw them,
+* what geodesics look like on a sphere, a cone, a torus and in the hyperbolic plane,
+* that geodesics which start parallel can meet: the first sign of curvature acting on paths.
+
+%md
+## 1. The geodesic equation
+
+A geodesic parallel transports its own velocity (part 5). Setting $V^a = \dot x^a$ in the transport equation gives
+
+$$\ddot x^a = -\Gamma^a{}_{bc}\,\dot x^b \dot x^c$$
+
+`geodesics(g)` writes these equations out. In polar coordinates:
+
+%code
+p = metric.generate(polar)
+geodesics(p)
+
+%md
+The equations look complicated, but they describe straight lines. `geodesic(g, start, velocity, length, map)` solves
+them numerically and draws the result through `map`, which turns coordinates into points to plot. Several rows of
+velocities give several geodesics from the same start. Starting at $r = 1$, $\phi = 0$:
+
+%code
+geodesic(p, [1 0], [0 1; 0.5 1; -0.5 1; 1 0.5], 4, [r*cos(phi) r*sin(phi)])
+
+%md
+Straight lines, as they should be.
+
+## 2. The sphere: great circles
+
+On a sphere every geodesic is a great circle, which is why flight routes look curved on flat maps.
+
+%code
+g = metric.generate(two-sphere)
+geodesics(g)
+
+%code
+r = 1;
+circles = geodesic(g, [pi/2 0], [0 1; 1 1; 1 0.3; 1, -1], 6.3, [sin(theta)*cos(phi) sin(theta)*sin(phi) cos(theta)]);
+ball = surface(sin(theta)*cos(phi), sin(theta)*sin(phi), cos(theta), theta, 0, pi, phi, 0, 2*pi);
+show(ball, circles)
+
+%md
+## 3. Parallel lines that meet
+
+Euclid's fifth postulate says that parallel lines never meet. On the sphere, start two walkers on the equator a short
+distance apart, both heading due north. Their paths start out parallel, yet they meet at the north pole:
+
+%code
+w1 = geodesic(g, [pi/2 3.6], [-1 0], pi/2, [sin(theta)*cos(phi) sin(theta)*sin(phi) cos(theta)]);
+w2 = geodesic(g, [pi/2 4.1], [-1 0], pi/2, [sin(theta)*cos(phi) sin(theta)*sin(phi) cos(theta)]);
+w3 = geodesic(g, [pi/2 4.6], [-1 0], pi/2, [sin(theta)*cos(phi) sin(theta)*sin(phi) cos(theta)]);
+show(ball, w1, w2, w3)
+
+%md
+Positive curvature focuses geodesics; negative curvature spreads them apart. In general relativity the same effect
+is the tidal force of gravity.
+
+## 4. The hyperbolic plane
+
+In the upper half plane with $ds^2 = (dx^2 + dy^2)/y^2$, the geodesics are vertical lines and semicircles centred on
+the $x$ axis. From the point $(0, 1)$ in several directions:
+
+%code
+clear
+h = metric.generate(hyperbolic)
+fan = geodesic(h, [0 1], [0 1; 1 0; 1 1; 1, -1; 1 3; 1, -3; -1 1; -1, -1; -1 0], 3, [x y])
+
+%md
+Here infinitely many "lines" through a point miss a given line: the hyperbolic plane is the geometry where Euclid's
+fifth postulate fails the other way. Its discovery, by Gauss, Bolyai and Lobachevsky, showed that geometry need not be
+Euclidean, and paved the way for Einstein.
+
+## 5. The cone
+
+On a cone, a geodesic is a straight line on the unrolled paper. Rolled up, it comes in from far away, swings around
+the tip and goes out again:
+
+%code
+cone = [w*cos(v) w*sin(v) w];
+c = inducedmetric(cone, [w v])
+path = geodesic(c, [3 0], [-1 0.25], 6, [w*cos(v) w*sin(v) w]);
+show(surface(w*cos(v), w*sin(v), w, w, 0, 3.2, v, 0, 2*pi), path)
+
+%md
+## 6. The torus
+
+On a torus geodesics are much more varied. Starting on the outer equator, one goes around the tube, others wind
+around the hole, and the one along the equator itself stays there:
+
+%code
+torus = [(R+a*cos(u))*cos(v) (R+a*cos(u))*sin(v) a*sin(u)];
+t = inducedmetric(torus, [u v]);
+R = 2;
+a = 0.7;
+paths = geodesic(t, [0 0], [0 1; 1 0.4; 0.3 1; 1 0.05], 25, torus);
+ring = surface((R+a*cos(u))*cos(v), (R+a*cos(u))*sin(v), a*sin(u), u, 0, 2*pi, v, 0, 2*pi);
+show(ring, paths)
+
+%md
+The geodesic that winds slowly ($\dot v = 0.05$) cannot get past the inner equator: it bounces between two circles,
+like a ball rolling in a valley. Geodesics on surfaces of revolution conserve a quantity like angular momentum
+(Clairaut's relation), and the same conservation law will govern planetary orbits in general relativity.
+
+## Summary
+
+* Geodesics satisfy $\ddot x^a = -\Gamma^a{}_{bc}\dot x^b\dot x^c$; `geodesics(g)` shows the equations.
+* `geodesic(g, start, velocities, length, map)` computes and draws them.
+* Great circles on the sphere; semicircles in the hyperbolic plane; straight lines on the unrolled cone.
+* Curvature makes initially parallel geodesics converge (positive) or diverge (negative).
+
+**Try it:** on the torus, start on the *inner* equator, `[pi 0]`, with the same velocities. What changes?
+
+Next: [The Riemann tensor](07-riemann-tensor.ipynb), curvature in any number of dimensions.

@@ -43,7 +43,11 @@ The full language is described in the [Galileo language reference](https://githu
 * [A tour of Galileo](examples/galileo-tour.ipynb): numbers, simplification, calculus, 2D and 3D plotting, matrices
 * [Differential geometry and physics](examples/differential-geometry-tour.ipynb): curvature of surfaces, geodesics in 3D, the Schwarzschild black hole, Mercury's perihelion precession, light bending, GPS clocks, the pendulum and the Lorenz attractor
 
-More notebooks go in [examples/](examples/), and the Docker image includes all of them.
+### Learning paths
+
+* [Differential geometry](examples/differential-geometry/README.md), seven notebooks: curves, metrics, surfaces, Gaussian curvature, parallel transport, geodesics and the Riemann tensor
+
+More notebooks go in [examples/](examples/), and the Docker image includes all of them. The learning-path notebooks are generated from the text sources in [examples/src](examples/src) with `python3 examples/src/build.py`, then executed with `examples/src/execute.sh` so that their results and plots are stored with them.
 
 ## Using your own Jupyter, with the kernel in Docker
 
