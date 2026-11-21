@@ -2,7 +2,7 @@
 
 # iGalileo
 
-iGalileo is a Jupyter kernel for [Galileo](https://github.com/cascala/galileo), a computer algebra system written in Scala. In a notebook you can do symbolic algebra, calculus, matrices, tensors and differential geometry, with interactive 2D and 3D plots.
+iGalileo is a Jupyter kernel for [Galileo](https://github.com/cascala/galileo-rs), a computer algebra system written in Rust. In a notebook you can do symbolic algebra, calculus, matrices, tensors and differential geometry, with interactive 2D and 3D plots.
 
 ![JupyterLab running Galileo, with plots](doc/jupyterlab_plot.png)
 
@@ -36,7 +36,7 @@ Options:
 * `help` lists all commands, and `help(name)` explains one. Shift+Tab on a name shows the same text.
 * Tab completes Galileo's functions and the variables you defined.
 
-The full language is described in the [Galileo language reference](https://github.com/cascala/galileo/blob/master/docs/language.md).
+The language is described in the [Galileo language reference](https://github.com/cascala/galileo/blob/master/docs/language.md), written for the Scala version. The [galileo-rs README](https://github.com/cascala/galileo-rs#readme) lists what changed and the new differential geometry commands.
 
 ### Example notebooks
 
@@ -63,34 +63,34 @@ If Jupyter already runs on your machine, you can install just the kernel. It sta
 
 `run_docker.sh` uses `cascala/igalileo:latest`. Set `IGALILEO_IMAGE` to use a different tag. For interactive plots in your own JupyterLab, also run `pip install plotly`. Without it you get the SVG version.
 
-## Building from source
+## Without Docker
 
-You need JDK 17 or later and [sbt](https://www.scala-sbt.org/).
-
-iGalileo needs Galileo 0.2.1, which isn't on Maven Central yet, so publish Galileo locally first:
+Install the engine with Rust's `cargo`, then the kernel with `pip`:
 
 ```
-git clone https://github.com/cascala/galileo.git && (cd galileo && sbt publishLocal)
-git clone https://github.com/cascala/igalileo.git && cd igalileo
-sbt test stage
+cargo install --git https://github.com/cascala/galileo-rs   # puts `galileo` on your PATH
+pip install "git+https://github.com/cascala/igalileo#subdirectory=kernel"
+python -m galileo_kernel.install --user
 ```
 
-This produces `target/universal/stage/bin/igalileo`. To use it with your own Jupyter, point `kernel.json` at [igalileo/run_sbt.sh](igalileo/run_sbt.sh), or straight at that launcher, with `"{connection_file}"` as the second argument.
+Start Jupyter and pick "Galileo". Set `GALILEO_BIN` if `galileo` is not on your `PATH`.
 
 ### Building the Docker image
 
-The image builds Galileo from source, which it receives as a named build context:
+The image builds the engine from source, which it receives as a named build context:
 
 ```
-docker build --build-context galileo=../galileo -t cascala/igalileo .
+docker build --build-context galileo=../galileo-rs -t cascala/igalileo .
 # or straight from GitHub:
-docker build --build-context galileo=https://github.com/cascala/galileo.git -t cascala/igalileo .
+docker build --build-context galileo=https://github.com/cascala/galileo-rs.git -t cascala/igalileo .
 ```
 
 To build and push for Intel and Apple Silicon at once, see [NOTES](NOTES). The image's entry point takes `lab` (the default), `notebook`, or `kernel CONNECTION_FILE`, which `run_docker.sh` uses.
 
 ## How it works
 
-The kernel is a JVM process. It speaks the [Jupyter messaging protocol](https://jupyter-client.readthedocs.io/en/latest/messaging.html) (version 5.3) over ZeroMQ using [JeroMQ](https://github.com/zeromq/jeromq), and evaluates code in-process with Galileo's parser and expression handler. Plots go out as `display_data` with three representations: a Plotly figure (`application/vnd.plotly.v1+json`), an SVG image, and a text fallback.
+The mathematics happens in the `galileo` executable from [galileo-rs](https://github.com/cascala/galileo-rs). Started as `galileo --kernel`, it reads cells on stdin and answers each with one line of JSON holding MIME bundles. The kernel in [kernel/](kernel/) is a small [ipykernel](https://github.com/ipython/ipykernel) wrapper that passes cells, completion and help requests to it. Plots go out as `display_data` with three representations: a Plotly figure (`application/vnd.plotly.v1+json`), an SVG image, and a text fallback. Interrupting a cell restarts the engine, and the variables you defined are lost.
+
+Version 0.2.1 and earlier used a JVM kernel built on the Scala version of Galileo. Those images are still on Docker Hub under their version tags.
 
 Feedback and bug reports are welcome as [issues](https://github.com/cascala/igalileo/issues/new).

@@ -2,10 +2,12 @@
 .ipynb_checkpoints
 *.DS_Store
 *.ipynb
-project/project/
-project/target/
-target
 
 # example notebooks are part of the repo
 !examples/*.ipynb
 !examples/*/*.ipynb
+
+# Python
+__pycache__/
+*.egg-info/
+build/

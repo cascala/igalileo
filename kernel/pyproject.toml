@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "galileo-kernel"
+version = "0.3.0"
+description = "Jupyter kernel for Galileo, the computer algebra system (Rust engine)"
+readme = "README.md"
+license = { text = "Apache-2.0" }
+requires-python = ">=3.9"
+dependencies = ["ipykernel>=6"]
+
+[project.urls]
+Homepage = "https://github.com/cascala/igalileo"
+Engine = "https://github.com/cascala/galileo-rs"
+
+[tool.setuptools]
+packages = ["galileo_kernel"]

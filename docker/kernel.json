@@ -1,5 +1,5 @@
 {
-    "argv": [ "/opt/igalileo/bin/igalileo", "{connection_file}" ],
+    "argv": [ "/opt/jupyter/bin/python", "-m", "galileo_kernel", "-f", "{connection_file}" ],
     "display_name": "Galileo",
     "language": "galileo"
 }

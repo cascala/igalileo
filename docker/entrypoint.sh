@@ -12,8 +12,12 @@ case "$1" in
     ;;
   kernel)
     shift
-    # bind to all interfaces inside the container so published ports reach the kernel
-    IGALILEO_IP=0.0.0.0 exec /opt/igalileo/bin/igalileo "$@"
+    # Bind to all interfaces inside the container so published ports reach the kernel.
+    # The connection file's "ip" wins over --ip, so rewrite it in a private copy.
+    conn=$(mktemp /tmp/connection-XXXXXX.json)
+    python -c 'import json,sys; c=json.load(open(sys.argv[1])); c["ip"]="0.0.0.0"; json.dump(c,open(sys.argv[2],"w"))' "$1" "$conn"
+    shift
+    exec python -m galileo_kernel -f "$conn" "$@"
     ;;
   *)
     exec "$@"

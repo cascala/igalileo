@@ -1,9 +1,14 @@
 (Developer notes)
 
-Docker images (see README for details):
->docker build --build-context galileo=../galileo -t cascala/igalileo:0.2.1 -t cascala/igalileo:latest .
->docker push cascala/igalileo:0.2.1 && docker push cascala/igalileo:latest
+Docker images (see README for details). The engine comes from a galileo-rs checkout next to this one:
+>docker build --build-context galileo=../galileo-rs -t cascala/igalileo:0.3.0 -t cascala/igalileo:latest .
+>docker push cascala/igalileo:0.3.0 && docker push cascala/igalileo:latest
 
 Multi-architecture (Intel and Apple Silicon) in one go:
->docker buildx build --platform linux/amd64,linux/arm64 --build-context galileo=../galileo \
-   -t cascala/igalileo:0.2.1 -t cascala/igalileo:latest --push .
+>docker buildx build --platform linux/amd64,linux/arm64 --build-context galileo=../galileo-rs \
+   -t cascala/igalileo:0.3.0 -t cascala/igalileo:latest --push .
+
+Keep the old version tags (0.2.0, 0.2.1): they are the Scala/JVM kernel.
+
+Execute the example notebooks with a local image before committing them:
+>IGALILEO_IMAGE=cascala/igalileo:0.3.0 examples/src/execute.sh examples/*.ipynb examples/*/*.ipynb

@@ -1,5 +1,4 @@
-target/
-project/target/
-project/project/
-.bsp/
 .git/
+kernel/build/
+kernel/*.egg-info/
+**/__pycache__/
