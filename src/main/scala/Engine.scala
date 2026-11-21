@@ -35,17 +35,27 @@ class Engine {
     var failed = false
     while ( it.hasNext && !failed ) {
       val line = it.next()
-      parser.parse( line ) match {
-        case parser.Success( expressions, _ ) =>
+      // as in Matlab, a trailing semicolon hides the result (errors are still shown)
+      val quiet = line.endsWith( ";" )
+      // the parser itself can throw (e.g. for a matrix with rows of different sizes)
+      val parsed: Either[ String, List[ Expr ] ] = try parser.parse( line ) match {
+        case parser.Success( expressions, _ ) => Right( expressions )
+        case err: parser.NoSuccess => Left( err.msg )
+      } catch {
+        case e: Exception => Left( Option( e.getMessage ).getOrElse( e.toString ).stripPrefix( "requirement failed: " ) )
+      }
+      parsed match {
+        case Right( expressions ) =>
           for ( expression <- expressions if !failed ) {
             evaluate( expression ) match {
               case e: ErrorOutput => { out += e; failed = true }
               case TextOutput( "" ) => ()
+              case _ if quiet => ()
               case o => out += o
             }
           }
-        case err: parser.NoSuccess =>
-          out += ErrorOutput( "SyntaxError", line + "\n" + err.msg )
+        case Left( msg ) =>
+          out += ErrorOutput( "SyntaxError", line + "\n" + msg )
           failed = true
       }
     }
@@ -61,6 +71,8 @@ class Engine {
           case d: Displayable => RichOutput( d.mimeBundle )
           case ErrorExpr( message ) => ErrorOutput( "Error", message )
           case _: NilExpr => TextOutput( "" )
+          case result if Engine.typeset( result ) =>
+            RichOutput( Map( "text/plain" -> result.toString, "text/latex" -> ( "$$" + galileo.geometry.Latex( result ) + "$$" ) ) )
           case result => TextOutput( result.toString )
         }
       } catch {
@@ -76,7 +88,10 @@ class Engine {
     "lanczostensor", "linspace", "log", "logspace", "lu", "min", "minkowski", "norm", "not", "ones", "or",
     "parametric", "plot", "prove", "rand", "ricciscalar", "riccitensor", "riemannfirst", "riemannsecond",
     "schoutentensor", "schwarzschild", "simplify", "sin", "sqrt", "tan", "tensor", "transpose", "weyltensor",
-    "who", "whos", "xor", "zeros" )
+    "who", "whos", "xor", "zeros",
+    // differential geometry and differential equations
+    "christoffel", "christoffelfirst", "christoffelsecond", "gausscurvature", "geodesic", "geodesics",
+    "inducedmetric", "inverse", "kretschmann", "metric", "odeplot", "odesolve" )
 
   def complete( code: String, cursor: Int ): ( List[ String ], Int, Int ) = {
     val end = math.max( 0, math.min( cursor, code.length ) )
@@ -85,5 +100,14 @@ class Engine {
     val prefix = code.substring( start, end )
     val names = ( keywords ++ environment.allVariables.keys ).distinct.sorted
     ( if ( prefix.isEmpty ) Nil else names.filter( _.startsWith( prefix ) ), start, end )
+  }
+}
+
+object Engine {
+  // symbolic scalar results are also sent as LaTeX, so notebooks typeset them;
+  // plain numbers, matrices and messages stay text
+  def typeset( e: Expr ): Boolean = e match {
+    case _: Sum | _: Product | _: Fraction | _: Power | _: Variable | _: FunF1 => true
+    case _ => false
   }
 }

@@ -28,6 +28,34 @@ class EngineTest extends AnyFunSuite {
     }
   }
 
+  test( "errors thrown while parsing are reported instead of crashing the request" ) {
+    val engine = new Engine
+    val out = engine.execute( "[1 2; 3]\n5" )
+    assert( out.size == 1 )
+    assert( out.head.isInstanceOf[ ErrorOutput ] )
+  }
+
+  test( "curvature results are typeset with LaTeX" ) {
+    val engine = new Engine
+    engine.execute( "christoffel(metric.generate(two-sphere))" ) match {
+      case List( RichOutput( bundle ) ) => assert( bundle( "text/latex" ).contains( "\\Gamma" ) )
+      case other => fail( "unexpected " + other )
+    }
+  }
+
+  test( "a trailing semicolon hides the result" ) {
+    val engine = new Engine
+    assert( engine.execute( "a = 2;\na + 1" ) == List( TextOutput( "3.0" ) ) )
+  }
+
+  test( "symbolic results are also sent as LaTeX" ) {
+    val engine = new Engine
+    engine.execute( "x^2/y" ) match {
+      case List( RichOutput( bundle ) ) => assert( bundle( "text/latex" ) == "$$\\frac{x^{2}}{y}$$" )
+      case other => fail( "unexpected " + other )
+    }
+  }
+
   test( "comments and blank lines produce no output" ) {
     assert( new Engine().execute( "// a comment\n\n" ) == Nil )
   }
