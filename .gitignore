@@ -8,3 +8,4 @@ target
 
 # example notebooks are part of the repo
 !examples/*.ipynb
+!examples/*/*.ipynb
