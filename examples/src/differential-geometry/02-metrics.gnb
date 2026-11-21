@@ -102,7 +102,7 @@ The spiral from pole to pole is about 16.5 long, compared with $\pi \approx 3.14
 
 ## 5. A space that is not flat: the hyperbolic plane
 
-Nothing forces a metric to come from flat space. The **hyperbolic plane** is the upper half plane $y > 0$ with
+Nothing forces a metric to come from flat space. The **hyperbolic plane** is the upper half plane $y > 0$ with [1]
 
 $$ds^2 = \frac{dx^2 + dy^2}{y^2}$$
 
@@ -122,7 +122,7 @@ odesolve([1/t], [len], t, [0], 1, 0.001)
 
 %md
 (The second number is negative because we walked downwards, from $t = 1$ to $t = 0.001$.) M. C. Escher's *Circle
-Limit* prints show this geometry in a disc: all the fish are the same size in the hyperbolic metric. We will see in
+Limit* prints (1958–1960) show this geometry in a disc [2]: all the fish are the same size in the hyperbolic metric. We will see in
 part 4 that this space has curvature $-1$ everywhere, and in part 6 what straight lines look like in it.
 
 ## Summary
@@ -137,3 +137,12 @@ part 4 that this space has curvature $-1$ everywhere, and in part 6 what straigh
 `inducedmetric([(u^2-v^2)/2 u*v], [u v])`.
 
 Next: [Surfaces](03-surfaces.ipynb), where the metric comes from a curved surface in space.
+
+%md
+## Sources
+
+Numbers in square brackets in the text refer to this list.
+
+1. H. Poincaré, "Théorie des groupes fuchsiens", *Acta Mathematica* **1**, 1–62 (1882). [doi:10.1007/BF02592124](https://doi.org/10.1007/BF02592124)
+2. H. S. M. Coxeter, "The non-Euclidean symmetry of Escher's picture 'Circle Limit III'", *Leonardo* **12**, 19–25 (1979). [doi:10.2307/1574078](https://doi.org/10.2307/1574078)
+3. M. P. do Carmo, *Differential Geometry of Curves and Surfaces*, 2nd ed., Dover (2016). Chapter 2 (first fundamental form).

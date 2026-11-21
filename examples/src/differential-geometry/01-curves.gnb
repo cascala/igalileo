@@ -65,7 +65,7 @@ numerically: `odesolve` solves $dL/dt = \text{speed}$ starting from $L = 0$, whi
 odesolve([speed], [len], t, [0], 0, 2*pi)
 
 %md
-So the ellipse with half-axes 2 and 1 has circumference about 9.688. Ramanujan's famous approximation
+So the ellipse with half-axes 2 and 1 has circumference about 9.688. Ramanujan's famous approximation [1]
 $\pi\,[\,3(a+b) - \sqrt{(3a+b)(a+3b)}\,]$ is remarkably close:
 
 %code
@@ -75,7 +75,7 @@ eval(pi*(3*(a+b) - sqrt((3*a+b)*(a+3*b))))
 ## 4. Curvature
 
 How sharply does a curve bend? A straight line does not bend at all; a small circle bends more than a big one. The
-**curvature** $\kappa$ of a circle of radius $r$ is $1/r$. For any plane curve,
+**curvature** $\kappa$ of a circle of radius $r$ is $1/r$. For any plane curve [2],
 
 $$\kappa = \frac{x'y'' - y'x''}{(x'^2 + y'^2)^{3/2}}$$
 
@@ -133,7 +133,7 @@ simplify(cx^2 + cy^2 + cz^2)
 
 %md
 So $|r' \times r''| = R\sqrt{R^2+c^2}$ and $\kappa = R/(R^2 + c^2)$: a helix has the same curvature everywhere, like
-a circle, but it also twists out of the plane (its *torsion* is $c/(R^2+c^2)$). Here is one with $R = 1$,
+a circle, but it also twists out of the plane (its *torsion* is $c/(R^2+c^2)$ [2]). Here is one with $R = 1$,
 $c = 0.15$; drag to rotate it:
 
 %code
@@ -151,3 +151,11 @@ parametric3d(x, y, z, t, 0, 6*pi)
 **Try it:** change $a$ and $b$ and re-run the cells. What happens to the curvature plot when $a = b$?
 
 Next: [Metrics and coordinates](02-metrics.ipynb), where we measure lengths inside a space instead of along a curve.
+
+%md
+## Sources
+
+Numbers in square brackets in the text refer to this list.
+
+1. S. Ramanujan, "Modular equations and approximations to π", *Quarterly Journal of Mathematics* **45**, 350–372 (1914).
+2. M. P. do Carmo, *Differential Geometry of Curves and Surfaces*, 2nd ed., Dover (2016). Chapter 1 (curvature and torsion of curves).

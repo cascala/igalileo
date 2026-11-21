@@ -3,8 +3,8 @@
 
 *Learning path: general relativity, part 3 of 9.* [Index](README.md) · Previous: [The equivalence principle](02-equivalence-principle.ipynb) · Next: [Black holes](04-black-holes.ipynb)
 
-"Spacetime tells matter how to move; matter tells spacetime how to curve" (John Wheeler). Part 2 covered the first
-half: free objects follow geodesics. This notebook covers the second half, **Einstein's field equations**. You will
+"Spacetime tells matter how to move; matter tells spacetime how to curve" (John Wheeler [1]). Part 2 covered the first
+half: free objects follow geodesics. This notebook covers the second half, **Einstein's field equations** [2]. You will
 learn
 
 * what the equations say, and what the Einstein tensor has to do with energy and momentum,
@@ -48,8 +48,8 @@ riccitensor(f1)
 
 %md
 All zero: $f = 1 - k/r$ solves Einstein's vacuum equations for any $k$, and matching Newton far away fixes
-$k = 2GM/c^2 = r_s$, the **Schwarzschild radius**. Karl Schwarzschild found this solution in 1915, weeks after
-Einstein published the equations, while serving at the Russian front. Birkhoff's theorem says it is the *only*
+$k = 2GM/c^2 = r_s$, the **Schwarzschild radius**. Karl Schwarzschild found this solution in December 1915, weeks after
+Einstein published the equations, while serving at the Russian front [3]. Birkhoff's theorem [4] says it is the *only*
 spherically symmetric vacuum solution: outside any round star, collapsing or not, spacetime is Schwarzschild.
 
 It is curved, though; the Riemann tensor and the Kretschmann scalar are not zero:
@@ -61,7 +61,7 @@ kretschmann(f1)
 ## 3. Adding electric charge
 
 A charged star (or black hole) has an electric field around it, whose energy curves spacetime. The
-**Reissner–Nordström** solution has $f = 1 - r_s/r + Q^2/r^2$, with $Q$ the charge in geometric units:
+**Reissner–Nordström** solution [5] has $f = 1 - r_s/r + Q^2/r^2$, with $Q$ the charge in geometric units:
 
 %code
 rn = metric([t r theta phi], [-(1-r_s/r+Q^2/r^2) 0 0 0; 0 1/(1-r_s/r+Q^2/r^2) 0 0; 0 0 r^2 0; 0 0 0 r^2*sin(theta)^2])
@@ -79,7 +79,7 @@ ricciscalar(rn)
 ## 4. The cosmological constant
 
 With $\Lambda \neq 0$, empty space has $R_{ab} = \Lambda\, g_{ab}$. Writing $\Lambda = 3/\ell^2$, the solution outside
-a star becomes $f = 1 - r_s/r - r^2/\ell^2$ (Schwarzschild–de Sitter):
+a star becomes $f = 1 - r_s/r - r^2/\ell^2$ (Schwarzschild–de Sitter [6]):
 
 %code
 sds = metric([t r theta phi], [-(1-r_s/r-r^2/l^2) 0 0 0; 0 1/(1-r_s/r-r^2/l^2) 0 0; 0 0 r^2 0; 0 0 0 r^2*sin(theta)^2])
@@ -87,12 +87,12 @@ riccitensor(sds)
 
 %md
 Each component is $(3/\ell^2)\,g_{ab}$; for example $R_{\theta\theta} = 3r^2/\ell^2 = \Lambda\,g_{\theta\theta}$. The
-$-r^2/\ell^2$ term is a repulsion that grows with distance. In our universe $\ell$ is about 16 billion light years, so it
+$-r^2/\ell^2$ term is a repulsion that grows with distance. In our universe $\ell = c/(H_0\sqrt{\Omega_\Lambda})$ is about 17 billion light years (with the values of part 9 [10]), so it
 is irrelevant for the Solar System but dominates cosmology today (part 9).
 
 ## 5. Einstein's static universe
 
-In 1917 Einstein applied his equations to the whole universe, assumed to be static and closed: space a 3-sphere of
+In 1917 Einstein applied his equations to the whole universe [7], assumed to be static and closed: space a 3-sphere of
 radius $a$ (see part 7 of the geometry path), time unchanging:
 
 %code
@@ -102,7 +102,7 @@ einsteintensor(esu)
 %md
 $G_{tt} = 3/a^2$ gives the matter density; but the spatial components $G_{\psi\psi} = -1$ would need *negative*
 pressure. Dust has zero pressure, so Einstein added the term $\Lambda g_{ab}$ with $\Lambda = 1/a^2$ to balance it.
-When Hubble found in 1929 that the universe expands, Einstein dropped $\Lambda$. It came back in 1998, when the
+When Hubble found in 1929 that the universe expands [8], Einstein dropped $\Lambda$ (in 1931). It came back in 1998 [9], when the
 expansion was found to be accelerating.
 
 ## Summary
@@ -115,3 +115,19 @@ expansion was found to be accelerating.
 **Try it:** check that $f = 1 - r_s/r + Q^2/r^2 - r^2/\ell^2$ gives $R = 4\Lambda$ with `ricciscalar`.
 
 Next: [Black holes](04-black-holes.ipynb), where $r_s$ stops being inside a star.
+
+%md
+## Sources
+
+Numbers in square brackets in the text refer to this list.
+
+1. J. A. Wheeler with K. Ford, *Geons, Black Holes, and Quantum Foam: A Life in Physics*, W. W. Norton (1998), p. 235.
+2. A. Einstein, "Die Feldgleichungen der Gravitation", *Sitzungsberichte der Preußischen Akademie der Wissenschaften*, 844–847 (25 November 1915).
+3. K. Schwarzschild, "Über das Gravitationsfeld eines Massenpunktes nach der Einsteinschen Theorie", *Sitzungsberichte der Preußischen Akademie der Wissenschaften*, 189–196 (1916); English translation: [arXiv:physics/9905030](https://arxiv.org/abs/physics/9905030). His letter of 22 December 1915 from the Russian front to Einstein is Doc. 169 in *The Collected Papers of Albert Einstein*, Vol. 8, Princeton University Press (1998).
+4. G. D. Birkhoff, *Relativity and Modern Physics*, Harvard University Press (1923).
+5. H. Reissner, *Annalen der Physik* **50**, 106–120 (1916); G. Nordström, *Proc. Kon. Ned. Akad. Wet.* **20**, 1238–1245 (1918).
+6. F. Kottler, "Über die physikalischen Grundlagen der Einsteinschen Gravitationstheorie", *Annalen der Physik* **56**, 401–462 (1918).
+7. A. Einstein, "Kosmologische Betrachtungen zur allgemeinen Relativitätstheorie", *Sitzungsberichte der Preußischen Akademie der Wissenschaften*, 142–152 (1917); A. Einstein, "Zum kosmologischen Problem der allgemeinen Relativitätstheorie", ibid., 235–237 (1931).
+8. E. Hubble, "A relation between distance and radial velocity among extra-galactic nebulae", *PNAS* **15**, 168–173 (1929). [doi:10.1073/pnas.15.3.168](https://doi.org/10.1073/pnas.15.3.168)
+9. A. G. Riess et al., *Astronomical Journal* **116**, 1009 (1998), [doi:10.1086/300499](https://doi.org/10.1086/300499); S. Perlmutter et al., *Astrophysical Journal* **517**, 565 (1999), [doi:10.1086/307221](https://doi.org/10.1086/307221).
+10. Planck Collaboration, "Planck 2018 results. VI. Cosmological parameters", *Astronomy & Astrophysics* **641**, A6 (2020). [doi:10.1051/0004-6361/201833910](https://doi.org/10.1051/0004-6361/201833910)

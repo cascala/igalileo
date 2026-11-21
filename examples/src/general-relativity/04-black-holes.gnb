@@ -47,7 +47,7 @@ true singularity.
 
 The tidal stretching in the radial direction is $R^r{}_{ttr} = r_s/r^3$ (part 2): a body of length $\ell$ is pulled apart
 with acceleration $c^2 r_s\,\ell/r^3$. At the horizon $r = r_s$ that is $c^2\ell/r_s^2$, so **smaller black holes have
-stronger tides**. For a 2 m person at the horizon of a 10 solar mass black hole, and of Sagittarius A*, the 4 million
+stronger tides**. For a 2 m person at the horizon of a 10 solar mass black hole, and of Sagittarius A*, the 4 million [1]
 solar mass black hole at the centre of our galaxy, in units of Earth's gravity $g = 9.81$:
 
 %code
@@ -88,7 +88,7 @@ odeplot([-sqrt(r_s/r), 1/(1-r_s/r)], [r t], tau, [6 0], 0, 9.125, [t r])
 ## 5. Flamm's paraboloid
 
 The space around the black hole at one moment, in the equatorial plane, has metric $dr^2/(1 - r_s/r) + r^2 d\phi^2$. It
-is the surface $z = 2\sqrt{r_s(r - r_s)}$ in flat space, the "gravity well" of popular pictures. Galileo checks that:
+is the surface $z = 2\sqrt{r_s(r - r_s)}$ in flat space [2], the "gravity well" of popular pictures. Galileo checks that:
 
 %code
 clear
@@ -104,7 +104,7 @@ surface.
 
 ## 6. Spinning black holes: Kerr
 
-Real black holes spin. Roy Kerr found the solution in 1963. In Boyer–Lindquist coordinates, with spin parameter $a$
+Real black holes spin. Roy Kerr found the solution in 1963 [3]. In Boyer–Lindquist coordinates, with spin parameter $a$
 (angular momentum per unit mass) and $\Sigma = r^2 + a^2\cos^2\theta$, $\Delta = r^2 - r_s r + a^2$:
 
 %code
@@ -133,8 +133,9 @@ ergo = surface(sqrt((r_s/2+sqrt(r_s^2/4-a^2*cos(theta)^2))^2+a^2)*sin(theta)*cos
 show(horizon, ergo)
 
 %md
-The ergosphere touches the horizon at the poles and bulges out at the equator. Roger Penrose showed that energy can
-be extracted from a spinning black hole through the ergosphere, which may power the jets of quasars.
+The ergosphere touches the horizon at the poles and bulges out at the equator. Roger Penrose showed in 1969 that energy can
+be extracted from a spinning black hole through the ergosphere [4]; a related magnetic mechanism (Blandford and Znajek, 1977)
+may power the jets of quasars [5].
 
 ## Summary
 
@@ -144,3 +145,16 @@ be extracted from a spinning black hole through the ergosphere, which may power 
 * Kerr black holes have frame dragging and an ergosphere.
 
 Next: [Orbits](05-orbits.ipynb): planets around the Sun and the precession of Mercury.
+
+%md
+## Sources
+
+Numbers in square brackets in the text refer to this list.
+
+1. Event Horizon Telescope Collaboration, "First Sagittarius A* Event Horizon Telescope results. I.", *Astrophysical Journal Letters* **930**, L12 (2022): mass about 4 × 10⁶ solar masses. [doi:10.3847/2041-8213/ac6674](https://doi.org/10.3847/2041-8213/ac6674)
+2. L. Flamm, "Beiträge zur Einsteinschen Gravitationstheorie", *Physikalische Zeitschrift* **17**, 448–454 (1916).
+3. R. P. Kerr, "Gravitational field of a spinning mass as an example of algebraically special metrics", *Physical Review Letters* **11**, 237 (1963). [doi:10.1103/PhysRevLett.11.237](https://doi.org/10.1103/PhysRevLett.11.237)
+4. R. Penrose, "Gravitational collapse: the role of general relativity", *Rivista del Nuovo Cimento* **1**, 252–276 (1969); reprinted in *General Relativity and Gravitation* **34**, 1141 (2002). [doi:10.1023/A:1016578408204](https://doi.org/10.1023/A:1016578408204)
+5. R. D. Blandford and R. L. Znajek, "Electromagnetic extraction of energy from Kerr black holes", *MNRAS* **179**, 433–456 (1977). [doi:10.1093/mnras/179.3.433](https://doi.org/10.1093/mnras/179.3.433)
+6. Constants: CODATA 2018, E. Tiesinga et al., *Reviews of Modern Physics* **93**, 025010 (2021), [doi:10.1103/RevModPhys.93.025010](https://doi.org/10.1103/RevModPhys.93.025010).
+7. S. M. Carroll, *Spacetime and Geometry: An Introduction to General Relativity*, Addison-Wesley (2004). Chapter 5 (Schwarzschild) and 6 (Kerr).

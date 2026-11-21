@@ -19,7 +19,7 @@ to 3 are enough to start here.
 %md
 ## 1. The Minkowski metric
 
-In spacetime an *event* has coordinates $(t, x, y, z)$. Einstein and Minkowski discovered that observers moving
+In spacetime an *event* has coordinates $(t, x, y, z)$. Einstein [1] and Minkowski [2] discovered that observers moving
 relative to each other disagree about time intervals and distances, but all agree on the **interval**
 
 $$ds^2 = -dt^2 + dx^2 + dy^2 + dz^2$$
@@ -94,7 +94,7 @@ plot(1/sqrt(1 - v^2), v, 0, 0.995)
 %md
 ### Muons from the sky
 
-Cosmic rays make muons about 15 km up. A muon lives about 2.2 microseconds, and at $v = 0.9995\,c$ it would cover only
+Cosmic rays make muons about 15 km up. A muon lives about 2.2 microseconds [3], and at $v = 0.9995\,c$ it would cover only
 660 m in that time, yet many reach the ground. Their clocks run slow by $\gamma$:
 
 %code
@@ -102,7 +102,7 @@ gam = eval(1/sqrt(1 - 0.9995^2))
 eval(gam*2.2e-6*0.9995*299792458)
 
 %md
-They live about 32 times longer and can travel about 21 km, more than enough.
+They live about 32 times longer and can travel about 21 km, more than enough. Frisch and Smith measured exactly this by counting muons on Mount Washington and at sea level [4].
 
 ## 5. The twin paradox
 
@@ -139,3 +139,14 @@ the paths of longest proper time, the geodesics of spacetime.
 **Try it:** make the trip faster, `0.95*sin(pi*t/5)`, and recompute the traveller's age.
 
 Next: [The equivalence principle](02-equivalence-principle.ipynb), where gravity enters.
+
+%md
+## Sources
+
+Numbers in square brackets in the text refer to this list.
+
+1. A. Einstein, "Zur Elektrodynamik bewegter Körper", *Annalen der Physik* **17**, 891–921 (1905). [doi:10.1002/andp.19053221004](https://doi.org/10.1002/andp.19053221004)
+2. H. Minkowski, "Raum und Zeit", *Physikalische Zeitschrift* **10**, 104–111 (1909); lecture of 21 September 1908.
+3. Particle Data Group, S. Navas et al., "Review of Particle Physics", *Physical Review D* **110**, 030001 (2024): muon mean life 2.1969811 µs; review "Cosmic rays" for muon production heights. [doi:10.1103/PhysRevD.110.030001](https://doi.org/10.1103/PhysRevD.110.030001)
+4. D. H. Frisch and J. H. Smith, "Measurement of the relativistic time dilation using μ-mesons", *American Journal of Physics* **31**, 342–355 (1963). [doi:10.1119/1.1969508](https://doi.org/10.1119/1.1969508)
+5. S. M. Carroll, *Spacetime and Geometry: An Introduction to General Relativity*, Addison-Wesley (2004). Chapter 1.

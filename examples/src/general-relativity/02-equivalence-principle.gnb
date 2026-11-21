@@ -3,7 +3,7 @@
 
 *Learning path: general relativity, part 2 of 9.* [Index](README.md) · Previous: [Spacetime](01-spacetime.ipynb) · Next: [Einstein's equations](03-einstein-equations.ipynb)
 
-In 1907 Einstein had "the happiest thought of my life": a person falling freely does not feel their own weight. Gravity
+In 1907 Einstein had "the happiest thought of my life" [1][2]: a person falling freely does not feel their own weight. Gravity
 can be made to disappear, locally, by falling with it. This notebook follows that idea to the conclusion that gravity is
 geometry. You will learn
 
@@ -78,8 +78,8 @@ eval(GMe/(Re*c^2))
 eval(GMe/(Re*c^2)*365.25*86400*1000)
 
 %md
-Clocks this good exist: optical atomic clocks have measured the difference over a height change of a few
-centimetres. Part 7 shows why GPS has to correct for it.
+Clocks this good exist: optical atomic clocks measured the difference over a height change of 33 cm in
+2010 [3]. Part 7 shows why GPS has to correct for it.
 
 ## 4. What cannot be transformed away: tides
 
@@ -97,7 +97,7 @@ riemannsecond(S)
 %md
 For large $r$ the component $R^r{}_{ttr} \approx r_s/r^3 = 2GM/r^3$. The *geodesic deviation equation* says that two
 free objects a small distance $\ell$ apart in the radial direction accelerate apart at $R^r{}_{ttr}\,\ell = 2GM\ell/r^3$:
-exactly Newton's tidal acceleration, the one that raises two tidal bulges in the oceans. Gravity's honest signature is
+exactly Newton's tidal acceleration, the one that raises two tidal bulges in the oceans [4]. Gravity's honest signature is
 curvature.
 
 ## Summary
@@ -108,3 +108,13 @@ curvature.
 * Clocks run slower deeper in a potential; tides, the Riemann tensor, are what make gravity real.
 
 Next: [Einstein's equations](03-einstein-equations.ipynb), which tell spacetime how to curve.
+
+%md
+## Sources
+
+Numbers in square brackets in the text refer to this list.
+
+1. A. Einstein, "Über das Relativitätsprinzip und die aus demselben gezogenen Folgerungen", *Jahrbuch der Radioaktivität und Elektronik* **4**, 411–462 (1907): the first statement of the equivalence principle.
+2. A. Pais, *'Subtle is the Lord...': The Science and the Life of Albert Einstein*, Oxford University Press (1982), p. 178, quoting Einstein's 1920 manuscript on "der glücklichste Gedanke meines Lebens".
+3. C. W. Chou, D. B. Hume, T. Rosenband and D. J. Wineland, "Optical clocks and relativity", *Science* **329**, 1630–1633 (2010). [doi:10.1126/science.1192720](https://doi.org/10.1126/science.1192720)
+4. S. M. Carroll, *Spacetime and Geometry: An Introduction to General Relativity*, Addison-Wesley (2004). Sections 4.1 (Newtonian limit) and 3.10 (geodesic deviation).
