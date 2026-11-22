@@ -29,7 +29,7 @@ Galileo keeps $a$ and $b$ as symbols. To draw it we pick numbers. `parametric(x,
 %code
 a = 2;
 b = 1;
-parametric(x, y, t, 0, 2*pi)
+labels(parametric(x, y, t, 0, 2*pi), "x", "y")
 
 %md
 ## 2. Velocity and speed
@@ -52,7 +52,7 @@ The point moves fastest at the ends of the short axis and slowest at the ends of
 %code
 a = 2;
 b = 1;
-plot(speed, t, 0, 2*pi)
+labels(plot(speed, t, 0, 2*pi), "parameter t", "speed |r'(t)|")
 
 %md
 ## 3. Length
@@ -94,7 +94,7 @@ most pointed:
 %code
 a = 2;
 b = 1;
-plot(k, t, 0, 2*pi)
+labels(plot(k, t, 0, 2*pi), "parameter t", "curvature kappa")
 
 %md
 ### The osculating circle
@@ -107,7 +107,7 @@ $(a - 1/2, 0)$. At $t = \pi/2$, $\kappa = b/a^2 = 1/4$ and the circle has radius
 ellipse = parametric(x, y, t, 0, 2*pi);
 kiss1 = parametric(1.5 + 0.5*cos(t), 0.5*sin(t), t, 0, 2*pi);
 kiss2 = parametric(4*cos(t), 4*sin(t) - 3, t, 1.2, 1.94);
-show(ellipse, kiss1, kiss2)
+labels(legend(show(ellipse, kiss1, kiss2), "the ellipse", "kissing circle at t = 0 (radius 1/2)", "kissing circle at t = pi/2 (radius 4)"), "x", "y")
 
 %md
 ## 5. Curves in space

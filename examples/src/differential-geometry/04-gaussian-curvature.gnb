@@ -88,7 +88,7 @@ K = gausscurvature(inducedmetric(torus, [u v]))
 %code
 R = 2;
 a = 0.7;
-plot(K, u, 0, 2*pi)
+labels(plot(K, u, 0, 2*pi), "u, the angle around the tube (0 = outside, pi = inside)", "Gaussian curvature K")
 
 %md
 $u = 0$ is the outer equator and $u = \pi$ the inner one. The curvature is zero on the top and bottom circles
@@ -128,7 +128,7 @@ eval(4*pi)
 flat = surface(sin(theta)*cos(phi), sin(theta)*sin(phi), 0.3*cos(theta), theta, 0, pi, phi, 0, 2*pi);
 round = surface(sin(theta)*cos(phi) + 3, sin(theta)*sin(phi), cos(theta), theta, 0, pi, phi, 0, 2*pi);
 long = surface(sin(theta)*cos(phi) + 6, sin(theta)*sin(phi), 3*cos(theta), theta, 0, pi, phi, 0, 2*pi);
-show(flat, round, long)
+legend(show(flat, round, long), "flattened", "round", "stretched")
 
 %md
 All three give $4\pi$: the flattened ellipsoid packs its curvature into the sharp rim, the elongated one into its

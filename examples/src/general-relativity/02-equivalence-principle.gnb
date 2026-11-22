@@ -37,7 +37,7 @@ Drop a ball at height 1 with $g = 1$, and draw height against time:
 
 %code
 g = 1;
-geodesic(rindler, [0 1], [1 0], 1.2, [t x])
+labels(geodesic(rindler, [0 1], [1 0], 1.2, [t x]), "time t", "height x above the floor")
 
 %md
 So a "gravitational field" can be nothing but the coordinates of an accelerating observer, carried by the

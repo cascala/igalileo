@@ -31,7 +31,7 @@ them numerically and draws the result through `map`, which turns coordinates int
 velocities give several geodesics from the same start. Starting at $r = 1$, $\phi = 0$:
 
 %code
-geodesic(p, [1 0], [0 1; 0.5 1; -0.5 1; 1 0.5], 4, [r*cos(phi) r*sin(phi)])
+labels(geodesic(p, [1 0], [0 1; 0.5 1; -0.5 1; 1 0.5], 4, [r*cos(phi) r*sin(phi)]), "x = r cos(phi)", "y = r sin(phi)")
 
 %md
 Straight lines, as they should be.
@@ -48,7 +48,7 @@ geodesics(g)
 r = 1;
 circles = geodesic(g, [pi/2 0], [0 1; 1 1; 1 0.3; 1, -1], 6.3, [sin(theta)*cos(phi) sin(theta)*sin(phi) cos(theta)]);
 ball = surface(sin(theta)*cos(phi), sin(theta)*sin(phi), cos(theta), theta, 0, pi, phi, 0, 2*pi);
-show(ball, circles)
+legend(show(ball, circles), "unit sphere")
 
 %md
 ## 3. Parallel lines that meet
@@ -60,7 +60,7 @@ distance apart, both heading due north. Their paths start out parallel, yet they
 w1 = geodesic(g, [pi/2 3.6], [-1 0], pi/2, [sin(theta)*cos(phi) sin(theta)*sin(phi) cos(theta)]);
 w2 = geodesic(g, [pi/2 4.1], [-1 0], pi/2, [sin(theta)*cos(phi) sin(theta)*sin(phi) cos(theta)]);
 w3 = geodesic(g, [pi/2 4.6], [-1 0], pi/2, [sin(theta)*cos(phi) sin(theta)*sin(phi) cos(theta)]);
-show(ball, w1, w2, w3)
+legend(show(ball, w1, w2, w3), "unit sphere", "walker 1", "walker 2", "walker 3")
 
 %md
 Positive curvature focuses geodesics; negative curvature spreads them apart. In general relativity the same effect
@@ -74,7 +74,7 @@ the $x$ axis. From the point $(0, 1)$ in several directions:
 %code
 clear
 h = metric.generate(hyperbolic)
-fan = geodesic(h, [0 1], [0 1; 1 0; 1 1; 1, -1; 1 3; 1, -3; -1 1; -1, -1; -1 0], 3, [x y])
+fan = labels(geodesic(h, [0 1], [0 1; 1 0; 1 1; 1, -1; 1 3; 1, -3; -1 1; -1, -1; -1 0], 3, [x y]), "x", "y (the edge y = 0 is infinitely far away)")
 
 %md
 Here infinitely many "lines" through a point miss a given line: the hyperbolic plane is the geometry where Euclid's
@@ -90,7 +90,7 @@ the tip and goes out again:
 cone = [w*cos(v) w*sin(v) w];
 c = inducedmetric(cone, [w v])
 path = geodesic(c, [3 0], [-1 0.25], 6, [w*cos(v) w*sin(v) w]);
-show(surface(w*cos(v), w*sin(v), w, w, 0, 3.2, v, 0, 2*pi), path)
+legend(show(surface(w*cos(v), w*sin(v), w, w, 0, 3.2, v, 0, 2*pi), path), "cone", "geodesic")
 
 %md
 ## 6. The torus
@@ -105,7 +105,7 @@ R = 2;
 a = 0.7;
 paths = geodesic(t, [0 0], [0 1; 1 0.4; 0.3 1; 1 0.05], 25, torus);
 ring = surface((R+a*cos(u))*cos(v), (R+a*cos(u))*sin(v), a*sin(u), u, 0, 2*pi, v, 0, 2*pi);
-show(ring, paths)
+legend(show(ring, paths), "torus")
 
 %md
 The geodesic that winds slowly ($\dot v = 0.05$) cannot get past the inner equator: it bounces between two circles,

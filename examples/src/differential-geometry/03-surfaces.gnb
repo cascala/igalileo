@@ -61,7 +61,7 @@ cone = [w*cos(v) w*sin(v) w];
 inducedmetric(cone, [w v])
 
 %code
-show(surface(cos(v), sin(v), h, h, -1, 1, v, 0, 2*pi), surface(w*cos(v) + 3, w*sin(v), w - 1, w, 0, 2, v, 0, 2*pi))
+legend(show(surface(cos(v), sin(v), h, h, -1, 1, v, 0, 2*pi), surface(w*cos(v) + 3, w*sin(v), w - 1, w, 0, 2, v, 0, 2*pi)), "cylinder", "cone")
 
 %md
 The cone, too, can be made from paper: a disc with a wedge cut out. With $\rho = \sqrt2\,w$ (distance measured along
@@ -96,7 +96,7 @@ inducedmetric([u v u^2+v^2], [u v])
 inducedmetric([u v u^2-v^2], [u v])
 
 %code
-show(plot3d(x^2+y^2, x, -1, 1, y, -1, 1), plot3d(x^2-y^2 - 3, x, -1, 1, y, -1, 1))
+legend(show(plot3d(x^2+y^2, x, -1, 1, y, -1, 1), plot3d(x^2-y^2 - 3, x, -1, 1, y, -1, 1)), "bowl z = x^2 + y^2", "saddle z = x^2 - y^2 (shifted down by 3)")
 
 %md
 Now an off-diagonal term $du\,dv$ appears: the coordinate lines are no longer perpendicular on the surface.

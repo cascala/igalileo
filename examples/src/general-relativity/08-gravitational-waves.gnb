@@ -62,7 +62,7 @@ p5 = geodesic(pp, [0, 0, -1, 0], [1, -0.5, 0, 0], 12.6, [x y u]);
 p6 = geodesic(pp, [0, 0, -0.707, -0.707], [1, -0.5, 0, 0], 12.6, [x y u]);
 p7 = geodesic(pp, [0, 0, 0, -1], [1, -0.5, 0, 0], 12.6, [x y u]);
 p8 = geodesic(pp, [0, 0, 0.707, -0.707], [1, -0.5, 0, 0], 12.6, [x y u]);
-show(p1, p2, p3, p4, p5, p6, p7, p8)
+labels(show(p1, p2, p3, p4, p5, p6, p7, p8), "x", "y", "time u")
 
 %md
 Following just two particles, the one on the $x$ axis and the one on the $y$ axis, and plotting their distance from the
@@ -71,7 +71,7 @@ centre:
 %code
 px = geodesic(pp, [0, 0, 1, 0], [1, -0.5, 0, 0], 12.6, [u x]);
 py = geodesic(pp, [0, 0, 0, 1], [1, -0.5, 0, 0], 12.6, [u y]);
-show(px, py)
+labels(legend(show(px, py), "particle on the x axis: its x", "particle on the y axis: its y"), "time u", "distance from the centre")
 
 %md
 The two oscillate in opposite phase: while one moves out, the other moves in. Both also drift slowly inward. That is
@@ -106,7 +106,7 @@ $G\mathcal M/c^3 = 28 \times 4.925\,\mu\text{s}$. The frequency during the last 
 
 %code
 Tc = 28*4.925e-6;
-plot(1/pi*(5/(256*(-t)))^(3/8)*Tc^(-5/8), t, -0.2, -0.004)
+labels(plot(1/pi*(5/(256*(-t)))^(3/8)*Tc^(-5/8), t, -0.2, -0.004), "time t before the merger (s)", "wave frequency (Hz)")
 
 %md
 From about 35 Hz to over 150 Hz in a fifth of a second, the range LIGO heard [2] (it is audible if played as sound). The

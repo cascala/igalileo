@@ -49,7 +49,7 @@ l1 = parametric(t, 0, t, -3, 3);
 l2 = parametric(t*cos(pi/4), t*sin(pi/4), t, -3, 3);
 l3 = parametric(0, t, t, -3, 3);
 l4 = parametric(t*cos(3*pi/4), t*sin(3*pi/4), t, -3, 3);
-show(c1, c2, c3, l1, l2, l3, l4)
+labels(legend(show(c1, c2, c3, l1, l2, l3, l4), "r = 1", "r = 2", "r = 3", "phi = 0 and pi", "phi = pi/4 and 5pi/4", "phi = pi/2 and 3pi/2", "phi = 3pi/4 and 7pi/4"), "x", "y")
 
 %md
 ### Spherical coordinates
@@ -95,7 +95,7 @@ odesolve([sqrt(1 + 64*sin(t)^2)], [len], t, [0], 0, pi)
 r = 1;
 ball = surface(sin(theta)*cos(phi), sin(theta)*sin(phi), cos(theta), theta, 0, pi, phi, 0, 2*pi);
 spiral = parametric3d(1.01*sin(t)*cos(8*t), 1.01*sin(t)*sin(8*t), 1.01*cos(t), t, 0, pi);
-show(ball, spiral)
+legend(show(ball, spiral), "unit sphere", "spiral from pole to pole")
 
 %md
 The spiral from pole to pole is about 16.5 long, compared with $\pi \approx 3.14$ for the direct route along a meridian.

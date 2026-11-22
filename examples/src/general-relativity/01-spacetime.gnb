@@ -51,7 +51,7 @@ rocket moving at half the speed of light; it stays inside the cone.
 %code
 cone = surface(q*cos(p), q*sin(p), q, q, -1, 1, p, 0, 2*pi);
 rocket = parametric3d(0.5*t*0.82, -0.5*t*0.57, t, t, -1, 1);
-show(cone, rocket)
+labels(legend(show(cone, rocket), "light cone", "rocket at half the speed of light"), "x", "y", "time t")
 
 %md
 ## 3. Lorentz transformations
@@ -89,7 +89,7 @@ $$d\tau = \sqrt{dt^2 - dx^2} = \sqrt{1 - v^2}\;dt = dt/\gamma$$
 Moving clocks run slow by the factor $\gamma$. It is small at everyday speeds and grows without bound as $v \to 1$:
 
 %code
-plot(1/sqrt(1 - v^2), v, 0, 0.995)
+labels(plot(1/sqrt(1 - v^2), v, 0, 0.995), "speed v (fraction of the speed of light)", "time dilation factor gamma")
 
 %md
 ### Muons from the sky
@@ -112,7 +112,7 @@ position is $x(t) = \tfrac{4}{\pi}\big(1 - \cos(\pi t/5)\big)$. In a spacetime d
 %code
 home = parametric(0, t, t, 0, 10);
 trip = parametric(4/pi*(1 - cos(pi*t/5)), t, t, 0, 10);
-show(home, trip)
+labels(legend(show(home, trip), "twin who stays home", "travelling twin"), "position x (light-years)", "time t (years)")
 
 %md
 The stay-at-home twin ages 10 years. The traveller's age is the proper time along the curved worldline,

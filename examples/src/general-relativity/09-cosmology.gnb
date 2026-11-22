@@ -84,7 +84,7 @@ tH = eval(977.8/H0)
 The age is $\int_0^1 da/\dot a$. In units of $1/H_0$, then in billions of years:
 
 %code
-age = odesolve([1/(a*sqrt(9e-5/a^4 + 0.31/a^3 + 0.69))], [t], a, [0], 1e-8, 1)
+age = integrate(1/(a*sqrt(9e-5/a^4 + 0.31/a^3 + 0.69)), a, 0, 1)
 eval(age*tH)
 
 %md
@@ -92,14 +92,18 @@ eval(age*tH)
 
 ### The history of the expansion
 
-Solving the Friedmann equation forward in time (in billions of years) gives $a(t)$. For comparison, a universe with
-matter only ($\Omega_m = 1$), which cosmologists assumed until 1998:
+The Friedmann equation is a differential equation for $a(t)$: $\dot a = H_0\,a\sqrt{\Omega_m/a^3 + \Omega_\Lambda}$
+(ignoring the tiny radiation term). `odeplot` solves it forward in time. The arguments: the right-hand side
+$\dot a$; the unknown `[a]`; the time variable `t`; the start value $a = 0.001$ (just after the Big Bang); the time range,
+0 to 30 billion years; and `[t a]`, to draw $a$ (vertically) against $t$ (horizontally). $H_0$ in km/s/Mpc divided by
+977.8 is $H_0$ per billion years. For comparison, a universe with matter only ($\Omega_m = 1$), which cosmologists
+assumed until 1998:
 
 %code
 k = eval(H0/977.8);
-ours = odeplot([k*a*sqrt(0.31/a^3 + 0.69), 1], [a s], t, [0.001 0], 0, 30, [s a]);
-matteronly = odeplot([k*a*sqrt(1/a^3), 1], [a s], t, [0.001 0], 0, 30, [s a]);
-show(ours, matteronly)
+ours = odeplot([k*a*sqrt(0.31/a^3 + 0.69)], [a], t, [0.001], 0, 30, [t a]);
+matteronly = odeplot([k*a*sqrt(1/a^3)], [a], t, [0.001], 0, 30, [t a]);
+labels(legend(show(ours, matteronly), "our universe (31% matter, 69% dark energy)", "matter only"), "time since the Big Bang (billion years)", "scale factor a (1 = today)")
 
 %md
 Our universe (first curve) reaches $a = 1$, today, at 13.8 billion years; at first the expansion slows down, like the

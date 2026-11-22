@@ -70,19 +70,46 @@ of a far-away observer satisfy
 
 $$\frac{dr}{d\tau} = -\sqrt{\frac{r_s}{r}}, \qquad \frac{dt}{d\tau} = \frac{1}{1 - r_s/r}$$
 
-We follow it from $r = 6\,r_s$. The falling clock reaches the horizon and the centre in a finite time:
+These are two first-order differential equations: they say how fast $r$ and $t$ change as the falling clock ticks.
+Galileo's `odeplot` solves such a system numerically and plots the result. Its arguments, in order:
+
+| argument | what it is | here |
+|---|---|---|
+| `[-sqrt(r_s/r), 1/(1-r_s/r)]` | the right-hand sides, one per equation | $dr/d\tau$ and $dt/d\tau$ |
+| `[r t]` | the unknowns, in the same order | $r$ and $t$ |
+| `tau` | the independent variable, the "clock" of the equations | proper time $\tau$ |
+| `[6 0]` | the unknowns at the start | $r = 6\,r_s$, $t = 0$ |
+| `0, 9.7` | where the clock starts and stops | $\tau$ from 0 to 9.7 |
+| `[tau r]` | what to draw on the horizontal and vertical axes | $\tau$ across, $r$ up |
+
+(`odesolve` takes the first six arguments and returns the values at the end instead of a plot; `help(odeplot)` has the
+details.) We follow the object from $r = 6\,r_s$, plotting its distance from the centre $r$ against its own proper
+time $\tau$:
 
 %code
 clear
 r_s = 1;
-odeplot([-sqrt(r_s/r), 1/(1-r_s/r)], [r t], tau, [6 0], 0, 9.7, [tau r])
+labels(odeplot([-sqrt(r_s/r), 1/(1-r_s/r)], [r t], tau, [6 0], 0, 9.7, [tau r]), "proper time tau of the falling clock (units of r_s/c)", "r (units of r_s)")
 
 %md
-But the distant observer's time $t$ runs away to infinity as $r \to r_s$: from outside, the infalling object freezes at
-the horizon, ever more redshifted, and is never seen to cross:
+The curve stops at the horizon, $r = r_s = 1$, at $\tau \approx 9.13$. That is not the falling object's doing: the
+second equation, $dt/d\tau = 1/(1 - r_s/r)$, is infinite there, and `odeplot` cannot step past an infinite value. Only
+the first equation describes the fall itself, so solve that one alone (one equation, one unknown `[r]`):
 
 %code
-odeplot([-sqrt(r_s/r), 1/(1-r_s/r)], [r t], tau, [6 0], 0, 9.125, [t r])
+labels(odeplot([-sqrt(r_s/r)], [r], tau, [6], 0, 9.79, [tau r]), "proper time tau of the falling clock (units of r_s/c)", "r (units of r_s)")
+
+%md
+The falling clock passes the horizon without anything special happening and reaches the centre in a finite time,
+$\tau = \tfrac23\,6^{3/2} \approx 9.8$. (At $r = 0$ the equation itself breaks down, so we stop just before.)
+
+But the distant observer's time $t$ runs away to infinity as $r \to r_s$: from outside, the infalling object freezes at
+the horizon, ever more redshifted, and is never seen to cross. Same equations, but now the last argument `[t r]` puts
+the far-away time $t$ on the horizontal axis. We stop at $\tau = 9.125$, just before the horizon, where $t$ is
+already huge:
+
+%code
+labels(odeplot([-sqrt(r_s/r), 1/(1-r_s/r)], [r t], tau, [6 0], 0, 9.125, [t r]), "time t of a distant observer (units of r_s/c)", "r (units of r_s)")
 
 %md
 ## 5. Flamm's paraboloid
@@ -96,7 +123,7 @@ inducedmetric([r*cos(phi) r*sin(phi) 2*sqrt(r_s*(r-r_s))], [r phi])
 
 %code
 r_s = 1;
-surface(r*cos(phi), r*sin(phi), 2*sqrt(r_s*(r-r_s)), r, 1, 12, phi, 0, 2*pi)
+legend(surface(r*cos(phi), r*sin(phi), 2*sqrt(r_s*(r-r_s)), r, 1, 12, phi, 0, 2*pi), "Flamm's paraboloid")
 
 %md
 Radial distances near the horizon are stretched: the throat at $r = r_s$ is the horizon. Part 5 draws orbits on this
@@ -130,7 +157,7 @@ a = 0.45;
 rp = eval(r_s/2 + sqrt(r_s^2/4 - a^2));
 horizon = surface(sqrt(rp^2+a^2)*sin(theta)*cos(phi), sqrt(rp^2+a^2)*sin(theta)*sin(phi), rp*cos(theta), theta, 0, pi, phi, 0, 2*pi);
 ergo = surface(sqrt((r_s/2+sqrt(r_s^2/4-a^2*cos(theta)^2))^2+a^2)*sin(theta)*cos(phi), sqrt((r_s/2+sqrt(r_s^2/4-a^2*cos(theta)^2))^2+a^2)*sin(theta)*sin(phi), (r_s/2+sqrt(r_s^2/4-a^2*cos(theta)^2))*cos(theta), theta, 0, pi, phi, 5.04, 9.44);
-show(horizon, ergo)
+legend(show(horizon, ergo), "horizon", "edge of the ergosphere (cut open)")
 
 %md
 The ergosphere touches the horizon at the poles and bulges out at the equator. Roger Penrose showed in 1969 that energy can

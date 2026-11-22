@@ -59,7 +59,11 @@ above give
 
 $$\frac{dA}{d\phi} = \sin\theta_0\cos\theta_0\; B, \qquad \frac{dB}{d\phi} = -\frac{\cos\theta_0}{\sin\theta_0}\; A$$
 
-Start at latitude 30° north ($\theta_0 = \pi/3$) with the vector pointing south ($A = 1$, $B = 0$), and go once around:
+Start at latitude 30° north ($\theta_0 = \pi/3$) with the vector pointing south ($A = 1$, $B = 0$), and go once around.
+`odesolve` integrates differential equations numerically. Its arguments are: the right-hand sides
+`[sin(th)*cos(th)*B, -cos(th)/sin(th)*A]` (that is, $dA/d\phi$ and $dB/d\phi$); the unknowns `[A B]` in the same order;
+the independent variable `phi`; the start values `[1 0]`; and where to start and stop, `0, 2*pi`. It returns $A$ and
+$B$ at the end:
 
 %code
 clear
@@ -69,10 +73,13 @@ odesolve([sin(th)*cos(th)*B, -cos(th)/sin(th)*A], [A B], phi, [1 0], 0, 2*pi)
 %md
 The vector comes back pointing **north**: $A = -1$. It was never turned along the way, yet after one loop it is
 reversed. The solution is $A = \cos(\phi\cos\theta_0)$, so the vector turns relative to the coordinate grid at rate
-$\cos\theta_0$. Here are its components along the way:
+$\cos\theta_0$. `odeplot` takes the same arguments plus one more, what to draw: `[phi A]` puts the angle $\phi$ on
+the horizontal axis and the component $A$ on the vertical one. Here are both components along the way:
 
 %code
-odeplot([sin(th)*cos(th)*B, -cos(th)/sin(th)*A, 1], [A B phi], t, [1 0 0], 0, 2*pi, [phi A])
+pa = odeplot([sin(th)*cos(th)*B, -cos(th)/sin(th)*A], [A B], phi, [1 0], 0, 2*pi, [phi A]);
+pb = odeplot([sin(th)*cos(th)*B, -cos(th)/sin(th)*A], [A B], phi, [1 0], 0, 2*pi, [phi B]);
+labels(legend(show(pa, pb), "A (the theta component: +1 is south)", "B (the phi component: east)"), "phi, the angle walked around the circle (radians)", "components of the vector")
 
 %md
 ### Seeing it in 3D
@@ -85,7 +92,7 @@ r = 1;
 w = cos(th);
 ball = surface(sin(theta)*cos(phi), sin(theta)*sin(phi), cos(theta), theta, 0, pi, phi, 0, 2*pi);
 ribbon = surface(sin(th)*cos(phi) + q*(cos(w*phi)*cos(th)*cos(phi) + sin(w*phi)*sin(phi)), sin(th)*sin(phi) + q*(cos(w*phi)*cos(th)*sin(phi) - sin(w*phi)*cos(phi)), cos(th) - q*cos(w*phi)*sin(th), phi, 0, 2*pi, q, 0, 0.4);
-show(ball, ribbon)
+legend(show(ball, ribbon), "unit sphere", "ribbon: the transported vector along the circle")
 
 %md
 ## 3. Holonomy: the rotation equals the curvature inside

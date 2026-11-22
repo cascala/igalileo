@@ -28,7 +28,7 @@ Here is $\sqrt{1 - r_s/r}$, the rate of a clock at $r$ relative to one far away:
 
 %code
 r_s = 1;
-plot(sqrt(1 - r_s/r), r, 1, 20)
+labels(plot(sqrt(1 - r_s/r), r, 1, 20), "r (units of r_s)", "clock rate relative to far away")
 
 %md
 ## 2. Pound and Rebka, 1959
@@ -93,7 +93,7 @@ The net rate depends on the orbit radius. Low orbits are dominated by speed (clo
 (clocks run fast). With $x$ the orbit radius in thousands of km:
 
 %code
-plot((GMe/c^2*(1/Re - 1/(x*1e6)) - GMe/(2*x*1e6*c^2))*day*1e6, x, 6.6, 45)
+labels(plot((GMe/c^2*(1/Re - 1/(x*1e6)) - GMe/(2*x*1e6*c^2))*day*1e6, x, 6.6, 45), "orbit radius (thousands of km)", "clock gain per day vs ground (microseconds)")
 
 %md
 The curve crosses zero at $r = \tfrac32 R_E \approx 9\,560$ km, about 3 200 km above the ground. The International Space

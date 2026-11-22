@@ -19,7 +19,7 @@ $$\left(\frac{dr}{d\lambda}\right)^2 + V(r) = \frac{1}{b^2}, \qquad V(r) = \frac
 
 %code
 r_s = 1;
-plot((1 - r_s/r)/r^2, r, 1, 10)
+labels(plot((1 - r_s/r)/r^2, r, 1, 10), "r (units of r_s)", "potential V(r) for light")
 
 %md
 The potential has a single peak, at $r = 1.5\,r_s$, of height $4/(27r_s^2)$. Light can circle the black hole there, on an
@@ -55,7 +55,7 @@ r0 = sqrt(225+b^2); p0 = pi-atan(b/15); vr = -15/r0; vp = -b/r0^2; f = 1-r_s/r0;
 ray5 = geodesic(S, [0 r0 pi/2 p0], [ut vr 0 vp], 30, [r*cos(phi) r*sin(phi)]);
 horizon = parametric(cos(q), sin(q), q, 0, 2*pi);
 photonsphere = parametric(1.5*cos(q), 1.5*sin(q), q, 0, 2*pi);
-show(ray1, ray2, ray3, ray4, ray5, horizon, photonsphere)
+labels(legend(show(ray1, ray2, ray3, ray4, ray5, horizon, photonsphere), "b = 2", "b = 2.65", "b = 3.2", "b = 4.5", "b = 6", "horizon r = r_s", "photon sphere r = 1.5 r_s"), "x (units of r_s)", "y (units of r_s)")
 
 %md
 The ray at $b = 2$ is below $b_c$ and falls in. The ray at $b = 2.65$, just above $b_c \approx 2.6$, whips around the
@@ -72,7 +72,7 @@ r0 = 3;
 k = sqrt(1-r_s/r0);
 ut = 1/k;
 rays = geodesic(S, [0 r0 pi/2 0], [ut, k, 0, 0; ut, k*cos(0.5), 0, sin(0.5)/r0; ut, k*cos(1), 0, sin(1)/r0; ut, k*cos(1.5), 0, sin(1.5)/r0; ut, k*cos(1.8), 0, sin(1.8)/r0; ut, k*cos(2.0), 0, sin(2.0)/r0; ut, k*cos(2.2), 0, sin(2.2)/r0; ut, k*cos(2.5), 0, sin(2.5)/r0; ut, k*cos(3), 0, sin(3)/r0], 20, [r*cos(phi) r*sin(phi)]);
-show(rays, horizon, photonsphere)
+labels(legend(show(horizon, photonsphere, rays), "horizon r = r_s", "photon sphere r = 1.5 r_s"), "x (units of r_s)", "y (units of r_s)")
 
 %md
 ## 4. Eddington's eclipse
