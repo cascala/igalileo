@@ -115,12 +115,12 @@ Anyone can encrypt with the public key, $c = m^e \bmod n$. Only the owner of $d$
 
 %code
 c = powmod(m, e, n)
-decode(c)
 powmod(c, d, n)
 decode(powmod(c, d, n))
 
 %md
-The encrypted number $c$ decodes to gibberish (some bytes aren't even printable); the decrypted one is the message.
+The encrypted number $c$ looks random (decoded as text it is gibberish, mostly unprintable bytes); the decrypted
+one is the message.
 
 ### Why it works
 

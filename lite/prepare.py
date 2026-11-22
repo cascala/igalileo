@@ -57,6 +57,26 @@ def copy_contents(dest):
             shutil.copy(nb, out)
 
 
+BAD = re.compile(r"[\x00-\x08\x0b-\x1f\x7f]")
+
+
+def check_controls():
+    """Fail the build on control characters in any notebook: in markdown they
+    are a LaTeX backslash lost to a string escape ("\\bmod" -> backspace + "mod")."""
+    bad = []
+    for nb in sorted(EXAMPLES.rglob("*.ipynb")):
+        for i, c in enumerate(json.loads(nb.read_text())["cells"]):
+            parts = [text(c["source"])]
+            for o in c.get("outputs", []):
+                parts += [text(o.get("text", ""))] + [text(v) for k, v in o.get("data", {}).items() if k.startswith("text/")]
+            for part in parts:
+                m = BAD.search(part)
+                if m:
+                    bad.append(f"{nb.relative_to(EXAMPLES)} cell {i + 1}: {m.group()!r} near {part[max(0, m.start() - 30):m.end() + 10]!r}")
+    if bad:
+        sys.exit("control characters in notebooks:\n  " + "\n  ".join(bad))
+
+
 def lesson(path, lesson_id):
     nb = json.loads(path.read_text())
     cells, title = [], None
@@ -115,5 +135,6 @@ def landing(groups):
 
 
 if __name__ == "__main__":
+    check_controls()
     copy_contents(sys.argv[1])
     lessons(sys.argv[2])
