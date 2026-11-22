@@ -1,0 +1,210 @@
+%md
+# Foundations 2: Algebra
+
+*Learning path: foundations, part 2 of 9.* [Index](README.md) · Previous: [Numbers](01-numbers.ipynb) · Next: [Functions and graphs](03-functions-and-graphs.ipynb)
+
+Algebra is arithmetic with letters that stand for numbers we do not know yet. Galileo is a *computer algebra system*:
+it calculates with the letters themselves. You will learn
+
+* how Galileo tidies expressions automatically,
+* `expand`, `factor` and `simplify`, and when to use which,
+* how to substitute values,
+* how to solve equations and systems of equations, step by step and with `solve`,
+* how to define your own functions.
+
+%md
+## 1. Letters are numbers we haven't chosen yet
+
+Any name without a value is a symbol. Galileo collects like terms as you type, just as you would by hand:
+$3x + 2x = 5x$ and $x \cdot x = x^2$.
+
+%code
+3*x + 2*x - y
+x*x*x
+a*b + b*a
+
+%md
+It also keeps $x - x = 0$ and $x/x = 1$. Fractions of expressions are combined only when you ask, though, because the
+"simplest" form depends on what you want to do next.
+
+%code
+x - x
+(2*x)/x
+1/x + 1/y
+
+%md
+## 2. Expand, factor, simplify
+
+These three commands rewrite an expression without changing its value:
+
+| command | what it does | example |
+|---|---|---|
+| `expand(e)` | multiplies out all brackets | $(x+1)^2 \to x^2 + 2x + 1$ |
+| `factor(e)` | writes a polynomial as a product | $x^2 - 1 \to (x-1)(x+1)$ |
+| `simplify(e)` | combines fractions and cancels common factors | $\frac{x^2-1}{x-1} \to x + 1$ |
+
+%code
+expand((x + 1)^2)
+expand((a + b)*(a - b))
+expand((x + 2)^3)
+
+%md
+The famous identities appear: $(a+b)(a-b) = a^2 - b^2$, and the coefficients $1, 6, 12, 8$ of $(x+2)^3$ come from
+Pascal's triangle times powers of 2. `factor` goes the other way:
+
+%code
+factor(x^2 - 1)
+factor(x^2 + 5*x + 6)
+factor(2*x^3 - 8*x)
+
+%md
+To check a factorization, expand it again and compare. `simplify` brings a sum of fractions over one denominator and
+cancels what it can:
+
+%code
+simplify((x^2 - 1)/(x - 1))
+simplify(1/x + 1/y)
+simplify(1/(x - 1) - 1/(x + 1))
+
+%md
+## 3. Substituting values
+
+`subs(e, x, value)` replaces $x$ by a value in the expression $e$. The value can be a number or another expression:
+
+%code
+p = x^2 - 3*x + 2;
+subs(p, x, 5)
+subs(p, x, t + 1)
+expand(subs(p, x, t + 1))
+
+%md
+Assigning a value to the letter does the same thing for every later line, until you `clear` it:
+
+%code
+x = 5;
+p
+clear
+
+%md
+## 4. Solving an equation, by hand and by Galileo
+
+An equation is written with `==` (two equals signs; a single `=` stores a value). Let's solve $3x + 7 = 22$ the way
+you would on paper, doing the same thing to both sides. Subtract 7, then divide by 3:
+
+%code
+eq = 3*x + 7 == 22
+(22 - 7)/3
+
+%md
+`solve(equation, x)` does all of that in one step. It returns every solution in a row:
+
+%code
+solve(3*x + 7 == 22, x)
+
+%md
+The equation can also be given as an expression that should be zero: `solve(f, x)` solves $f = 0$.
+
+### Quadratic equations
+
+A quadratic equation $ax^2 + bx + c = 0$ has the solutions
+
+$$x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}.$$
+
+The number under the root, the **discriminant** $D = b^2 - 4ac$, decides how many real solutions there are:
+two if $D > 0$, one if $D = 0$, none (but two complex ones) if $D < 0$. Galileo can derive the formula itself, with
+$a$, $b$, $c$ as symbols:
+
+%code
+solve(a*x^2 + b*x + c, x)
+
+%md
+Three examples, one for each sign of the discriminant:
+
+%code
+solve(x^2 - 5*x + 6, x)
+solve(x^2 - 6*x + 9, x)
+solve(x^2 + 2*x + 5, x)
+
+%md
+The first has $D = 1$ (two solutions, 2 and 3), the second $D = 0$ (only $x = 3$), the third $D = -16$. Its solutions
+contain $i = \sqrt{-1}$, the imaginary unit; they are the subject of
+[complex numbers](06-complex-numbers.ipynb).
+
+### Equations with fractions
+
+`solve` also handles equations with fractions. It multiplies out the denominators and throws away "solutions" that
+would divide by zero:
+
+%code
+solve(1/x + 1/(x + 2) == 3/4, x)
+
+%md
+## 5. Systems of equations
+
+Two equations with two unknowns: a list of equations in square brackets and a list of unknowns. The answer lists the
+values in the same order as the unknowns.
+
+$$\begin{aligned} x + y &= 10 \\ 2x - y &= 2 \end{aligned}$$
+
+%code
+solve([x + y == 10, 2*x - y == 2], [x, y])
+
+%md
+So $x = 4$, $y = 6$. Check by substituting both back: $4 + 6 = 10$ and $8 - 6 = 2$. ✓
+
+A word problem: *tickets cost 5 for children and 8 for adults; 120 people paid 750 in total. How many were
+children?* Let $c$ be the number of children and $a$ the number of adults:
+
+%code
+solve([c + a == 120, 5*c + 8*a == 750], [c, a])
+
+%md
+## 6. Your own functions
+
+`f(x) := expression` defines a function. Afterwards `f` works like a built-in one: `f(3)` puts 3 in for $x$, and
+`f(t + 1)` puts in a whole expression. (`f(x) = expression` with one `=` works too.)
+
+%code
+f(x) := x^2 - 3*x + 2
+f(3)
+f(t + 1)
+expand(f(t + 1))
+
+%md
+Functions can have several inputs, and can use each other. The area of a rectangle and of a ring between two circles
+of radius $r$ and $R$:
+
+%code
+area(w, h) := w*h
+ring(r, R) := pi*R^2 - pi*r^2
+area(3, 4)
+ring(1, 2)
+factor(ring(r, R))
+
+%md
+Galileo can also differentiate your function: `f'(x)` is the derivative (the slope, see
+[calculus](07-calculus.ipynb)):
+
+%code
+f'(x)
+solve(f'(x), x)
+
+%md
+## Summary
+
+* Letters without values are symbols; like terms are collected automatically.
+* `expand`, `factor` and `simplify` rewrite expressions; `subs` substitutes values.
+* Equations use `==`; `solve(eq, x)` finds all solutions, `solve([eq1, eq2], [x, y])` solves systems.
+* The discriminant $b^2 - 4ac$ tells how many real solutions a quadratic has.
+* `f(x) := ...` defines your own function.
+
+**Try it:** factor $x^4 - 16$. Solve $x^2 = 2$ and evaluate the answers with `eval`. Find two numbers whose sum is 20
+and whose product is 91.
+
+Next: [Functions and graphs](03-functions-and-graphs.ipynb), where we draw these expressions.
+
+%md
+## Sources
+
+1. I. M. Gelfand and A. Shen, *Algebra*, Birkhäuser (1993). A short classic introduction to algebraic manipulation.
+2. J. von zur Gathen and J. Gerhard, *Modern Computer Algebra*, 3rd ed., Cambridge University Press (2013). Chapter 1 (how computer algebra systems represent and simplify expressions).
