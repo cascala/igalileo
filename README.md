@@ -10,7 +10,7 @@ iGalileo is a Jupyter kernel for [Galileo](https://github.com/cascala/galileo-rs
 
 ## Try it in your browser, no install
 
-**[cascala.github.io/igalileo](https://cascala.github.io/igalileo/)** runs Galileo entirely in your browser: the Rust engine is compiled to WebAssembly, so nothing is installed and nothing is sent to a server.
+**[cascala.github.io/igalileo](https://cascala.github.io/igalileo/)** runs Galileo entirely in your browser: everything runs locally, with nothing to install.
 
 * [Playground](https://cascala.github.io/igalileo/playground/): a light REPL with the learning paths as interactive lessons. Works on a phone, and the Share button makes a link that replays your session.
 * [Notebooks](https://cascala.github.io/igalileo/lab/lab/index.html): JupyterLite (JupyterLab in the browser) with the Galileo kernel and all the example notebooks. Notebooks you create are saved in your browser's storage.
