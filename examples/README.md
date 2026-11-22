@@ -17,6 +17,7 @@ cascala/igalileo`, or open them on GitHub to read them with their results.
 * [Number theory](number-theory/README.md): primes, prime factoring (trial division, Fermat, Pollard rho,
   Miller–Rabin), modular arithmetic, cryptography (Diffie–Hellman, RSA).
 * [Group theory](group-theory/README.md): symmetry, cyclic groups, permutations, Lagrange's theorem.
+* [Chaos and fractals](chaos/README.md): the logistic map, bifurcations, the Lorenz attractor, the Mandelbrot set.
 * [Differential geometry](differential-geometry/README.md): curves, surfaces, curvature, geodesics, the Riemann tensor.
   There is also a short [differential geometry tour](differential-geometry-tour.ipynb).
 

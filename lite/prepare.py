@@ -24,6 +24,8 @@ GROUPS = [
      "Primes, factoring large numbers, modular arithmetic and the cryptography built on them.", None),
     ("group-theory", "Group theory",
      "Symmetry, cyclic groups, permutations, card shuffles and Lagrange's theorem.", None),
+    ("chaos", "Chaos and fractals",
+     "The logistic map, bifurcations, the Lorenz butterfly, the Mandelbrot set and Julia sets.", None),
     ("differential-geometry", "Differential geometry",
      "Seven lessons from curves to the Riemann tensor, drawn in interactive 3D.", None),
     ("general-relativity", "General relativity",
