@@ -53,7 +53,11 @@ a.card { text-decoration: none; color: var(--ink); display: block; }
 a.card:hover { border-color: var(--accent); }
 .paths { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; }
 .paths .card h3 { font-size: 20px; }
-.paths ol { margin: 10px 0 0; padding-left: 20px; color: var(--muted); font-size: 15px; }
+.paths ol { margin: 10px 0 0; padding-left: 22px; color: var(--muted); font-size: 15px; }
+.paths li { margin: 2px 0; }
+.paths a { color: var(--ink); text-decoration: none; }
+.paths a:hover { color: var(--accent); text-decoration: underline; }
+.paths h3 a { color: var(--accent); }
 .install pre { background: var(--code-bg); border-radius: 10px; padding: 12px 14px; overflow-x: auto; font-size: 14px; margin: 8px 0 0; }
 footer { border-top: 1px solid var(--line); color: var(--muted); font-size: 14px; padding: 24px 0 40px; margin-top: 24px; }
 @media (max-width: 760px) {
@@ -104,21 +108,33 @@ kretschmann(g)</pre></div>
     <h2>Learn by doing</h2>
     <p class="sub">Interactive lessons. Read, change the code, press Run.</p>
     <div class="paths">
-      <a class="card" href="playground/#lesson/differential-geometry/01-curves">
-        <h3>Differential geometry</h3>
-        <p>Seven lessons from curves to the Riemann tensor.</p>
-        <ol><li>Curves</li><li>Metrics and coordinates</li><li>Surfaces</li><li>Gaussian curvature</li><li>Parallel transport</li><li>Geodesics</li><li>The Riemann tensor</li></ol>
-      </a>
-      <a class="card" href="playground/#lesson/general-relativity/01-spacetime">
-        <h3>General relativity</h3>
-        <p>Nine lessons from flat spacetime to the age of the universe.</p>
-        <ol><li>Spacetime</li><li>The equivalence principle</li><li>Einstein's equations</li><li>Black holes</li><li>Orbits and Mercury</li><li>Light bending</li><li>Clocks and GPS</li><li>Gravitational waves</li><li>Cosmology</li></ol>
-      </a>
-      <a class="card" href="playground/#lesson/discovery/01-kepler">
-        <h3>Discovering physical laws</h3>
-        <p>Find Kepler's and Newton's laws in planet data, then the term Einstein added for Mercury.</p>
-        <ol><li>Kepler's third law</li><li>From Kepler to Newton</li><li>Mercury doesn't fit</li><li>Proving the precession</li></ol>
-      </a>
+      <!-- paths:start -->
+      <div class="card">
+        <h3><a href="playground/#lesson/foundations/01-numbers">Foundations</a></h3>
+        <p>Nine lessons from arithmetic to calculus, differential equations and conic sections. Start here.</p>
+        <ol><li><a href="playground/#lesson/foundations/01-numbers">Numbers and arithmetic</a></li><li><a href="playground/#lesson/foundations/02-algebra">Algebra</a></li><li><a href="playground/#lesson/foundations/03-functions-and-graphs">Functions and graphs</a></li><li><a href="playground/#lesson/foundations/04-polynomials">Polynomials</a></li><li><a href="playground/#lesson/foundations/05-trigonometry">Trigonometry</a></li><li><a href="playground/#lesson/foundations/06-complex-numbers">Complex numbers</a></li><li><a href="playground/#lesson/foundations/07-calculus">Calculus</a></li><li><a href="playground/#lesson/foundations/08-differential-equations">Differential equations</a></li><li><a href="playground/#lesson/foundations/09-geometry-and-conics">Geometry and conic sections</a></li></ol>
+      </div>
+      <div class="card">
+        <h3><a href="playground/#lesson/number-theory/01-divisibility-and-primes">Number theory</a></h3>
+        <p>Primes, factoring large numbers, modular arithmetic and the cryptography built on them.</p>
+        <ol><li><a href="playground/#lesson/number-theory/01-divisibility-and-primes">Divisibility and primes</a></li><li><a href="playground/#lesson/number-theory/02-prime-factoring">Prime factoring</a></li><li><a href="playground/#lesson/number-theory/03-modular-arithmetic">Modular arithmetic</a></li></ol>
+      </div>
+      <div class="card">
+        <h3><a href="playground/#lesson/differential-geometry/01-curves">Differential geometry</a></h3>
+        <p>Seven lessons from curves to the Riemann tensor, drawn in interactive 3D.</p>
+        <ol><li><a href="playground/#lesson/differential-geometry/01-curves">Curves</a></li><li><a href="playground/#lesson/differential-geometry/02-metrics">Metrics and coordinates</a></li><li><a href="playground/#lesson/differential-geometry/03-surfaces">Surfaces</a></li><li><a href="playground/#lesson/differential-geometry/04-gaussian-curvature">Gaussian curvature</a></li><li><a href="playground/#lesson/differential-geometry/05-parallel-transport">Christoffel symbols and parallel transport</a></li><li><a href="playground/#lesson/differential-geometry/06-geodesics">Geodesics</a></li><li><a href="playground/#lesson/differential-geometry/07-riemann-tensor">The Riemann tensor</a></li></ol>
+      </div>
+      <div class="card">
+        <h3><a href="playground/#lesson/general-relativity/01-spacetime">General relativity</a></h3>
+        <p>Nine lessons from flat spacetime to black holes, gravitational waves and the age of the universe.</p>
+        <ol><li><a href="playground/#lesson/general-relativity/01-spacetime">Spacetime and special relativity</a></li><li><a href="playground/#lesson/general-relativity/02-equivalence-principle">The equivalence principle</a></li><li><a href="playground/#lesson/general-relativity/03-einstein-equations">Einstein&#x27;s equations</a></li><li><a href="playground/#lesson/general-relativity/04-black-holes">Black holes</a></li><li><a href="playground/#lesson/general-relativity/05-orbits">Orbits and the precession of Mercury</a></li><li><a href="playground/#lesson/general-relativity/06-light">Light bending and black hole shadows</a></li><li><a href="playground/#lesson/general-relativity/07-clocks-and-gps">Clocks, redshift and GPS</a></li><li><a href="playground/#lesson/general-relativity/08-gravitational-waves">Gravitational waves</a></li><li><a href="playground/#lesson/general-relativity/09-cosmology">Cosmology</a></li></ol>
+      </div>
+      <div class="card">
+        <h3><a href="playground/#lesson/discovery/01-kepler">Discovering physical laws</a></h3>
+        <p>Four lessons that find Kepler&#x27;s and Newton&#x27;s laws in planet data, then the term Einstein added for Mercury.</p>
+        <ol><li><a href="playground/#lesson/discovery/01-kepler">Kepler&#x27;s third law from planet data</a></li><li><a href="playground/#lesson/discovery/02-newton">From Kepler to Newton</a></li><li><a href="playground/#lesson/discovery/03-mercury">Mercury doesn&#x27;t fit</a></li><li><a href="playground/#lesson/discovery/04-proof">Proving the precession</a></li></ol>
+      </div>
+      <!-- paths:end -->
     </div>
   </section>
 

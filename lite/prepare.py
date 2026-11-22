@@ -7,6 +7,7 @@
   data joined into strings (JupyterLite's table of contents expects strings);
 * writes the playground's lessons (markdown and code cells) to <lessons.json>.
 """
+import html
 import json, pathlib, re, shutil, sys
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
@@ -15,6 +16,10 @@ EXAMPLES = ROOT / "examples"
 GROUPS = [
     ("tours", "Tours", "Two quick tours: the language, and differential geometry with physics.",
      ["galileo-tour", "differential-geometry-tour"]),
+    ("foundations", "Foundations",
+     "Nine lessons from arithmetic to calculus, differential equations and conic sections. Start here.", None),
+    ("number-theory", "Number theory",
+     "Primes, factoring large numbers, modular arithmetic and the cryptography built on them.", None),
     ("differential-geometry", "Differential geometry",
      "Seven lessons from curves to the Riemann tensor, drawn in interactive 3D.", None),
     ("general-relativity", "General relativity",
@@ -67,7 +72,7 @@ def lesson(path, lesson_id):
             cells.append({"t": "code", "s": s})
     title = title or lesson_id
     # "Differential geometry 1: Curves" -> "Curves"
-    title = re.sub(r"^(Differential geometry|General relativity) \d+:\s*", "", title)
+    title = re.sub(r"^[A-Z][A-Za-z ]{2,40} \d+:\s*", "", title)
     return {"id": lesson_id, "title": title, "cells": cells}
 
 
@@ -80,6 +85,31 @@ def lessons(dest):
             items = [lesson(p, f"{gid}/{p.stem}") for p in sorted((EXAMPLES / gid).glob("*.ipynb"))]
         groups.append({"id": gid, "title": gtitle, "blurb": blurb, "lessons": items})
     pathlib.Path(dest).write_text(json.dumps({"groups": groups}, ensure_ascii=False, separators=(",", ":")))
+    landing(groups)
+
+
+def landing(groups):
+    """Writes the learning paths into the landing page, one link per lesson."""
+    index = EXAMPLES.parent / "site" / "index.html"
+    page = index.read_text()
+    start, end = "<!-- paths:start -->", "<!-- paths:end -->"
+    if start not in page:
+        return
+    cards = []
+    for g in groups:
+        if g["id"] == "tours" or not g["lessons"]:
+            continue
+        first = g["lessons"][0]["id"]
+        items = "".join(f'<li><a href="playground/#lesson/{l["id"]}">{html.escape(l["title"])}</a></li>'
+                        for l in g["lessons"])
+        cards.append(f'      <div class="card">\n'
+                     f'        <h3><a href="playground/#lesson/{first}">{html.escape(g["title"])}</a></h3>\n'
+                     f'        <p>{html.escape(g["blurb"])}</p>\n'
+                     f'        <ol>{items}</ol>\n'
+                     f'      </div>')
+    block = start + "\n" + "\n".join(cards) + "\n      " + end
+    a, b = page.index(start), page.index(end) + len(end)
+    index.write_text(page[:a] + block + page[b:])
 
 
 if __name__ == "__main__":
