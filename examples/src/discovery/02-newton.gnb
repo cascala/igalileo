@@ -82,8 +82,7 @@ Now the fit is perfect to the rounding of the data (0.002%), with just three ter
 $$u = \frac{1}{r} = A + B\cos\phi + C\sin\phi .$$
 
 A wave plus a constant can always be written as $A\,(1 + e\cos(\phi - \varpi))$, with $e = \sqrt{B^2 + C^2}/A$ and
-$\varpi$ the angle where $u$ is largest, that is where Mars is closest to the Sun. And $r = 1/(A(1 + e\cos(\phi -
-\varpi)))$ is exactly the polar equation of an **ellipse** with the Sun at a focus, eccentricity $e$, and semi-major
+$\varpi$ the angle where $u$ is largest, that is where Mars is closest to the Sun. And $r = 1/(A(1 + e\cos(\phi - \varpi)))$ is exactly the polar equation of an **ellipse** with the Sun at a focus, eccentricity $e$, and semi-major
 axis $a = 1/(A(1-e^2))$ [5]. Kepler's first law. Let's compute the three numbers from the coefficients:
 
 %code

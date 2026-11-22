@@ -72,7 +72,8 @@
     const keep = s => `@@MATH${math.push(s) - 1}@@`;
     src = src.replace(/(`+)([\s\S]*?)\1/g, m => keep({ code: m }));
     src = src.replace(/\$\$([\s\S]+?)\$\$/g, (_, m) => keep({ tex: m, display: true }));
-    src = src.replace(/\$([^$\n]+?)\$/g, (_, m) => keep({ tex: m, display: false }));
+    // inline math may wrap onto the next line, but not across a blank line
+    src = src.replace(/\$((?:[^$\n]|\n(?!\s*\n))+?)\$/g, (_, m) => keep({ tex: m, display: false }));
     let html = inline ? marked.parseInline(src) : marked.parse(src);
     html = html.replace(/@@MATH(\d+)@@/g, (_, i) => {
       const m = math[+i];

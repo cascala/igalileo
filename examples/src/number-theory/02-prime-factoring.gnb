@@ -162,7 +162,7 @@ Greek letter $\rho$, which gave the method its name.
 
 The plot shows the walk mod 83: across is the step number $k$, up is $x_k$ mod 83. After the four tail steps the same
 five values repeat forever. To compute the points, `w(k, p)` is $x_k$ mod $p$, defined recursively: 2 for $k = 0$,
-otherwise the rule applied to $x_{k-1}$. The table has one row $[k, x_k mod 83]$ per step:
+otherwise the rule applied to $x_{k-1}$. The table has one row $[k, x_k \bmod 83]$ per step:
 
 %code
 w(k, p) := if(k == 0, 2, mod(w(k - 1, p)^2 + 1, p));

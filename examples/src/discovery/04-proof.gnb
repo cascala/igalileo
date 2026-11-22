@@ -173,8 +173,7 @@ legend(labels(show(scatter(pw, [p w], sw), plot(0.03838/p, p, 0.3, 1.05)), "semi
 Looking back over the four lessons:
 
 * **Found from data:** Kepler's three laws, the inverse-square law with $GM_\odot = 4\pi^2$ AU³/year², the Binet
-  equation $u'' + u = GM/h^2$, and, for the anomaly, the $1/p$ scaling, the $u^2$ term and its size, $\epsilon \approx
-  4.4$ km. Each step was a search over simple formulas built from blocks we chose, ranked by fit and simplicity.
+  equation $u'' + u = GM/h^2$, and, for the anomaly, the $1/p$ scaling, the $u^2$ term and its size, $\epsilon \approx 4.4$ km. Each step was a search over simple formulas built from blocks we chose, ranked by fit and simplicity.
 * **Not found from data:** why. General relativity cannot be fitted from planetary data. Its central idea, that gravity
   is the geometry of spacetime, is a conceptual leap; the $u^2$ term is one small consequence of it, and the same
   theory predicts light bending, gravitational redshift, black holes and gravitational waves, which no fit to orbits
