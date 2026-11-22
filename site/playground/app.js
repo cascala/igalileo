@@ -125,6 +125,59 @@
     if (res.error) box.appendChild(el('div', 'error', (res.error.ename === 'SyntaxError' ? 'Syntax error: ' : '') + res.error.evalue));
   }
 
+  // ---------- results hidden by ";" ----------
+  // Statements whose result a trailing ";" hides: [{ name (if an assignment), text }]
+  function quietStatements(code) {
+    const out = [];
+    let depth = 0, cur = '';
+    const end = semi => {
+      const t = cur.trim();
+      if (t && semi) {
+        const m = t.match(/^([A-Za-z_][A-Za-z0-9_]*)\s*:?=(?!=)/);
+        out.push({ name: m ? m[1] : null, text: t });
+      }
+      cur = '';
+    };
+    for (const line of code.split('\n')) {
+      const l = line.replace(/\/\/.*$/, '');
+      for (const ch of l) {
+        if (ch === '[' || ch === '(') depth++;
+        else if (ch === ']' || ch === ')') depth--;
+        if (ch === ';' && depth <= 0) { end(true); continue; }
+        cur += ch;
+      }
+      if (depth <= 0) end(false); else cur += '\n';
+    }
+    return out;
+  }
+  function describeType(t) {
+    let m = t.match(/^Matrix:(\d+)\(r\),(\d+)\(c\)$/);
+    if (m) return m[1] === '1' || m[2] === '1' ? `a list of ${Math.max(+m[1], +m[2])} numbers or expressions` : `a table of ${m[1]} rows × ${m[2]} columns`;
+    return { Scalar: 'a number', Expression: 'an expression', Variable: 'a name', Boolean: 'true or false', String: 'text',
+      Figure: 'a plot', Figure3D: 'a 3D plot', Discovery: 'a discover result', Check: 'a check result', Proof: 'a proof' }[t] || ('a ' + t);
+  }
+  // A short note under a cell whose results were hidden, so running it visibly did something
+  async function quietNote(code, res, box) {
+    if (res.error) return;
+    const quiet = quietStatements(code);
+    if (!quiet.length) return;
+    const named = quiet.filter(q => q.name);
+    let text;
+    if (named.length) {
+      const who = await execute('who');
+      const types = {};
+      for (const o of who.outputs) for (const line of ((o.text ?? o.data?.['text/plain']) || '').split('\n')) {
+        const m = line.match(/^([A-Za-z_][A-Za-z0-9_]*):\s*(.+)$/);
+        if (m) types[m[1]] = m[2].trim();
+      }
+      const parts = [...new Set(named.map(q => q.name))].map(n => types[n] ? `${n} (${describeType(types[n])})` : n);
+      text = `✓ Defined ${parts.join(', ')}. The ; at the end hides the value; type the name in a cell to see it.`;
+    } else {
+      text = '✓ Done. The ; at the end hides the result; remove it to see the result.';
+    }
+    box.appendChild(el('div', 'note', text));
+  }
+
   // ---------- REPL ----------
   const input = $('input');
   const transcript = $('transcript');
@@ -155,6 +208,7 @@
     entry.scrollIntoView({ block: 'end' });
     const res = await execute(code);
     renderOutputs(res, out);
+    await quietNote(code, res, out);
     entry.scrollIntoView({ block: 'nearest' });
   }
 
@@ -296,6 +350,7 @@
     await request('reset');
     const body = $('lesson-body');
     body.replaceChildren();
+    const hint = el('p', 'hint', 'Cells build on each other, like a notebook: a cell can use variables defined above it. You don\u2019t have to run them in order by hand. Running a cell first runs every earlier cell that hasn\u2019t run yet, and “Run all” runs the whole lesson.');
     current = { lesson, cells: [] };
     for (const c of lesson.cells) {
       if (c.t === 'md') {
@@ -334,6 +389,9 @@
         requestAnimationFrame(() => autosize(ta));
       }
     }
+    // the hint goes right after the lesson's title and introduction
+    const firstCell = body.querySelector('.cell');
+    body.insertBefore(hint, firstCell ? firstCell.previousElementSibling || firstCell : null);
     const pager = $('pager');
     pager.replaceChildren();
     const prev = group.lessons[index - 1], next = group.lessons[index + 1];
@@ -357,8 +415,9 @@
         const res = await execute(c.textarea.value);
         if (current !== lesson) return;
         renderOutputs(res, c.out);
+        await quietNote(c.textarea.value, res, c.out);
         c.ran = true;
-        c.label.textContent = res.error ? 'error' : '';
+        c.label.textContent = res.error ? 'error' : (i < n ? `ran first: cell ${n + 1} builds on it` : '✓ ran');
         if (res.error) return;
       }
     });

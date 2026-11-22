@@ -27,7 +27,7 @@ distance, and the **orbital period** $T$, the length of the planet's year, in Ea
 rounded to four digits, about the precision the best 17th-century astronomers could reach [2, 3].
 
 A data table is just a matrix: rows are separated by `;`, numbers within a row by spaces. The `;` at the very end
-hides the output, because we don't need to see the table again.
+hides the output, which would only repeat the table.
 
 %code
 planets = [0.3871 0.2408; 0.7233 0.6152; 1.000 1.000; 1.524 1.881; 5.203 11.86; 9.537 29.45; 19.19 84.02; 30.07 164.8];
