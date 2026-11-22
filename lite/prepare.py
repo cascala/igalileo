@@ -20,6 +20,8 @@ GROUPS = [
      "Nine lessons from arithmetic to calculus, differential equations and conic sections. Start here.", None),
     ("number-theory", "Number theory",
      "Primes, factoring large numbers, modular arithmetic and the cryptography built on them.", None),
+    ("group-theory", "Group theory",
+     "Symmetry, cyclic groups, permutations, card shuffles and Lagrange's theorem.", None),
     ("differential-geometry", "Differential geometry",
      "Seven lessons from curves to the Riemann tensor, drawn in interactive 3D.", None),
     ("general-relativity", "General relativity",

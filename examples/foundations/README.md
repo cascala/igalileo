@@ -21,7 +21,6 @@ After this path you can continue with any of the advanced paths:
 
 * [Number theory](../number-theory/README.md): primes, factoring large numbers, modular arithmetic, cryptography.
 * [Group theory](../group-theory/README.md): symmetry, permutations, cyclic groups, Lagrange's theorem.
-* [Linear algebra](../linear-algebra/README.md): vectors, matrices, eigenvalues.
 * [Differential geometry](../differential-geometry/README.md) and then [general relativity](../general-relativity/README.md).
 
 The notebooks are generated from the plain-text sources in [`../src/foundations`](../src/foundations) by
