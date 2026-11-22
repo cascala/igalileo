@@ -1,0 +1,200 @@
+%md
+# Number theory 4: Cryptography
+
+*Learning path: number theory, part 4 of 4.* [Index](README.md) · Previous: [Modular arithmetic](03-modular-arithmetic.ipynb)
+
+Until 1976 two people could only communicate secretly if they had first met, or used a courier, to agree on a secret
+key. Then Diffie and Hellman, and a year later Rivest, Shamir and Adleman, showed how to do it with nothing but
+modular arithmetic, in public. Every `https` web page uses their ideas. You will learn
+
+* shift ciphers, and why they are easy to break,
+* the **Diffie–Hellman key exchange**: agreeing on a secret in public,
+* **RSA**: a lock everyone can close but only you can open, and digital signatures,
+* why RSA is safe exactly as long as factoring is hard, and how to break it when the key is too small.
+
+This lesson uses `powmod`, `modinv` and the totient $\varphi$ from [lesson 3](03-modular-arithmetic.ipynb), and the
+factoring methods of [lesson 2](02-prime-factoring.ipynb).
+
+%md
+## 1. Shift ciphers
+
+Julius Caesar replaced every letter by the one three places further in the alphabet. In numbers, with
+$A = 0, B = 1, \ldots, Z = 25$, that is adding 3 mod 26. `letters(text)` turns a text into those numbers (anything
+that is not a letter is skipped) and `word(list)` turns numbers back into letters:
+
+%code
+letters("HELLO")
+mod(letters("HELLO") + 3, 26)
+word(mod(letters("HELLO") + 3, 26))
+
+%md
+To decrypt, subtract 3. The weakness: there are only 26 possible keys. An enemy who intercepts `"WKLVLVVHFUHW"` just
+tries them all. Each row of the table is a key $k$ and the text shifted back by $k$; one row makes sense:
+
+%code
+table([k, word(mod(letters("WKLVLVVHFUHW") - k, 26))], k, 1, 6)
+
+%md
+Better ciphers use longer keys, and modern ones like AES are not breakable this way at all. But they all share a
+problem: both sides need the same secret key, and they must agree on it before they can talk secretly.
+
+## 2. Diffie–Hellman: a shared secret, agreed in public
+
+Alice and Bob want a common secret, but everything they send can be read by Eve. They publicly agree on a large
+prime $p$ and a primitive root $g$ mod $p$ (lesson 3). Here $p = 1\,000\,000\,007$ and $g = 5$:
+
+%code
+p = 1000000007;
+primroot(p)
+g = 5;
+
+%md
+Then:
+
+1. Alice picks a secret number $a$ and sends $A = g^a \bmod p$;
+2. Bob picks a secret number $b$ and sends $B = g^b \bmod p$;
+3. Alice computes $B^a$ and Bob computes $A^b$, both mod $p$.
+
+Both get $g^{ab}$, the shared secret. In Galileo (the secrets $a$ and $b$ are made up; in practice they are random):
+
+%code
+a = 271828182;
+b = 314159265;
+A = powmod(g, a, p)
+B = powmod(g, b, p)
+powmod(B, a, p)
+powmod(A, b, p)
+
+%md
+The last two lines agree: $(g^b)^a = (g^a)^b$. Eve has seen $p$, $g$, $A$ and $B$. To get the secret she needs $a$
+from $A = g^a$, the **discrete logarithm**. Lesson 3 showed that the powers of a primitive root jump around without
+visible pattern; for primes with 600 digits, the best known methods would take longer than the age of the universe.
+
+## 3. RSA
+
+Diffie–Hellman agrees on a key, but it does not let anyone send *you* a message you can read and nobody else can.
+Rivest, Shamir and Adleman found such a **public-key** system in 1977 (Clifford Cocks had found it in 1973 at the
+British intelligence service GCHQ, but it was secret until 1997).
+
+### Making a key
+
+Take two large primes $p$ and $q$ and multiply them: $n = pq$. Here two 19-digit primes, found with `nextprime`:
+
+%code
+p = nextprime(10^18)
+q = nextprime(3*10^18)
+n = p*q
+
+%md
+Choose an exponent $e$ that shares no factor with $\varphi(n) = (p - 1)(q - 1)$. Almost everyone uses
+$e = 65537 = 2^{16} + 1$. Then compute the inverse of $e$ mod $\varphi(n)$:
+
+$$d = e^{-1} \bmod \varphi(n), \qquad\text{so}\qquad e\cdot d \equiv 1 \pmod{\varphi(n)}.$$
+
+%code
+phi = (p - 1)*(q - 1);
+e = 65537;
+gcd(e, phi)
+d = modinv(e, phi)
+
+%md
+The **public key** is the pair $(n, e)$: you publish it. The **private key** is $d$: you keep it, and throw $p$ and
+$q$ away.
+
+### Encrypting and decrypting
+
+A message is a number $m < n$. `encode(text)` turns a short text (up to 15 characters) into a number, from its bytes;
+`decode(m)` turns it back:
+
+%code
+m = encode("Meet at noon")
+m < n
+
+%md
+Anyone can encrypt with the public key, $c = m^e \bmod n$. Only the owner of $d$ can decrypt, $m = c^d \bmod n$:
+
+%code
+c = powmod(m, e, n)
+decode(c)
+powmod(c, d, n)
+decode(powmod(c, d, n))
+
+%md
+The encrypted number $c$ decodes to gibberish (some bytes aren't even printable); the decrypted one is the message.
+
+### Why it works
+
+Since $ed \equiv 1 \pmod{\varphi(n)}$, we can write $ed = 1 + k\varphi(n)$. By Euler's theorem
+$m^{\varphi(n)} \equiv 1 \pmod n$ (when $\gcd(m, n) = 1$, which is all but certain for random $m$), so
+
+$$c^d = m^{ed} = m \cdot \left(m^{\varphi(n)}\right)^k \equiv m \cdot 1^k = m \pmod n.$$
+
+To find $d$ you need $\varphi(n) = (p - 1)(q - 1)$, and for that you need $p$ and $q$: you need to factor $n$.
+
+### Signatures
+
+Run backwards, RSA proves who wrote something. The owner of $d$ computes the **signature** $s = m^d \bmod n$. Anyone
+can check it with the public key: $s^e \bmod n$ must give back $m$. Nobody without $d$ could have made an $s$ that passes:
+
+%code
+s = powmod(m, d, n)
+powmod(s, e, n) == m
+
+%md
+(In practice one signs a short fingerprint, a *hash*, of the document rather than the document itself.)
+
+## 4. Breaking small keys
+
+RSA is exactly as strong as factoring $n$. Here is a key with a 19-digit $n$, made from two 10-digit primes. Eve
+sees only the public key $(n, e)$ and the encrypted message (a short one: the message number must be smaller than $n$):
+
+%code
+n2 = nextprime(10^9)*nextprime(2*10^9)
+c2 = powmod(encode("pin 42"), 65537, n2)
+
+%md
+She factors $n_2$ with Pollard's rho from lesson 2 (built into `factor`), which takes a fraction of a second, and
+then does exactly what the key owner did: compute $\varphi$, then $d$, then decrypt:
+
+%code
+factor(n2)
+phi2 = (1000000007 - 1)*(2000000011 - 1);
+d2 = modinv(65537, phi2)
+decode(powmod(c2, d2, n2))
+
+%md
+Broken. The 38-digit key of section 3 already defeats Galileo's methods (rho would need about $10^9$ steps), but not a
+modern computer with the number field sieve. Real RSA keys have 2048 bits, 617 digits: the factoring record of
+lesson 2 (RSA-250, 829 bits) is far below that.
+
+### The quantum threat
+
+Shor's algorithm (1994) would factor and solve discrete logarithms quickly on a large quantum computer, breaking both
+RSA and Diffie–Hellman. No quantum computer is anywhere near big enough yet, but since messages recorded today might
+be decrypted later, the US standards institute NIST published **post-quantum** replacements in 2024 (ML-KEM and
+ML-DSA), based on lattices instead of primes, and browsers have started using them alongside the classical methods.
+
+## Summary
+
+* Shift cipher: add $k$ mod 26 (`letters`, `word`); 26 keys, broken by trying them all.
+* Diffie–Hellman: publish $g^a$ and $g^b$ mod $p$; both sides compute $g^{ab}$. Safe while discrete logarithms are hard.
+* RSA: $n = pq$, $e = 65537$, $d = e^{-1} \bmod (p - 1)(q - 1)$. Encrypt $m^e$, decrypt $c^d$, sign $m^d$, verify $s^e$,
+  all mod $n$. Safe while factoring is hard.
+* `encode` and `decode` turn short texts into numbers and back.
+
+**Try it:** make your own RSA key from two primes near $10^{15}$, encrypt a 10-letter word, and ask someone to break
+it with `factor` (does it work? how long does it take?). What goes wrong if $p = q$? Why must $\gcd(e, \varphi(n)) = 1$?
+In Diffie–Hellman, what happens if $g$ is not a primitive root, for example $g = p - 1$?
+
+This is the end of the number theory path. Related paths: [Group theory](../group-theory/README.md), where the
+numbers $1, \ldots, p - 1$ under multiplication mod $p$ reappear as a cyclic group.
+
+%md
+## Sources
+
+1. W. Diffie and M. E. Hellman, "New directions in cryptography", *IEEE Transactions on Information Theory* 22 (1976) 644–654.
+2. R. L. Rivest, A. Shamir and L. Adleman, "A method for obtaining digital signatures and public-key cryptosystems", *Communications of the ACM* 21 (1978) 120–126.
+3. C. C. Cocks, "A note on 'non-secret encryption'", CESG report (1973, declassified 1997).
+4. P. W. Shor, "Algorithms for quantum computation: discrete logarithms and factoring", *Proc. 35th FOCS* (1994) 124–134.
+5. NIST, FIPS 203 (ML-KEM) and FIPS 204 (ML-DSA), August 2024.
+6. S. Singh, *The Code Book*, Fourth Estate (1999). A popular history from Caesar to RSA.
