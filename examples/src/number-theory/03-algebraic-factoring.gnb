@@ -310,6 +310,22 @@ algfactor(3^201 + 1)
 algfactor(10^90 + 1)
 
 %md
+### When you only have the number
+
+Often you get just a long number $N$, not a formula. `algfactor(N)` then searches for a form itself: it tests whether
+$N = a^k \pm 1$ for any base $a$ (by taking $k$-th roots of $N \mp 1$), whether $N = a^k \pm b^k$ for small $b$,
+and whether $N$ divides some $b^k \pm 1$, which is how leftover parts in the factor tables look. That last test
+computes $b, b^2, b^3, \ldots$ modulo $N$ and watches for $\pm1$. Here $N$ is $2^{1062} + 1$ with the factor 5
+removed, written out as a 319-digit number:
+
+%code
+N = (2^1062 + 1)/5;
+algfactor(N)
+
+%md
+A second argument, `algfactor(N, effort)`, searches more bases and exponents and gives rho and $p - 1$ that many
+times more work on each piece: `algfactor(N, 10)` takes about ten seconds.
+
 ### The Cunningham Project
 
 In 1925 Allan Cunningham and Herbert Woodall published tables of factorizations of $b^n \pm 1$ for $b = 2, 3, 5, 6,
