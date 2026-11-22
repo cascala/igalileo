@@ -190,13 +190,23 @@ f'(x)
 solve(f'(x), x)
 
 %md
+`ans` is always the last answer. Using it in a definition stores the answer as it is *now*, so you can turn a result
+into a new function. Here `slope(x)` becomes the derivative just computed (`deriv(expr, x)` differentiates an
+expression), and keeps it even after later answers:
+
+%code
+deriv(f(x), x)
+slope(x) := ans
+slope(3)
+
+%md
 ## Summary
 
 * Letters without values are symbols; like terms are collected automatically.
 * `expand`, `factor` and `simplify` rewrite expressions; `subs` substitutes values.
 * Equations use `==`; `solve(eq, x)` finds all solutions, `solve([eq1, eq2], [x, y])` solves systems.
 * The discriminant $b^2 - 4ac$ tells how many real solutions a quadratic has.
-* `f(x) := ...` defines your own function.
+* `f(x) := ...` defines your own function; `g(x) := ans` turns the last answer into one.
 
 **Try it:** factor $x^4 - 16$. Solve $x^2 = 2$ and evaluate the answers with `eval`. Find two numbers whose sum is 20
 and whose product is 91.
