@@ -13,6 +13,7 @@ cascala/igalileo`, or open them on GitHub to read them with their results.
 
 ## Mathematics
 
+* [Linear algebra](linear-algebra/README.md): vectors, matrices, systems of equations, eigenvalues.
 * [Number theory](number-theory/README.md): primes, prime factoring (trial division, Fermat, Pollard rho,
   Miller–Rabin), modular arithmetic, cryptography (Diffie–Hellman, RSA).
 * [Group theory](group-theory/README.md): symmetry, cyclic groups, permutations, Lagrange's theorem.

@@ -18,6 +18,8 @@ GROUPS = [
      ["galileo-tour", "differential-geometry-tour"]),
     ("foundations", "Foundations",
      "Nine lessons from arithmetic to calculus, differential equations and conic sections. Start here.", None),
+    ("linear-algebra", "Linear algebra",
+     "Vectors, matrices as transformations, systems of equations, eigenvalues, Fibonacci and Markov chains.", None),
     ("number-theory", "Number theory",
      "Primes, factoring large numbers, modular arithmetic and the cryptography built on them.", None),
     ("group-theory", "Group theory",
