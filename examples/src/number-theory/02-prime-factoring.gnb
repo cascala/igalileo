@@ -303,21 +303,35 @@ gcd(67 - 1, 561)
 %md
 For a composite $n$, at least three quarters of all $a$ expose it. Trying 20 values of $a$ leaves a chance below
 $4^{-20} \approx 10^{-12}$ of being fooled, and for numbers below $3\cdot10^{24}$ the first twelve primes as $a$ are proven
-to be enough. That is what `isprime` does. It handles 39-digit numbers instantly, where trial division would need
-$10^{19}$ steps. The first one is $2^{127} - 1$, which Édouard Lucas proved prime by hand in 1876 with a test of this
-kind; it stayed the largest known prime for 75 years:
+to be enough; for larger numbers no composite is known that passes all 20 bases. That is what `isprime` does. It
+handles 39-digit numbers instantly, where trial division would need $10^{19}$ steps. The first one is $2^{127} - 1$,
+which Édouard Lucas proved prime by hand in 1876 with a test of this kind; it stayed the largest known prime for 75
+years:
 
 %code
-isprime(170141183460469231731687303715884105727)
+2^127 - 1
+isprime(2^127 - 1)
 isprime(2^89 - 1)
 isprime(10062757)
+
+%md
+Galileo's whole numbers have no size limit, so the next records are within reach too. In 1952 Raphael Robinson ran a
+test of this kind on the SWAC, one of the first computers, and found five new primes in one year: $2^{521} - 1$ (157
+digits, found within hours of the program's first run), $2^{607} - 1$, $2^{1279} - 1$, $2^{2203} - 1$ and
+$2^{2281} - 1$ (687 digits). $2^{523} - 1$, on the other hand, is not prime:
+
+%code
+2^521 - 1
+isprime(2^521 - 1)
+isprime(2^2281 - 1)
+isprime(2^523 - 1)
 
 %md
 ## 5. Putting it together
 
 Galileo's `factor` (also called `ifactor`) works like this: divide out the small primes by trial division, test the
-rest with Miller–Rabin, and split any composite part with Pollard–Brent rho, repeating on each piece. The famous
-factorizations of the 19th century take a fraction of a second:
+rest with Miller–Rabin, and split any composite part with Pollard–Brent rho (and Pollard's $p - 1$ method, below),
+repeating on each piece. The famous factorizations of the 19th century take a fraction of a second:
 
 %code
 factor(2^64 + 1)
@@ -328,10 +342,29 @@ factor(1000000000039*10000000000037)
 $2^{64} + 1 = 274177 \cdot 67280421310721$ was found by Fortuné Landry in 1880, at 82, after months of work by hand. The
 last one is a product of two 13-digit primes; rho needs about a million steps for it.
 
+### Pollard's $p - 1$ method
+
+By Fermat's little theorem (lesson 3), $a^{p-1} \equiv 1 \pmod p$ for a prime $p$, and so $a^M \equiv 1$ for every
+multiple $M$ of $p - 1$. If $p - 1$ has only small prime factors, then $M = $ the product of all small prime powers is
+such a multiple, without knowing $p$. Then $p$ divides $a^M - 1$, and $\gcd(a^M - 1, n)$ reveals it (John Pollard,
+1974). Here $p$ is a 20-digit prime with a very smooth $p - 1$, hidden in a 50-digit product. Rho would need about
+$10^{10}$ steps; $p - 1$ needs a few thousand multiplications:
+
+%code
+p = 97767475431570134191;
+factor(p - 1)
+n = p*nextprime(10^30)
+factor(n)
+
+%md
+That is why the primes in an RSA key must be chosen so that $p - 1$ has a large prime factor.
+
 ### The limits
 
 Rho finds a factor $p$ in about $\sqrt p$ steps. A product of two 20-digit primes therefore needs about $10^{10}$
-steps, which Galileo, working with numbers of up to 38 digits, does not attempt. Modern methods go much further:
+steps. Galileo gives up after about a second of work and says which factors it found and how many digits the unsplit
+part has: `factor(nextprime(10^19)*nextprime(10^20))` stops with an error message, although the 40-digit product
+itself is computed instantly. Modern methods go much further:
 
 * the **quadratic sieve** (Carl Pomerance, 1981) and the **number field sieve** (1990s) build Fermat's difference of
   squares from many small factorizations; their running time grows more slowly than any power of $n$;
@@ -351,7 +384,8 @@ That gap, multiplying is easy and factoring is hard, is exactly what RSA encrypt
   $p$. Built in as `pollard`.
 * Primality: Fermat's test `powmod(a, n - 1, n)` can be fooled by Carmichael numbers like 561; Miller–Rabin
   (`isprime`) cannot, in practice.
-* `factor` combines them, up to 38 digits.
+* Pollard's $p - 1$ finds $p$ quickly when $p - 1$ has only small prime factors.
+* `factor` combines them, on numbers of any size; it gives up when what remains has only large prime factors.
 
 **Try it:** factor $n = 999\,962\,000\,357$ with `fermat` (start at `isqrt(n) + 1`) and with `rho`; which is faster,
 and why? Change the walk in `rho` to $x^2 + 2$ or $x^2 - 1$: does it still work? Find the next Carmichael number after
@@ -369,3 +403,5 @@ Next: [Modular arithmetic](03-modular-arithmetic.ipynb), the arithmetic behind `
 5. F. N. Cole, "On the factoring of large numbers", *Bull. Amer. Math. Soc.* 10 (1903) 134–137.
 6. R. Crandall and C. Pomerance, *Prime Numbers: A Computational Perspective*, 2nd ed., Springer (2005). Chapters 3, 5 and 6.
 7. F. Boudot, P. Gaudry, A. Guillevic, N. Heninger, E. Thomé and P. Zimmermann, "Factorization of RSA-250" (February 2020), announcement on the NMBRTHRY mailing list.
+8. J. M. Pollard, "Theorems on factorization and primality testing", *Proc. Cambridge Philosophical Society* 76 (1974) 521–528 (the $p - 1$ method).
+9. R. M. Robinson, "Mersenne and Fermat numbers", *Proc. American Mathematical Society* 5 (1954) 842–846.

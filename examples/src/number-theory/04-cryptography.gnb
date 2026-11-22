@@ -78,11 +78,12 @@ British intelligence service GCHQ, but it was secret until 1997).
 
 ### Making a key
 
-Take two large primes $p$ and $q$ and multiply them: $n = pq$. Here two 19-digit primes, found with `nextprime`:
+Take two large primes $p$ and $q$ and multiply them: $n = pq$. Here two 80-digit primes, found with `nextprime`, so
+$n$ has 160 digits (530 bits). Real keys are about four times longer, but the steps are the same:
 
 %code
-p = nextprime(10^18)
-q = nextprime(3*10^18)
+p = nextprime(10^79)
+q = nextprime(3*10^79)
 n = p*q
 
 %md
@@ -103,11 +104,11 @@ $q$ away.
 
 ### Encrypting and decrypting
 
-A message is a number $m < n$. `encode(text)` turns a short text (up to 15 characters) into a number, from its bytes;
-`decode(m)` turns it back:
+A message is a number $m < n$. `encode(text)` turns a text into a number, from its bytes (each character is a digit
+in base 256), and `decode(m)` turns it back. A 160-digit $n$ has room for 66 characters:
 
 %code
-m = encode("Meet at noon")
+m = encode("Meet me at the old bridge at noon. Bring the map.")
 m < n
 
 %md
@@ -163,9 +164,9 @@ d2 = modinv(65537, phi2)
 decode(powmod(c2, d2, n2))
 
 %md
-Broken. The 38-digit key of section 3 already defeats Galileo's methods (rho would need about $10^9$ steps), but not a
-modern computer with the number field sieve. Real RSA keys have 2048 bits, 617 digits: the factoring record of
-lesson 2 (RSA-250, 829 bits) is far below that.
+Broken. A key made from two 20-digit primes already defeats Galileo's methods (rho would need about $10^{10}$ steps),
+and the 160-digit key of section 3 is far beyond them, but not beyond a modern computer with the number field sieve.
+Real RSA keys have 2048 bits, 617 digits: the factoring record of lesson 2 (RSA-250, 829 bits) is far below that.
 
 ### The quantum threat
 

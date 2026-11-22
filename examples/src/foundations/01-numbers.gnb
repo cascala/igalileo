@@ -98,12 +98,13 @@ $a^{-1} = 1/a$ and $a^{1/2} = \sqrt{a}$, $a^{1/3} = \sqrt[3]{a}$.
 16^(3/4)
 
 %md
-Whole numbers have no size limit up to about 38 digits, so you can see every digit of large powers and factorials.
-`factorial(n)` is $n! = 1 \cdot 2 \cdot 3 \cdots n$, the number of ways to put $n$ things in a row:
+Whole numbers have no size limit, so you can see every digit of large powers and factorials.
+`factorial(n)` is $n! = 1 \cdot 2 \cdot 3 \cdots n$, the number of ways to put $n$ things in a row; $52!$ is the
+number of ways to shuffle a deck of cards:
 
 %code
 2^100
-factorial(25)
+factorial(52)
 
 %md
 ### Order of operations
