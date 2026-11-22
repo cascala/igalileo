@@ -7,8 +7,8 @@ let engine = null;
 
 function load() {
   if (!engine) {
-    engine = WebAssembly.instantiateStreaming(fetch('galileo.wasm'), {})
-      .catch(() => fetch('galileo.wasm').then(r => r.arrayBuffer()).then(b => WebAssembly.instantiate(b, {})))
+    engine = WebAssembly.instantiateStreaming(fetch('galileo.wasm', { cache: 'no-cache' }), {})
+      .catch(() => fetch('galileo.wasm', { cache: 'no-cache' }).then(r => r.arrayBuffer()).then(b => WebAssembly.instantiate(b, {})))
       .then(({ instance }) => {
         const e = instance.exports;
         const w = crypto.getRandomValues(new Uint32Array(2));
