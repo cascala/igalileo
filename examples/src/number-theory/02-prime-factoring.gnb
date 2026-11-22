@@ -1,11 +1,11 @@
 %md
 # Number theory 2: Prime factoring
 
-*Learning path: number theory, part 2 of 4.* [Index](README.md) · Previous: [Divisibility and primes](01-divisibility-and-primes.ipynb) · Next: [Modular arithmetic](03-modular-arithmetic.ipynb)
+*Learning path: number theory, part 2 of 5.* [Index](README.md) · Previous: [Divisibility and primes](01-divisibility-and-primes.ipynb) · Next: [Algebraic factoring](03-algebraic-factoring.ipynb)
 
 Multiplying two primes takes a second, even by hand: $1009 \cdot 9973 = 10\,062\,757$. Going back, from
 $10\,062\,757$ to its two primes, is much harder, and for numbers with a few hundred digits nobody knows how to do it
-at all. That one-way street is what protects most of the internet (lesson 4). In this lesson you build the classic
+at all. That one-way street is what protects most of the internet (lesson 5). In this lesson you build the classic
 factoring methods yourself, see why each one works, and measure how fast it is:
 
 * **trial division**, and why you can stop at $\sqrt n$,
@@ -238,12 +238,12 @@ pollard(2^64 + 1)
 ## 4. Is it prime?
 
 Every factoring method needs to know when to stop: when the remaining number is prime. Testing that by trial division
-costs $\sqrt n$ steps again. Fermat's little theorem gives a shortcut (lesson 3 explains why it holds): if $p$ is prime,
+costs $\sqrt n$ steps again. Fermat's little theorem gives a shortcut (lesson 4 explains why it holds): if $p$ is prime,
 then
 
 $$a^{p-1} \equiv 1 \pmod p \qquad\text{for every } a \text{ not divisible by } p.$$
 
-`powmod(a, e, n)` computes $a^e$ mod $n$ quickly even for huge $e$ (by repeated squaring; lesson 3). So if
+`powmod(a, e, n)` computes $a^e$ mod $n$ quickly even for huge $e$ (by repeated squaring; lesson 4). So if
 $2^{n-1}$ mod $n$ is not 1, then $n$ is certainly not prime, and we know it without finding a factor:
 
 %code
@@ -344,7 +344,7 @@ last one is a product of two 13-digit primes; rho needs about a million steps fo
 
 ### Pollard's $p - 1$ method
 
-By Fermat's little theorem (lesson 3), $a^{p-1} \equiv 1 \pmod p$ for a prime $p$, and so $a^M \equiv 1$ for every
+By Fermat's little theorem (lesson 4), $a^{p-1} \equiv 1 \pmod p$ for a prime $p$, and so $a^M \equiv 1$ for every
 multiple $M$ of $p - 1$. If $p - 1$ has only small prime factors, then $M = $ the product of all small prime powers is
 such a multiple, without knowing $p$. Then $p$ divides $a^M - 1$, and $\gcd(a^M - 1, n)$ reveals it (John Pollard,
 1974). Here $p$ is a 20-digit prime with a very smooth $p - 1$, hidden in a 50-digit product. Rho would need about
@@ -374,7 +374,7 @@ itself is computed instantly. Modern methods go much further:
 * a large quantum computer running **Shor's algorithm** (1994) could factor in polynomial time; none big enough
   exists yet.
 
-That gap, multiplying is easy and factoring is hard, is exactly what RSA encryption relies on (lesson 4).
+That gap, multiplying is easy and factoring is hard, is exactly what RSA encryption relies on (lesson 5).
 
 ## Summary
 
@@ -391,7 +391,7 @@ That gap, multiplying is easy and factoring is hard, is exactly what RSA encrypt
 and why? Change the walk in `rho` to $x^2 + 2$ or $x^2 - 1$: does it still work? Find the next Carmichael number after
 561 by testing `powmod(2, n - 1, n) == 1` and `isprime(n)` in a table. (Hint: it is $1105 = 5\cdot13\cdot17$.)
 
-Next: [Modular arithmetic](03-modular-arithmetic.ipynb), the arithmetic behind `powmod` and Fermat's little theorem.
+Next: [Algebraic factoring](03-algebraic-factoring.ipynb): why `factor(10^300 + 1)` finds some factors instantly, and a hunt for identities like Sophie Germain's.
 
 %md
 ## Sources

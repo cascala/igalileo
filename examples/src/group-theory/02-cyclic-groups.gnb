@@ -91,7 +91,7 @@ table of $U(7)$ (row $k$: `mod(k*[1 2 3 4 5 6], 7)`):
 table(mod(k*[1 2 3 4 5 6], 7), k, 1, 6)
 
 %md
-Is it cyclic? It is when some element has order $p - 1 = 6$: a **primitive root** (number theory lesson 3). The powers
+Is it cyclic? It is when some element has order $p - 1 = 6$: a **primitive root** (number theory lesson 4). The powers
 of 3 mod 7 run through all six elements, so $U(7)$ is cyclic, isomorphic to $\mathbb{Z}_6$:
 
 %code

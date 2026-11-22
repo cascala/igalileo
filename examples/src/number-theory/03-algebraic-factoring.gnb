@@ -1,0 +1,352 @@
+%md
+# Number theory 3: Algebraic factoring
+
+*Learning path: number theory, part 3 of 5.* [Index](README.md) · Previous: [Prime factoring](02-prime-factoring.ipynb) · Next: [Modular arithmetic](04-modular-arithmetic.ipynb)
+
+In the last lesson, Pollard's rho needed about $\sqrt p$ steps to find a prime factor $p$, so a factor with 20 digits
+was already out of reach. Yet Galileo takes a number with 301 digits and pulls out prime factors with 33 and 72
+digits in about a second. This lesson explains the trick: **factor the formula before you plug in the numbers**. You
+will learn
+
+* why $x^n - 1$ and $x^n + 1$ always split, into **cyclotomic polynomials**,
+* how that cuts numbers like $10^{300} + 1$ into smaller pieces, and which primes can hide in each piece,
+* **Sophie Germain's identity** $a^4 + 4b^4 = (a^2 - 2ab + 2b^2)(a^2 + 2ab + 2b^2)$,
+* the surprise splits found by Aurifeuille and Lucas in the 1870s, which the Cunningham Project still uses today,
+* how to **hunt for new identities** yourself with `factorsearch`.
+
+%md
+## 1. A mystery
+
+$10^{300} + 1$ is a 1 followed by 299 zeros and a final 1. `digits(n)` counts the decimal digits of a whole number:
+
+%code
+N = 10^300 + 1;
+digits(N)
+factor(N)
+
+%md
+The answer lists eleven primes, and then `C156`: a part with 156 digits that did not split within a second. The line
+below the product gives it in full and says honestly that it is composite: we know it has factors, because it fails
+the Miller–Rabin test of lesson 2, but we did not find them.
+
+Two things are strange. The primes $100009999999899989999000000010001$ (33 digits) and the 72-digit one are far too
+big for rho, which would need about $10^{16}$ and $10^{36}$ steps. And the small ones, $73 \cdot 137 = 10001$, look
+familiar:
+
+%code
+73*137
+mod(N, 10001)
+
+%md
+$10001 = 10^4 + 1$ divides $10^{300} + 1$, with remainder 0. Why? Put $x = 10^4$. Then $10^{300} = x^{75}$, and
+$x^{75} + 1$ has the factor $x + 1$ because 75 is odd. Galileo's `factor` also works on polynomials:
+
+%code
+factor(x^3 + 1)
+factor(x^5 + 1)
+
+%md
+In general $x^m + 1 = (x + 1)(x^{m-1} - x^{m-2} + \cdots - x + 1)$ for every odd $m$: put $x = -1$ and the left side is
+$(-1)^m + 1 = 0$, so $x + 1$ is a factor. The same works for any $x = 10^d$ with $300/d$ odd, so $10^{300} + 1$ is
+divisible by $10^4 + 1$, $10^{12} + 1$, $10^{20} + 1$, $10^{60} + 1$, $10^{100} + 1$ and $10^{300} + 1$ itself. Galileo
+noticed that the number has the form $10^{300} + 1$, cut it into pieces along these lines, and factored each piece
+separately. To see how the pieces fit together we need the polynomials behind them.
+
+## 2. $x^n - 1$ and the cyclotomic polynomials
+
+%code
+factor(x^12 - 1)
+
+%md
+$x^{12} - 1$ splits into six pieces with small whole coefficients, and Galileo proves none of them splits further. Each
+piece collects some of the roots of $x^{12} - 1$. Those roots are the **12th roots of unity**, the complex numbers
+$$z_k = \cos\frac{2\pi k}{12} + i \sin\frac{2\pi k}{12}, \qquad k = 0, 1, \ldots, 11,$$
+twelve points evenly spaced on the unit circle (the [complex numbers](../foundations/06-complex-numbers.ipynb) lesson of the foundations path has more). The
+**order** of $z_k$ is the smallest $d \ge 1$ with $z_k^d = 1$; it is $12/\gcd(k, 12)$. The **cyclotomic polynomial**
+$\Phi_d(x)$ ("circle dividing", from Greek) has as its roots exactly the roots of unity of order $d$:
+
+$$\Phi_d(x) = \prod_{\text{order}(z) = d} (x - z), \qquad x^n - 1 = \prod_{d \mid n} \Phi_d(x).$$
+
+The plot draws the twelve roots. Each colour is one cyclotomic factor $\Phi_d$, whose roots have order $d$: across is the real part
+$\cos(2\pi k/12)$, up the imaginary part $\sin(2\pi k/12)$. `table(expr, k, [list])` makes one row per value in the
+list, and `R(ks)` turns a list of $k$ values into rows of points:
+
+%code
+R(ks) := table([cos(2*pi*k/12), sin(2*pi*k/12)], k, ks);
+pl = show(parametric(cos(t), sin(t), t, 0, 2*pi), scatter(R([0]), [re im]), scatter(R([6]), [re im]), scatter(R([4 8]), [re im]), scatter(R([3 9]), [re im]), scatter(R([2 10]), [re im]), scatter(R([1 5 7 11]), [re im]));
+pl = legend(pl, "circle", "Phi_1", "Phi_2", "Phi_3", "Phi_4", "Phi_6", "Phi_12");
+labels(title(pl, "The 12th roots of unity, grouped by order"), "real part", "imaginary part")
+
+%md
+`cyclotomic(n)` gives $\Phi_n(x)$. Multiplying the six factors for the divisors $d = 1, 2, 3, 4, 6, 12$ of 12 gives
+back $x^{12} - 1$:
+
+%code
+table([n, cyclotomic(n)], n, 1, 12)
+expand(cyclotomic(1)*cyclotomic(2)*cyclotomic(3)*cyclotomic(4)*cyclotomic(6)*cyclotomic(12))
+
+%md
+Three facts make these polynomials so useful:
+
+* **Whole coefficients.** Although the roots are complex, $\Phi_n(x)$ has integer coefficients. That follows from
+  $x^n - 1 = \prod_{d\mid n}\Phi_d(x)$ by dividing out the smaller ones in turn.
+* **Irreducible.** $\Phi_n$ never splits into polynomials with whole coefficients. Gauss proved it for prime $n$ in
+  1801; Kronecker proved it for every $n$ in 1854. So the factorization of $x^n - 1$ above is the final one.
+* **Small coefficients, almost.** Up to $n = 104$ every coefficient is 0, 1 or $-1$. The first exception is
+  $\Phi_{105}$, $105 = 3\cdot5\cdot7$, where $-2$ appears (Migotti, 1883). `coeff(p, x, k)` picks the coefficient of
+  $x^k$:
+
+%code
+coeff(cyclotomic(105), x, 7)
+coeff(cyclotomic(105), x, 41)
+
+%md
+And $x^n + 1$? Since $x^{2n} - 1 = (x^n - 1)(x^n + 1)$, the factors of $x^n + 1$ are the $\Phi_d$ with $d$ dividing $2n$
+but not $n$. For $n = 300$ those are $d = 8, 24, 40, 120, 200, 600$:
+
+%code
+factor(x^20 + 1)
+
+%md
+## 3. Back to numbers: the algebraic pieces
+
+Putting $x = 10$ into $x^{300} + 1 = \Phi_8\,\Phi_{24}\,\Phi_{40}\,\Phi_{120}\,\Phi_{200}\,\Phi_{600}$ cuts the 301-digit
+number into six pieces $\Phi_d(10)$. `algfactor(n)` shows these pieces, one row each, with their size and how far each
+one factors:
+
+%code
+algfactor(10^300 + 1)
+
+%md
+Now the mystery is solved. The 33-digit prime is a whole piece, $\Phi_{120}(10)$, so it never had to be *found*: the
+algebra handed it over, and Miller–Rabin only had to check that it is prime. The piece $\Phi_{200}(10)$ has 80 digits;
+after rho removes 401, 1201 and 1601 the rest, 72 digits, is again prime. Only $\Phi_{600}(10)$, with 161 digits,
+keeps a composite part that nobody here can split.
+
+### Which primes can hide in a piece?
+
+Look at the primes and the piece they came from: $73 = 9\cdot 8 + 1$ and $137 = 17 \cdot 8 + 1$ in $\Phi_8(10)$;
+$401 = 2\cdot 200 + 1$, $1201 = 6\cdot200 + 1$, $1601 = 8 \cdot 200 + 1$ in $\Phi_{200}(10)$:
+
+%code
+mod([73 137], 8)
+mod([401 1201 1601], 200)
+mod(32401, 600)
+
+%md
+Every one leaves remainder 1. This is a theorem: if a prime $p$ divides $\Phi_d(b)$ and does not divide $d$, then
+$d$ is the order of $b$ mod $p$ (the smallest $k$ with $b^k \equiv 1$), and by Fermat's little theorem that order
+divides $p - 1$, so $p \equiv 1 \pmod d$ (lesson 4 explains orders and Fermat's theorem). `multorder(b, p)` computes
+the order:
+
+%code
+multorder(10, 73)
+multorder(10, 32401)
+
+%md
+So the unknown factors of the 156-digit part all have the form $600k + 1$. That is a real help: factor hunters
+use it to skip most candidates.
+
+### How much does the algebra save?
+
+The piece $\Phi_n(b)$ has degree $\varphi(n)$ (Euler's totient `totient(n)`: how many of $1, \ldots, n$ share no factor with $n$; lesson 4), so it has about $\varphi(n)/n$ times as many
+digits as $b^n - 1$. The table compares, for $n = 2, \ldots, 120$, the digits of $2^n - 1$ with the digits of its
+largest new piece $\Phi_n(2)$; the plot has $n$ across and the number of digits up:
+
+%code
+T = table([n, digits(2^n - 1), digits(cyclotomic(n, 2))], n, 2, 120);
+pl = show(scatter(T, [n a c], [n a]), scatter(T, [n a c], [n c]));
+pl = legend(pl, "2^n - 1", "largest algebraic piece Phi_n(2)");
+labels(title(pl, "Algebra cuts 2^n - 1 into smaller pieces"), "exponent n", "decimal digits")
+
+%md
+For a prime $n$ the piece is the whole number ($\Phi_n(2) = 2^n - 1$ when $n$ is prime), so those points lie on the top
+row and get no help. For $n$ with many small factors, like $n = 120$ ($\varphi = 32$), the hardest piece has only about a
+quarter of the digits. Factoring difficulty grows faster than exponentially in the digits, so this is an enormous
+saving.
+
+## 4. Sophie Germain's identity
+
+Sums of two squares $a^2 + b^2$ don't factor over the whole numbers, and neither does $a^4 + b^4$. But one
+special sum of fourth powers does:
+
+%code
+factor(a^4 + 4*b^4)
+
+%md
+Sophie Germain (1776–1831), who also proved a famous special case of Fermat's last theorem, used this identity. The
+proof is Fermat's difference-of-squares trick from lesson 2: add and subtract $4a^2b^2$,
+
+$$a^4 + 4b^4 = (a^2 + 2b^2)^2 - (2ab)^2 = (a^2 + 2b^2 - 2ab)(a^2 + 2b^2 + 2ab).$$
+
+%code
+expand((a^2 + 2*b^2)^2 - (2*a*b)^2)
+
+%md
+Two consequences you can check. First, $n^4 + 4$ is prime only for $n = 1$: with $b = 1$ it is $(n^2 - 2n + 2)(n^2 + 2n + 2)$,
+and the first factor is bigger than 1 as soon as $n > 1$. Second, $n^4 + 4^n$ is never prime for $n > 1$: for even $n$
+it is even, and for odd $n$, $4^n = 4\cdot(2^{(n-1)/2})^4$, so Germain's identity applies with $a = n$. The table has
+$n$ and the factorization of $n^4 + 4^n$:
+
+%code
+table([n, factor(n^4 + 4^n)], n, 1, 9)
+
+%md
+## 5. Surprise splits: Aurifeuille, Lucas and the Cunningham Project
+
+In 1869 Fortuné Landry, the same man who split $2^{64} + 1$ in lesson 2, factored $2^{58} + 1$ by hand:
+
+$$2^{58} + 1 = 5 \cdot 107\,367\,629 \cdot 536\,903\,681.$$
+
+He wrote: "If we lose this result we shall miss patience and courage to repeat all calculations we have made." The
+cyclotomic pieces don't explain it: $2^{58} + 1 = \Phi_4(2)\,\Phi_{116}(2) = 5 \cdot 57\,646\,075\,230\,342\,349$, and
+the big piece $\Phi_{116}(2)$ still had to be cracked. Two years later, in 1871, Léon-François-Antoine Aurifeuille
+saw that it splits *algebraically* after all. Put $a = 1$ and $b = 2^k$ in Sophie Germain's identity:
+
+$$2^{4k+2} + 1 = 1 + 4\cdot(2^k)^4 = (2^{2k+1} - 2^{k+1} + 1)(2^{2k+1} + 2^{k+1} + 1).$$
+
+For $k = 14$ that is $2^{58} + 1 = (2^{29} - 2^{15} + 1)(2^{29} + 2^{15} + 1)$, and Landry's hard work becomes one
+line:
+
+%code
+2^29 - 2^15 + 1
+factor(2^29 - 2^15 + 1)
+2^29 + 2^15 + 1
+isprime(2^29 + 2^15 + 1)
+algfactor(2^58 + 1)
+
+%md
+The first half is $5 \cdot 107\,367\,629$ (the 5 is the small cyclotomic piece $\Phi_4(2)$), the second half is prime.
+`algfactor` shows three pieces: $\Phi_4(2) = 5$ and the two halves of $\Phi_{116}(2)$, called $L$ and $M$ as in the
+factor tables.
+
+### Where do the extra splits come from?
+
+The cyclotomic polynomial $\Phi_n(x)$ itself never splits. But the number $2$ is $2\cdot 1^2$, and if we put
+$x = 2y^2$ into $\Phi_n$, the new polynomial in $y$ sometimes does split. `cyclotomic(n, v)` puts $v$ in place of $x$;
+for $n = 4$:
+
+%code
+cyclotomic(4, 2*y^2)
+factor(cyclotomic(4, 2*y^2))
+
+%md
+That is Aurifeuille's identity again (at $y = 2^k$, $4y^4 + 1 = 2^{4k+2} + 1$). Édouard Lucas found the general
+pattern: for a squarefree base $s$ (no square divides it), $\Phi_n(s y^2)$ splits into two halves for the right $n$.
+Here is a first hunt. `factorsearch(expr, k, a, b)` puts $k = a, a+1, \ldots, b$ into an expression, factors each
+result over the whole numbers and lists the $k$ for which it splits. We search $n = 1, \ldots, 40$ for base 2:
+
+%code
+factorsearch(cyclotomic(n, 2*y^2), n, 1, 40)
+
+%md
+The splits come at $n = 4, 12, 20, 28, 36$: exactly $n \equiv 4 \pmod 8$, the odd multiples of 4. The same search for
+bases 3 and 5:
+
+%code
+factorsearch(cyclotomic(n, 3*y^2), n, 1, 40)
+factorsearch(cyclotomic(n, 5*y^2), n, 1, 40)
+
+%md
+Base 3 splits at $n = 6, 18, 30$, the odd multiples of 6; base 5 at $n = 5, 15, 25, 35$, the odd multiples of 5. The
+general rule is: if $s \equiv 1 \pmod 4$, then $\Phi_n(s y^2)$ splits
+when $n$ is an odd multiple of $s$; otherwise when $n$ is an odd multiple of $2s$. With $y = 1$ that splits $\Phi_n(s)$,
+and so the numbers $s^m \pm 1$. Base 3 gives Lucas's identity
+
+$$3^{6k+3} + 1 = (3^{2k+1} + 1)(3^{2k+1} - 3^{k+1} + 1)(3^{2k+1} + 3^{k+1} + 1),$$
+
+and Galileo's `factor` uses these splits automatically, for any base. $3^{201} + 1$ has 96 digits; without the
+algebra, rho gets stuck on a 58-digit part. With it, the five pieces all split:
+
+%code
+digits(3^201 + 1)
+algfactor(3^201 + 1)
+algfactor(10^90 + 1)
+
+%md
+### The Cunningham Project
+
+In 1925 Allan Cunningham and Herbert Woodall published tables of factorizations of $b^n \pm 1$ for $b = 2, 3, 5, 6,
+7, 10, 11, 12$. Continuing those tables became the **Cunningham Project**, one of the longest-running computations
+in mathematics: the third edition of the tables, by John Brillhart, D. H. Lehmer, John Selfridge, Bryant Tuckerman and
+Samuel Wagstaff, appeared in 2002, and Wagstaff keeps them up to date online. Volunteer projects (ECMNET, NFS@Home)
+still work through its "most wanted" numbers. The tables split every number first into exactly the pieces you saw
+here, with the Aurifeuillean halves listed separately as $L$ and $M$ (Landry's number appears as "2,58L" and
+"2,58M"). Only then does the heavy machinery (the elliptic curve method, the number field sieve) start.
+
+## 6. Hunting for identities
+
+Are there more identities like Sophie Germain's, waiting to be found? Let's search. Which numbers $k$ make $x^4 + k$
+factor? We try $k$ from $-50$ to $400$:
+
+%code
+factorsearch(x^4 + k, k, -50, 400)
+
+%md
+Two families appear. Negative squares, $x^4 - m^2 = (x^2 - m)(x^2 + m)$: the difference of squares. And
+$k = 4, 64, 324 = 4\cdot1^4, 4\cdot2^4, 4\cdot3^4$: Sophie Germain's identity with $b = 1, 2, 3$. Nothing else, and
+that is a theorem: $x^4 + k$ splits over the whole numbers only for these two families. Our search rediscovered both.
+
+A second family: **trinomials** $x^n + x + 1$. The table has every $n$ from 2 to 30 for which it factors:
+
+%code
+factorsearch(x^n + x + 1, n, 2, 30)
+
+%md
+It splits exactly when $n \equiv 2 \pmod 3$, always with the factor $x^2 + x + 1 = \Phi_3(x)$. Can you see why?
+The roots of $\Phi_3$ are the cube roots of unity $\omega$ (order 3), so $\omega^n$ only depends on $n$ mod 3, and
+$\omega^n + \omega + 1 = 0$ exactly when $\omega^n = \omega^2$. Ernst Selmer proved in 1956 that the other factor never
+splits further, and that $x^n - x - 1$ never factors at all:
+
+%code
+factorsearch(x^n - x - 1, n, 2, 30)
+
+%md
+Your turn. Some families to search (each takes a second or so):
+
+* `factorsearch(x^4 + k*x^2 + 1, k, -20, 20)`: which $k$ work? (Try to write $x^4 + kx^2 + 1$ as a difference of
+  squares.)
+* `factorsearch(x^6 + k, k, -100, 1000)`: besides cubes and squares, is there a Germain-like family?
+* `factorsearch(x^8 + k, k, 1, 2000)`, `factorsearch(x^n + x^2 + 1, n, 3, 40)`, `factorsearch(x^n + 2*x + 2, n, 2, 30)`.
+* Homogeneous families work too: `factorsearch(a^4 + k*b^4, k, 1, 400)`.
+
+**Be honest about the odds.** Factorizations of one-parameter families like these are very well studied, and
+Aurifeuillean factorizations in particular are well understood (Andrew Granville and Peter Pleasants gave a modern
+account of them in 2006). So a genuinely new identity is very unlikely. But every pattern you find has a reason, and finding
+the reason, like the cube roots of unity for $x^n + x + 1$, is real mathematics. And if your search turns up something
+you can't explain, check the literature, and then tell someone.
+
+## Summary
+
+* Factor the formula first: $x^n - 1 = \prod_{d\mid n}\Phi_d(x)$ and $x^n + 1 = \prod_{d \mid 2n,\ d\nmid n}\Phi_d(x)$, with
+  irreducible **cyclotomic polynomials** $\Phi_d$ (`cyclotomic(d)`).
+* So $b^n \pm 1$ splits into pieces $\Phi_d(b)$, each much smaller than the number. Primes in $\Phi_d(b)$ (not dividing
+  $d$) are $\equiv 1 \pmod d$.
+* **Sophie Germain:** $a^4 + 4b^4 = (a^2 - 2ab + 2b^2)(a^2 + 2ab + 2b^2)$; so $n^4 + 4$ and $n^4 + 4^n$ are composite
+  for $n > 1$.
+* **Aurifeuille and Lucas:** $\Phi_n(s y^2)$ splits for the right $n$, which splits $\Phi_n(s)$ into $L\cdot M$; for
+  base 2, $2^{4k+2} + 1 = (2^{2k+1} - 2^{k+1} + 1)(2^{2k+1} + 2^{k+1} + 1)$.
+* `factor` does all this automatically for numbers $a^n \pm b^n$, `algfactor` shows the pieces, and composite parts
+  that don't split are shown as `C` and their number of digits.
+* `factorsearch` hunts for factorizations in a family of polynomials.
+
+**Try it:** Factor $2^{106} + 1$ with `algfactor`: which $k$ is it in Aurifeuille's formula? Compare `factor(2^120 - 1)`
+with `factor(2^127 - 1)` and explain the difference with $\varphi(n)$. Find all $n \le 60$ for which `cyclotomic(n, 7*y^2)`
+splits and check the rule of section 5.
+
+Next: [Modular arithmetic](04-modular-arithmetic.ipynb), where orders and Fermat's little theorem, used above to locate
+the primes in $\Phi_d(b)$, are explained properly.
+
+%md
+## Sources
+
+1. C. F. Gauss, *Disquisitiones Arithmeticae* (1801), section 7 (the cyclotomic polynomial for prime $n$ is irreducible).
+2. L. Kronecker, "Mémoire sur les facteurs irréductibles de l'expression $x^n - 1$", *J. Math. Pures Appl.* 19 (1854) 177–192.
+3. A. Migotti, "Zur Theorie der Kreisteilungsgleichung", *Sitzungsber. Akad. Wiss. Wien* 87 (1883) 7–14 (coefficients of $\Phi_n$; the $-2$ in $\Phi_{105}$).
+4. F. Landry's factorization of $2^{58} + 1$ (1869) and Aurifeuille's identity (1871): ProofWiki, "Prime Decomposition of $2^{58}+1$ / Historical Note", and D. Wells, *Curious and Interesting Numbers*, 2nd ed., Penguin (1997).
+5. "Aurifeuillean factorization", Wikipedia (Lucas's general form, and the table of $L$ and $M$ factors for bases up to 24).
+6. A. J. C. Cunningham and H. J. Woodall, *Factorisation of $y^n \mp 1$, $y = 2, 3, 5, 6, 7, 10, 11, 12$ up to high powers $n$*, Hodgson, London (1925).
+7. J. Brillhart, D. H. Lehmer, J. L. Selfridge, B. Tuckerman and S. S. Wagstaff Jr., *Factorizations of $b^n \pm 1$, $b = 2, 3, 5, 6, 7, 10, 11, 12$ up to high powers*, 3rd ed., Contemporary Mathematics 22, American Mathematical Society (2002); online tables at homes.cerias.purdue.edu/~ssw/cun.
+8. E. S. Selmer, "On the irreducibility of certain trinomials", *Mathematica Scandinavica* 4 (1956) 287–302.
+9. A. Granville and P. Pleasants, "Aurifeuillian factorization", *Mathematics of Computation* 75 (2006) 497–508.
+10. R. P. Brent, "On computing factors of cyclotomic polynomials", *Mathematics of Computation* 61 (1993) 131–149.

@@ -1,7 +1,7 @@
 %md
 # Number theory 4: Cryptography
 
-*Learning path: number theory, part 4 of 4.* [Index](README.md) · Previous: [Modular arithmetic](03-modular-arithmetic.ipynb)
+*Learning path: number theory, part 5 of 5.* [Index](README.md) · Previous: [Modular arithmetic](04-modular-arithmetic.ipynb)
 
 Until 1976 two people could only communicate secretly if they had first met, or used a courier, to agree on a secret
 key. Then Diffie and Hellman, and a year later Rivest, Shamir and Adleman, showed how to do it with nothing but
@@ -12,7 +12,7 @@ modular arithmetic, in public. Every `https` web page uses their ideas. You will
 * **RSA**: a lock everyone can close but only you can open, and digital signatures,
 * why RSA is safe exactly as long as factoring is hard, and how to break it when the key is too small.
 
-This lesson uses `powmod`, `modinv` and the totient $\varphi$ from [lesson 3](03-modular-arithmetic.ipynb), and the
+This lesson uses `powmod`, `modinv` and the totient $\varphi$ from [lesson 4](04-modular-arithmetic.ipynb), and the
 factoring methods of [lesson 2](02-prime-factoring.ipynb).
 
 %md
@@ -41,7 +41,7 @@ problem: both sides need the same secret key, and they must agree on it before t
 ## 2. Diffie–Hellman: a shared secret, agreed in public
 
 Alice and Bob want a common secret, but everything they send can be read by Eve. They publicly agree on a large
-prime $p$ and a primitive root $g$ mod $p$ (lesson 3). Here $p = 1\,000\,000\,007$ and $g = 5$:
+prime $p$ and a primitive root $g$ mod $p$ (lesson 4). Here $p = 1\,000\,000\,007$ and $g = 5$:
 
 %code
 p = 1000000007;

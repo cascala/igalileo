@@ -1,12 +1,12 @@
 %md
 # Number theory 1: Divisibility and primes
 
-*Learning path: number theory, part 1 of 4.* [Index](README.md) · Next: [Prime factoring](02-prime-factoring.ipynb)
+*Learning path: number theory, part 1 of 5.* [Index](README.md) · Next: [Prime factoring](02-prime-factoring.ipynb)
 
 Number theory studies the whole numbers $1, 2, 3, \ldots$ For two thousand years it was the purest of pure
 mathematics; since the 1970s it is what keeps every bank transfer and every web page secret. This path builds up to
-that: lesson 2 is about splitting numbers into primes, lesson 3 about computing with remainders, lesson 4 about
-cryptography. In this lesson you will learn
+that: lesson 2 is about splitting numbers into primes, lesson 3 about splitting them with algebra, lesson 4 about
+computing with remainders, lesson 5 about cryptography. In this lesson you will learn
 
 * division with remainder and what "divides" means,
 * the greatest common divisor and **Euclid's algorithm**, the oldest algorithm still in daily use,
@@ -69,7 +69,7 @@ The built-in `gcd` gives the same answers. Even for numbers with hundreds of dig
 hundred steps, because the remainders at least halve every two steps.
 
 The gcd can always be written as a combination of $a$ and $b$ (**Bézout's identity**): $21 = -3\cdot 1071 + 7\cdot 462$.
-This will matter for dividing with remainders in lesson 3.
+This will matter for dividing with remainders in lesson 4.
 
 %code
 -3*1071 + 7*462

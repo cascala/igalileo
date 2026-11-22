@@ -5,7 +5,7 @@
 
 A group is the mathematics of symmetry. The idea came from Galois (around 1830), who used it to show that there is no
 formula like the quadratic formula for equations of degree 5. Today groups describe crystals, the particles of physics,
-the Rubik's cube and the cryptography of lesson 4 of the number theory path. In this lesson you will learn
+the Rubik's cube and the cryptography of lesson 5 of the number theory path. In this lesson you will learn
 
 * what a symmetry is, and how to write one as a **permutation**,
 * how to **compose** symmetries, and why the order matters,

@@ -60,7 +60,7 @@ cycles(table(if(i <= 26, 2*i - 1, 2*(i - 26)), i, 1, 52))
 
 %md
 Why 8? Ignoring the bottom card, the out-shuffle sends the card at position $j = i - 1$ (counting from 0) to position
-$2j \bmod (2n - 1)$: doubling mod $2n - 1$. So the order is the order of 2 mod $2n - 1$, from number theory lesson 3.
+$2j \bmod (2n - 1)$: doubling mod $2n - 1$. So the order is the order of 2 mod $2n - 1$, from number theory lesson 4.
 For 52 cards, $2^8 = 256 = 5\cdot51 + 1$. The table compares the deck size, the order of the shuffle and
 `multorder(2, 2n - 1)`:
 
