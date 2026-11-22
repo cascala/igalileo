@@ -19,6 +19,8 @@ GROUPS = [
      "Seven lessons from curves to the Riemann tensor, drawn in interactive 3D.", None),
     ("general-relativity", "General relativity",
      "Nine lessons from flat spacetime to black holes, gravitational waves and the age of the universe.", None),
+    ("discovery", "Discovering physical laws",
+     "Four lessons that find Kepler's and Newton's laws in planet data, then the term Einstein added for Mercury.", None),
 ]
 
 

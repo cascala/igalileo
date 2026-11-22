@@ -1,0 +1,212 @@
+%md
+# Discovering laws 2: From Kepler to Newton
+
+*Learning path: discovering physical laws, part 2 of 4.* [Index](README.md) · Previous: [Kepler's third law](01-kepler.ipynb) · Next: [Mercury doesn't fit](03-mercury.ipynb)
+
+Kepler's third law relates different planets. His first two laws are about a single orbit: it is an ellipse with the
+Sun at one focus, and the line from the Sun to the planet sweeps out equal areas in equal times. Kepler found both in
+Tycho Brahe's observations of Mars [1]. Newton then showed that all three follow from one force, pulling towards the
+Sun with a strength proportional to $1/r^2$ [2]. In this lesson you will find all of this in a table of Mars
+positions. You will learn
+
+* how to change a table with `transform` (units, angles, $1/r$),
+* how to give `discover` your own building blocks, such as $\cos\phi$,
+* how `discover` finds a law involving a **rate of change**, written with a prime: $\phi'$ or $u''$,
+* how the inverse-square law and the orbit equation drop out of the data.
+
+%md
+## 1. A year of Mars
+
+The table has one row every 28.6 days through one Martian year of 687 days. The columns are
+
+1. $t$, the time in days since Mars passed its perihelion (its closest point to the Sun),
+2. $\lambda$, Mars's direction seen from the Sun, in degrees, measured in the plane of the Earth's orbit from a fixed
+   direction in the sky (the vernal equinox). It keeps counting past 360° so that it always increases.
+3. $r$, the distance from the Sun in AU.
+
+**Where the numbers come from.** They are computed from JPL's orbital elements for Mars [3], which summarise centuries
+of real observations, and rounded to 0.01° and 0.0001 AU. They are not raw telescope readings, which would also
+include the Earth's own motion; untangling that was Kepler's hardest problem, and we skip it.
+
+%code
+mars = [0.0 336.06 1.3814; 28.6 354.17 1.3873; 57.2 372.00 1.4042; 85.9 389.27 1.4304; 114.5 405.85 1.4632; 143.1 421.65 1.4997; 171.7 436.70 1.5369; 200.4 451.04 1.5724; 229.0 464.78 1.6041; 257.6 478.03 1.6304; 286.2 490.91 1.6499; 314.9 503.54 1.6619; 343.5 516.06 1.6660; 372.1 528.57 1.6619; 400.7 541.20 1.6499; 429.4 554.08 1.6304; 458.0 567.33 1.6041; 486.6 581.07 1.5724; 515.2 595.42 1.5369; 543.9 610.46 1.4997; 572.5 626.26 1.4632; 601.1 642.84 1.4304; 629.7 660.12 1.4042; 658.4 677.94 1.3873];
+
+%md
+To see the orbit, turn distance and direction into a position: $x = r\cos\lambda$, $y = r\sin\lambda$, with $\lambda$
+converted from degrees to radians by multiplying with $\pi/180$. `scatter` takes the column names `[t lon r]` (three
+columns, so three names) and then `[x y]` expressions in those names. The Sun is at the origin; both axes are in AU
+and drawn to the same scale.
+
+%code
+labels(scatter(mars, [t lon r], [r*cos(lon*pi/180) r*sin(lon*pi/180)]), "x (AU, towards the vernal equinox)", "y (AU)")
+
+%md
+Notice that the dots are not evenly spaced around the orbit, although they are evenly spaced in time: Mars moves
+faster near the Sun (on the right) and slower far away. We will come back to that in section 3.
+
+%md
+## 2. The shape: an ellipse
+
+How does the distance $r$ depend on the direction $\phi$? A natural first guess is a sum of waves:
+$r = c_0 + c_1\cos\phi + c_2\sin\phi + \dots$. First we make a table with the angle in radians and the distance,
+using `transform(data, [names], [new columns])`:
+
+1. `mars`, the table to transform;
+2. `[t lon r]`, names for its columns;
+3. `[lon*pi/180 r]`, one expression per column of the new table, computed row by row.
+
+%code
+polar = transform(mars, [t lon r], [lon*pi/180 r]);
+
+%md
+Now `discover` with a third argument: a row of **candidate terms**. `discover` then looks for the fewest terms whose
+weighted sum fits the data, trying every combination of one, two, three or four of them. This is the idea behind
+SINDy, "sparse identification of nonlinear dynamics" [4]: offer many building blocks, keep only the few that matter.
+
+%code
+discover(polar, [phi r], [1 cos(phi) sin(phi) cos(2*phi) sin(2*phi)])
+
+%md
+The best fit is off by 0.3%, ten times more than the rounding of the data, and adding $\cos 2\phi$ and $\sin 2\phi$
+only helps a little. So $r$ is *not* a simple wave in $\phi$. Kepler tried this kind of curve for years.
+
+Now try the reciprocal, $u = 1/r$:
+
+%code
+orbit = transform(mars, [t lon r], [lon*pi/180 1/r]);
+discover(orbit, [phi u], [1 cos(phi) sin(phi) cos(2*phi) sin(2*phi)])
+
+%md
+Now the fit is perfect to the rounding of the data (0.002%), with just three terms:
+
+$$u = \frac{1}{r} = A + B\cos\phi + C\sin\phi .$$
+
+A wave plus a constant can always be written as $A\,(1 + e\cos(\phi - \varpi))$, with $e = \sqrt{B^2 + C^2}/A$ and
+$\varpi$ the angle where $u$ is largest, that is where Mars is closest to the Sun. And $r = 1/(A(1 + e\cos(\phi -
+\varpi)))$ is exactly the polar equation of an **ellipse** with the Sun at a focus, eccentricity $e$, and semi-major
+axis $a = 1/(A(1-e^2))$ [5]. Kepler's first law. Let's compute the three numbers from the coefficients:
+
+%code
+A = 0.6620733; B = 0.0565102; C = -0.025094;
+ecc = eval(sqrt(B^2 + C^2)/A)
+perihelion = eval(atan2(C, B)*180/pi + 360)
+a = eval(1/(A*(1 - ecc^2)))
+
+%md
+Eccentricity 0.0934, perihelion at 336.06°, semi-major axis 1.5237 AU: JPL's elements for Mars are 0.09339, 336.06°
+and 1.52371 AU [3]. Everything about the orbit's shape was in the data.
+
+%md
+## 3. Equal areas: a law about a rate
+
+Mars sped up near the Sun. How fast does its direction change? That is the **rate** $\phi' = d\phi/dt$, in radians per
+day. We don't have it in the table, but `discover` can estimate it: write the name with a prime in the list of
+columns, `[t phi' r]`. That means: the first column is time $t$; the second column holds $\phi$, and the quantity to
+explain is its rate $\phi'$, estimated from each row and its neighbours (by fitting a smooth curve through five rows);
+the third column is $r$.
+
+%code
+k2 = transform(mars, [t lon r], [t lon*pi/180 r]);
+discover(k2, [t phi' r])
+
+%md
+The answer: $\phi' = 0.021141/r^2$, or
+
+$$r^2\,\frac{d\phi}{dt} = h = 0.021141\ \text{AU}^2 \text{ per day}.$$
+
+In a short time $dt$ the line from the Sun sweeps a thin triangle with sides $r$ and $r\,d\phi$, of area
+$\tfrac12 r^2\,d\phi$. So the area swept per day is $h/2$, the same all around the orbit: **Kepler's second law**.
+Physicists call $h$ the angular momentum per unit mass; it is constant because the force points straight at the Sun.
+
+The note under the table shows the power law fitted with free exponents for all three columns: $t$ and $\phi$ get
+exponents $0.005 \pm 0.005$ and $-0.02 \pm 0.02$, zero within the errors, so they don't matter; $r$ gets
+$-2.01 \pm 0.01$.
+
+%md
+## 4. Newton's inverse-square law
+
+What force holds a planet in its orbit? For a nearly circular orbit of radius $a$ and period $T$, the speed is
+$v = 2\pi a/T$ and the acceleration towards the centre is $g = v^2/a = 4\pi^2 a/T^2$. We can compute $g$ for every
+planet from the table of lesson 1 and ask how it depends on distance:
+
+%code
+planets = [0.3871 0.2408; 0.7233 0.6152; 1.000 1.000; 1.524 1.881; 5.203 11.86; 9.537 29.45; 19.19 84.02; 30.07 164.8];
+pull = transform(planets, [a T], [a 4*pi^2*a/T^2]);
+discover(pull, [r g])
+
+%md
+$g = 39.5/r^2$: the pull of the Sun falls off as the **inverse square** of the distance. The axes of the next plot are
+both logarithmic, so the straight line of slope $-2$ is the inverse-square law: horizontally the log of the distance in
+AU, vertically the log of the acceleration in AU per year².
+
+%code
+legend(labels(show(scatter(pull, [r g], [log(r) log(g)]), plot(log(39.5) - 2*x, x, -1, 3.5)), "log r  (distance in AU)", "log g  (acceleration in AU/year^2)"), "planets", "log g = log 39.5 - 2 log r")
+
+%md
+The constant is the Sun's $GM$ in these units: $g = GM/r^2$. Combining with $g = 4\pi^2 a/T^2$ gives
+$T^2 = 4\pi^2 a^3/GM$, and since $T = 1$ year when $a = 1$ AU, $GM_\odot = 4\pi^2 = 39.48$ AU³/year². `discover`
+wrote 39.5 instead of $4\pi^2$, because with four-digit data both are within the uncertainty and it doesn't guess.
+`check` can test the precise hypothesis, and fit a free constant $k$ for comparison:
+
+%code
+check([4*pi^2/r^2, k/r^2], pull, [r g])
+
+%md
+Both fit to better than 0.1%. The fitted $k = 39.50 \pm 0.01$ is within 0.06% of $4\pi^2 = 39.48$; the small
+remainder is the rounding of the periods and the planets' own masses, which we met in lesson 1. Notice the division of
+labour: the hypothesis $4\pi^2$ came from us, and the data could only confirm it.
+
+%md
+## 5. The law of motion as an equation
+
+So far each law described the orbit. Newton's insight was a law that *generates* orbits: a differential equation.
+For orbits it is nicest in terms of $u = 1/r$ and the angle $\phi$ (see the [general relativity orbits
+lesson](../general-relativity/05-orbits.ipynb) for the derivation): an inverse-square force gives the **Binet equation**
+
+$$u'' + u = \frac{GM}{h^2}, \qquad u'' = \frac{d^2u}{d\phi^2}.$$
+
+Can we find this equation in the data, without assuming it? We ask `discover` for $u''$, the second rate of change of
+$u$ with respect to $\phi$, as a sum of powers of $u$. In `[phi u'']`, the first column $\phi$ is the variable we
+differentiate by, and `u''` means: the second column holds $u$, explain its second derivative.
+
+%code
+discover(orbit, [phi u''], [1 u u^2 u^3])
+
+%md
+$u'' = 0.662 - u$, so $u'' + u = 0.662$: the Binet equation. Estimating a second derivative from rounded data costs
+precision (the fit is "only" 1.4% good), yet the coefficient of $u$ came out as $-1.00$ and `discover` recognised it.
+
+And the constant should be $GM/h^2$. We know both: $GM = 4\pi^2$ AU³/year² from section 4, and $h = 0.021141$ AU²/day
+from section 3, which is $0.021141 \times 365.25$ AU²/year:
+
+%code
+h = 0.021141*365.25;
+eval(4*pi^2/h^2)
+
+%md
+0.6621, matching the 0.662 in the equation and the $A = 0.66207$ of the ellipse. Three separate fits, on three
+different questions, tell one consistent story: Newton's gravity.
+
+**A warning about building blocks.** We offered only powers of $u$, not $\cos\phi$. A force law shouldn't depend on
+which direction in the sky the planet happens to be (space has no preferred direction), so terms in $\phi$ don't
+belong in a *law*, although they did belong in the *description* of one orbit in section 2. Choosing the building
+blocks is where physics enters; [part 3](03-mercury.ipynb) shows what goes wrong otherwise.
+
+%md
+## Sources
+
+Numbers in square brackets in the text refer to this list.
+
+1. J. Kepler, *Astronomia Nova* (Heidelberg, 1609). English translation: *New Astronomy*, transl. W. H. Donahue,
+   Cambridge University Press (1992).
+2. I. Newton, *Philosophiæ Naturalis Principia Mathematica* (London, 1687), Book I, Propositions 11–13 and Book III.
+3. E. M. Standish, *Keplerian Elements for Approximate Positions of the Major Planets*, JPL Solar System Dynamics,
+   Table 1: Mars $a$ = 1.52371034 AU, $e$ = 0.09339410, longitude of perihelion 336.05637°,
+   [ssd.jpl.nasa.gov/planets/approx_pos.html](https://ssd.jpl.nasa.gov/planets/approx_pos.html). Positions computed
+   by solving Kepler's equation at 24 equally spaced times, ignoring the small tilt of Mars's orbit (1.85°).
+4. S. L. Brunton, J. L. Proctor and J. N. Kutz, "Discovering governing equations from data by sparse identification of
+   nonlinear dynamical systems", *PNAS* **113**, 3932–3937 (2016).
+   [doi:10.1073/pnas.1517384113](https://doi.org/10.1073/pnas.1517384113)
+5. H. Goldstein, C. Poole and J. Safko, *Classical Mechanics*, 3rd edition, Addison-Wesley (2002), sections 3.7–3.8.
+
+Next: [Mercury doesn't fit](03-mercury.ipynb): a 43-arcsecond problem, and the term that solves it.
