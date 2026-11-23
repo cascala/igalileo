@@ -48,7 +48,8 @@ def run(path):
                 texts.append(o["text"])
             else:
                 flush()
-                outs.append({"output_type": "display_data", "data": mime_data(o["data"]), "metadata": {}})
+                meta = {"galileo": {"notes": True}} if o.get("notes") else {}
+                outs.append({"output_type": "display_data", "data": mime_data(o["data"]), "metadata": meta})
         flush()
         if r.get("error"):
             e = r["error"]

@@ -75,19 +75,25 @@ export class GalileoKernel extends BaseKernel {
       return { status: 'error', execution_count: this.executionCount, ename: 'InternalError', evalue, traceback: [] };
     }
     const res = JSON.parse(r.reply!) as {
-      outputs: ({ text: string } | { data: Record<string, string> })[];
+      outputs: ({ text: string } | { data: Record<string, string>; notes?: boolean })[];
       error: { ename: string; evalue: string } | null;
     };
+    // the result is the last output that is not an explanation (notes come after it)
+    let last = -1;
     res.outputs.forEach((o, i) => {
+      if (!('notes' in o && o.notes)) last = i;
+    });
+    res.outputs.forEach((o, i) => {
+      const notes = 'notes' in o && o.notes;
       const data: Record<string, any> = 'text' in o ? { 'text/plain': o.text } : { ...o.data };
       const plotly = data['application/vnd.plotly.v1+json'];
       if (typeof plotly === 'string') {
         data['application/vnd.plotly.v1+json'] = JSON.parse(plotly);
       }
-      if (i === res.outputs.length - 1 && !res.error) {
+      if (i === last && !res.error) {
         this.publishExecuteResult({ execution_count: this.executionCount, data, metadata: {} });
       } else {
-        this.displayData({ data, metadata: {}, transient: {} });
+        this.displayData({ data, metadata: notes ? { galileo: { notes: true } } : {}, transient: {} });
       }
     });
     if (res.error) {

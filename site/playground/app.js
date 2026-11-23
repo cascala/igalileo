@@ -70,6 +70,8 @@
   function markdown(src, inline) {
     const math = [];
     const keep = s => `@@MATH${math.push(s) - 1}@@`;
+    // fenced code blocks (``` on lines of their own) stay blocks
+    src = src.replace(/^```[^\n]*\n([\s\S]*?)\n```[ \t]*$/gm, (_, m) => keep({ block: m }));
     src = src.replace(/(`+)([\s\S]*?)\1/g, m => keep({ code: m }));
     src = src.replace(/\$\$([\s\S]+?)\$\$/g, (_, m) => keep({ tex: m, display: true }));
     // inline math may wrap onto the next line, but not across a blank line
@@ -77,6 +79,7 @@
     let html = inline ? marked.parseInline(src) : marked.parse(src);
     html = html.replace(/@@MATH(\d+)@@/g, (_, i) => {
       const m = math[+i];
+      if (m.block !== undefined) return '<pre>' + m.block.replace(/&/g, '&amp;').replace(/</g, '&lt;') + '</pre>';
       if (m.code) return inline ? marked.parseInline(m.code) : marked.parseInline(m.code);
       return tex(m.tex, m.display);
     });
@@ -118,6 +121,13 @@
         continue;
       }
       const d = o.data;
+      if (o.notes) {
+        // an explanation, shown apart from the result; switch off with: explain = false
+        const n = el('div', 'notes');
+        n.innerHTML = markdown((d['text/markdown'] || '').replace(/^> ?/gm, ''));
+        box.appendChild(n);
+        continue;
+      }
       if (d['application/vnd.plotly.v1+json']) renderPlot(d, box);
       else if (d['image/svg+xml']) { const w = el('div', 'plot'); w.innerHTML = d['image/svg+xml']; box.appendChild(w); }
       else if (d['text/markdown'] || d['text/latex']) { const m = el('div', 'math'); m.innerHTML = markdown(d['text/markdown'] || d['text/latex']); box.appendChild(m); }

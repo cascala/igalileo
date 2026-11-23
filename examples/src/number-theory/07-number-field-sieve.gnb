@@ -51,7 +51,9 @@ Smaller numbers are far more likely to be smooth, and that is the whole advantag
 %md
 ## 2. The whole method on $2^{128} + 1$
 
-`gnfs(N)` runs the number field sieve and prints each step. Without a polynomial it tries the special forms that the
+`gnfs(N)` runs the number field sieve. Its result is the pair of factors, smaller first, as a row you can use in
+the next line; the explanation below it shows each step (`explain = false` hides explanations, here and for every
+command). Without a polynomial it tries the special forms that the
 algebraic factoring of lesson 3 recognizes ($N$ divides $b^k \pm 1$) and base-$m$ polynomials, and picks the one with
 the best score.
 
@@ -59,7 +61,7 @@ the best score.
 gnfs(2^128 + 1)
 
 %md
-How to read the report:
+How to read the explanation:
 
 1. **Polynomial.** For $2^{128} + 1$ it picks $x^3 + 2$, $m = 2^{43}$ from the form $2^{128} + 1$.
 2. **Factor bases.** On the rational side, the primes $p$ up to a bound $B$. On the algebraic side, the pairs

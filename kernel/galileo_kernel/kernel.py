@@ -67,8 +67,10 @@ class GalileoKernel(Kernel):
                     texts.append(out["text"])
                 else:
                     flush()
+                    # explanations ("notes") are a block of their own after the result
+                    meta = {"galileo": {"notes": True}} if out.get("notes") else {}
                     self.send_response(self.iopub_socket, "display_data",
-                                       {"data": mime_data(out["data"]), "metadata": {}, "transient": {}})
+                                       {"data": mime_data(out["data"]), "metadata": meta, "transient": {}})
             flush()
         err = reply.get("error")
         if err:

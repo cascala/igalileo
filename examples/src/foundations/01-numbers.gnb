@@ -23,6 +23,17 @@ in these lessons can be changed and run again, so experiment freely.
 2 + 3*4
 
 %md
+The answer is always something you could type into Galileo yourself. When a command does more than arithmetic, an
+**explanation** follows the answer, set apart from it (in grey, or as lines starting with `//`). Try it with the
+prime factors of 360:
+
+%code
+factor(360)
+
+%md
+`explain = false` switches explanations off for the rest of the session, and `explain = true` switches them back on.
+A `;` at the end of a line hides the answer and its explanation.
+
 Multiplication is written `*` and happens before addition, as in school: $2 + 3 \cdot 4 = 14$. Use brackets to change
 the order:
 

@@ -77,6 +77,14 @@ kbd { border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 4p
 .entry .in::before { content: "›"; color: var(--accent); font-weight: 700; }
 .out { margin: 6px 0 0 18px; overflow-x: auto; }
 .out pre { margin: 0; white-space: pre; font-size: 14px; }
+.out .notes {
+  margin: 6px 0 4px; padding: 6px 12px; border-left: 3px solid var(--line); color: var(--muted);
+  font-size: 14px; line-height: 1.5;
+}
+.out .notes p { margin: .3em 0; }
+.out .notes table { border-collapse: collapse; font-size: 13px; }
+.out .notes td, .out .notes th { border: 1px solid var(--line); padding: 2px 6px; }
+.out .notes pre { font-size: 12.5px; }
 .out .katex-display { margin: .3em 0; text-align: left; }
 .out .katex-display > .katex { text-align: left; }
 .out .error { color: var(--error); background: var(--error-bg); border-radius: 8px; padding: 8px 12px; font: 14px ui-monospace, Menlo, monospace; white-space: pre-wrap; }
