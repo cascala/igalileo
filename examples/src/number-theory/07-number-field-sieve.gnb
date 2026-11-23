@@ -133,6 +133,44 @@ same size. Twenty bits more in the norms means far fewer smooth pairs. That is w
 reaches numbers about 1.5 times as long as the general one with the same work. Serious programs spend hours
 searching for good polynomials (Kleinjung's method, root sieving); `nfspoly` only tries a few values of $m$.
 
+### Searching harder: `polyselect`
+
+`polyselect(N, d, generations)` searches more widely, in three steps:
+
+1. **Base $m$:** write $N$ in base $m \approx N^{1/d}$, which gives $f$ with $f(m) = N$.
+2. **Root sieve:** rotations $f + (jx + k)(x - m)$ keep the common root $m$ for free. A sieve over $j$ and $k$
+   finds the rotation with the most roots modulo small primes, that is the most negative $\alpha$.
+3. **Evolution:** a population of candidates (leading coefficient, shift of $m$, rotation) is mutated, and the
+   fittest survive by **Murphy's $E$**. $E$ is the average of $\rho(u_f)\,\rho(u_g)$ over the sieve region, where
+   Dickman's $\rho(u)$ is the chance that a number of size $B^u$ has no prime factor above $B$. It estimates how
+   often both norms are smooth at the same time.
+
+Real sieves use a skewed region: much wider in $a$ than in $b$ when the coefficients of $f$ shrink from $a_0$ to
+$a_d$. So the table also shows the best **skew** and the **lognorm**, the size of $F(a, b)$ over that region:
+
+%code
+polyselect(N, 4, 20)
+
+%md
+The search mostly improves $\alpha$ and the leading coefficient. Galileo's own sieve wants a monic $f$ and sieves a
+rectangle without skew, so `polyselect` also runs a monic search scored by `gnfs`'s own estimate, and prints a
+`gnfs(...)` line to paste. On this 40-digit number, `gnfs(N)` with its own polynomial took $1.6 \cdot 10^8$ work units,
+and with the polynomial from `polyselect` $1.6 \cdot 10^7$, ten times less. On another 38-digit semiprime the gain was
+3.7 times. Run both and compare; each takes from seconds to a few minutes.
+
+The same search on RSA-100 (the 100-digit RSA challenge number, factored in 1991) raises $E$ about twentyfold over
+plain base $m$:
+
+%code
+load(RSA);
+polyselect(RSA100, 4, 30)
+
+%md
+Two cautions. First, $E$ only compares polynomials for the same $N$ and the same sieve: a polynomial chosen for a
+skewed lattice sieve can be worse in a rectangle, which is why there are two searches. Second, a better polynomial
+saves a constant factor, typically tens of percent at record sizes, but it does not change how the cost grows with
+$N$. Evolution or a neural network could tune the search; they cannot remove the $L_N[1/3]$ in the running time.
+
 %md
 ## 5. General numbers and the race against the quadratic sieve
 
@@ -172,6 +210,8 @@ those, RSA-250 took about 2700 core-years.
   is computed $q$-adically.
 * Special forms give tiny polynomials (SNFS); forms whose polynomial factors are split by algebra alone.
 * `gnfs(N)`, `gnfs(N, f, m)`, `nfspoly(N)`, and the method `"nfs"` in `labrun` and `scoreboard`.
+* `polyselect(N, d)`: base $m$, a root sieve for $\alpha$ and an evolutionary search by Murphy's $E$, plus a monic
+  pair for `gnfs`.
 
 **Try it:** run `gnfs(2^128 + 1, x^5 + 4, 2^26)` (degree 5) and compare the work with degree 3 and 4. Run
 `gnfs(10^40 + 1, x^5 + 1, 10^8)` and explain what happens (what is $x^5 + 1$ over the integers?). Compare
@@ -191,3 +231,5 @@ digits?
 8. P. L. Montgomery, "Square roots of products of algebraic numbers", *Proc. Symp. Applied Math.* 48 (1994) 567–571; J.-M. Couveignes, "Computing a square root for the number field sieve", in [1], 95–102.
 9. F. Boudot, P. Gaudry, A. Guillevic, N. Heninger, E. Thomé and P. Zimmermann, "Comparing the difficulty of factorization and discrete logarithm: a 240-digit experiment", *CRYPTO 2020*; the RSA-250 announcement (2020).
 10. R. Crandall and C. Pomerance, *Prime Numbers: A Computational Perspective*, 2nd ed., Springer (2005), section 6.2.
+11. T. Kleinjung, "On polynomial selection for the general number field sieve", *Mathematics of Computation* 75 (2006) 2037–2047.
+12. S. Bai, C. Bouvier, A. Kruppa and P. Zimmermann, "Better polynomials for GNFS", *Mathematics of Computation* 85 (2016) 861–873 (root sieve and size optimization in CADO-NFS).
