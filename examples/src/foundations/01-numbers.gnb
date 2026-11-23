@@ -170,7 +170,8 @@ isprime(97)
 primes(50)
 
 %md
-So $360 = 2^3 \cdot 3^2 \cdot 5$. From the factorization you can read off the gcd: $12 = 2^2\cdot 3$ and
+`factor` answers with one row per prime: the prime and how many times it divides. So $360 = 2^3 \cdot 3^2 \cdot 5$,
+which the explanation writes out. From the factorization you can read off the gcd: $12 = 2^2\cdot 3$ and
 $18 = 2 \cdot 3^2$ share $2 \cdot 3 = 6$.
 
 ## 5. Variables

@@ -159,7 +159,8 @@ exist too: none of the 99 numbers $100! + 2, \ldots, 100! + 100$ is prime, since
 ## 5. The fundamental theorem of arithmetic
 
 Every whole number above 1 is a product of primes, and the primes and their powers are the same whichever way you
-find them. `factor(n)` writes $n$ as that product:
+find them. `factor(n)` gives them as a table with one row per prime, holding the prime and its power; the explanation
+below writes $n$ as the product:
 
 %code
 factor(360)
@@ -170,10 +171,14 @@ factor(1001)
 $2^{32} + 1 = 641 \cdot 6700417$: Fermat believed all numbers $2^{2^k} + 1$ were prime, and Euler found this factor in
 1732. Lesson 2 shows how such factors are found.
 
-`factors(n)` gives the same information as a table: one row per prime, with the prime and its power:
+Because the answer is a matrix, you can compute with it. `f(i, j)` is the entry in row $i$, column $j$, and
+`rows(f)` counts the distinct primes:
 
 %code
-factors(360)
+f = factor(360);
+f(1, 1)
+f(3, 1)^f(3, 2)
+rows(f)
 
 %md
 ### Counting divisors

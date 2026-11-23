@@ -52,7 +52,8 @@ tf(10062757)
 tf(2^32 + 1)
 
 %md
-Galileo's built-in `factor` agrees and writes the same thing compactly:
+Galileo's built-in `factor` agrees. It answers with one row per prime and its power, and its explanation writes the
+product:
 
 %code
 factor(5040)

@@ -232,10 +232,10 @@ expand((a^2 + 2*b^2)^2 - (2*a*b)^2)
 Two consequences you can check. First, $n^4 + 4$ is prime only for $n = 1$: with $b = 1$ it is $(n^2 - 2n + 2)(n^2 + 2n + 2)$,
 and the first factor is bigger than 1 as soon as $n > 1$. Second, $n^4 + 4^n$ is never prime for $n > 1$: for even $n$
 it is even, and for odd $n$, $4^n = 4\cdot(2^{(n-1)/2})^4$, so Germain's identity applies with $a = n$. The table has
-$n$ and the factorization of $n^4 + 4^n$:
+$n$, $n^4 + 4^n$, whether it is prime, and how many different primes divide it (the number of rows of its `factor`):
 
 %code
-table([n, factor(n^4 + 4^n)], n, 1, 9)
+table([n, n^4 + 4^n, isprime(n^4 + 4^n), rows(factor(n^4 + 4^n))], n, 1, 9)
 
 %md
 ## 5. Surprise splits: Aurifeuille, Lucas and the Cunningham Project
