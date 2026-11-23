@@ -3,164 +3,325 @@
 
 *Learning path: number theory, part 7 of 7.* [Index](README.md) · Previous: [The factoring lab](06-factoring-lab.ipynb)
 
-Every record factorization since the 1990s, up to RSA-250 (250 digits, 2020), was done with the **number field
-sieve**. Its cost grows like $L(1/3) = e^{1.92 (\ln N)^{1/3} (\ln \ln N)^{2/3}}$, while the quadratic sieve of the
-last lessons grows like $L(1/2)$. This lesson builds the method up from one idea and runs Galileo's own (small,
-plain) implementation on real numbers. You will see
+Every record factorization since the 1990s, up to RSA-250 (250 digits, in 2020), was done with the **number field
+sieve**. It is famous for being hard to understand. This lesson builds it from small pieces you can check by hand,
+and only then runs the real thing.
 
-* why a polynomial $f$ with $f(m) \equiv 0 \pmod N$ gives two worlds that agree modulo $N$,
-* how pairs $(a, b)$ that are smooth in **both** worlds are found by a sieve,
-* how linear algebra and a square root in a number field turn them into a factor,
-* why numbers like $2^{128} + 1$ are much easier (the special number field sieve), and how the algebraic factoring of
-  [lesson 3](03-algebraic-factoring.ipynb) can finish the job before any sieving starts,
-* an honest race against the quadratic sieve.
+**Who this is for.** You have done the earlier lessons of this path, or you know the same material from elsewhere:
+
+* `mod` and `gcd`, and what $a \equiv b \pmod n$ means ([lesson 4](04-modular-arithmetic.ipynb), sections 1 and 5);
+* Fermat's idea of writing $n$ as a difference of squares ([lesson 2](02-prime-factoring.ipynb), section 2);
+* helpful but not needed: algebraic factoring ([lesson 3](03-algebraic-factoring.ipynb)) and the factoring
+  scoreboard ([lesson 6](06-factoring-lab.ipynb)).
+
+No algebraic number theory is assumed. The one new idea, computing with a root of a polynomial, is introduced in
+section 4 with the complex number $i$, which you have probably met before.
+
+**What you will be able to do afterwards:**
+
+1. explain why a congruence $X^2 \equiv Y^2 \pmod N$ factors $N$, and how one is built from many small factorizations;
+2. explain why the number field sieve beats the quadratic sieve for large numbers: its numbers are smaller;
+3. read every step of a real run of `gnfs`, and check its numbers;
+4. compare polynomials and say which one will sieve faster, and why.
+
+Plan about an hour. Part A (sections 1 to 4) has only small numbers. Part B (sections 5 to 9) runs the method.
+Each section ends with a **Try this** you can do in the cell below it; hints and answers are at the end.
 
 %md
-## 1. One number, two worlds
+# Part A: the ideas, with small numbers
 
-The quadratic sieve looks for $x$ with $x^2 \bmod N$ small, so that it splits into small primes. Those numbers are
-about $\sqrt N$, which is what makes it slow for large $N$. The number field sieve gets much smaller numbers by
-working in two worlds at once.
+## 1. A square from smooth pieces
 
-Take a polynomial $f$ of degree $d$ and a whole number $m$ with $f(m) \equiv 0 \pmod N$. The simplest way: choose
-$m \approx N^{1/d}$ and write $N$ in base $m$; the digits are the coefficients, so $f(m) = N$ exactly. Let $\alpha$
-be a root of $f$ (a complex number). Numbers $a - b\alpha$ with whole $a, b$ can be added and multiplied like
-polynomials in $\alpha$, and replacing $\alpha$ by $m$ keeps every product correct **modulo $N$**, because
-$f(\alpha) = 0$ and $f(m) \equiv 0$. So if a set $S$ of pairs has
+Fermat looked for $a^2 - N = b^2$, so that $N = (a - b)(a + b)$. That needs luck. It is enough to have **any** two
+numbers with
 
-$$\prod_{S} (a - b m) = X^2 \quad\text{and}\quad \prod_{S} (a - b\alpha) = \beta^2,$$
+$$X^2 \equiv Y^2 \pmod N \quad\text{but}\quad X \not\equiv \pm Y \pmod N.$$
 
-then $X^2 \equiv \beta(m)^2 \pmod N$, and as in the quadratic sieve $\gcd(X - \beta(m), N)$ is a factor half of the
-time.
+Then $N$ divides $X^2 - Y^2 = (X - Y)(X + Y)$ but neither factor, so each factor takes part of $N$, and
+$\gcd(X - Y, N)$ is a proper factor.
 
-For $N = 2^{128} + 1$ there is a much better polynomial than base $m$: $2 (2^{128} + 1) = (2^{43})^3 + 2$, so
-$f(x) = x^3 + 2$ with $m = 2^{43}$. In the world of $\alpha = \sqrt[3]{-2}$, the size of $a - b\alpha$ is measured by
-its **norm** $a^3 + 2 b^3$, a small number. Here is the pair $a = -100$, $b = 1$ in both worlds:
+How to find such $X$ and $Y$? Square a few numbers just above $\sqrt N$ and look at the remainders. For $N = 1649$
+($\sqrt{1649} \approx 40.6$):
+
+%code
+N = 1649
+table([x, mod(x^2, N)], x, 41, 46)
+
+%md
+None of these remainders is a square. But look at their prime factors:
+
+%code
+factors(32)
+factors(200)
+
+%md
+$32 = 2^5$ and $200 = 2^3 \cdot 5^2$. Each is made of small primes only; such a number is called **smooth**. Neither
+is a square, because some exponents are odd. But multiply them: the exponents add, $2^{5+3} \cdot 5^{0+2} = 2^8 \cdot 5^2$,
+all even. So $32 \cdot 200 = 6400 = 80^2$ is a square, and
+
+$$(41 \cdot 43)^2 \equiv 32 \cdot 200 = 80^2 \pmod{1649}.$$
+
+%code
+X = 41*43
+Y = 80
+mod(X^2 - Y^2, N)
+gcd(X - Y, N)
+gcd(X + Y, N)
+
+%md
+$1649 = 17 \cdot 97$. No luck was needed, only two smooth remainders whose product is a square.
+
+**The bookkeeping that scales.** Only the exponents mod 2 matter. Write each smooth number as a row of exponents over
+the primes 2 and 5: $32 \to [5\ 0]$, $200 \to [3\ 2]$. A product is a square exactly when the rows add up to even
+numbers everywhere:
+
+%code
+mod([5 0] + [3 2], 2)
+
+%md
+With thousands of smooth numbers and thousands of primes, finding rows that add up to zeros mod 2 is solving a
+linear system mod 2, the kind of problem Gaussian elimination solves. This is the core of the quadratic sieve and of
+the number field sieve alike. They differ only in **where the smooth numbers come from**.
+
+**Try this.** `table([x, mod(x^2, N)], x, 41, 60)` lists more remainders. One of them is a perfect square all by
+itself. Find it, and check that it gives the factor 17 or 97 the same way.
+
+%md
+## 2. Smooth numbers are rare, and rarer the bigger they are
+
+Everything depends on how many smooth numbers we can find. Let us count. `big(n)` below is the largest prime
+factor of $n$ (`factors(n)` is a table of [prime exponent] rows, and `column(..., 1)` takes the primes). Then count
+how many of 1000 consecutive numbers have no prime factor above 100, near $10^6$, $10^9$ and $10^{12}$:
+
+%code
+big(n) := max(column(factors(n), 1))
+smooth(n) := if(big(n) <= 100, 1, 0)
+sum(smooth(k), k, 10^6, 10^6 + 999)
+sum(smooth(k), k, 10^9, 10^9 + 999)
+sum(smooth(k), k, 10^12, 10^12 + 999)
+
+%md
+About 38 in 1000 near a million, 3 near a billion, and 1 near $10^{12}$: numbers a thousand times larger are
+roughly ten times less likely to be smooth, and it gets worse as they grow. This one fact explains the whole
+history of factoring:
+
+* the quadratic sieve looks at numbers of size about $\sqrt N$: for a 100-digit $N$, 50-digit numbers;
+* the number field sieve arranges for its numbers to be about $N^{1/d}$ for a small degree $d$ (3 to 6), at the
+  price of needing **two** numbers to be smooth at once. For large $N$ that is a huge gain.
+
+**Try this.** Change the bound 100 in `smooth` to 1000 and count again. Bigger bounds find more smooth numbers, but
+then you need more of them (one more than the number of primes, to be sure the rows have a dependency). Real
+programs balance the two.
+
+%md
+## 3. Finding smooth numbers without factoring them: sieving
+
+Factoring every candidate to test smoothness is slow. A **sieve** is faster. Which of the numbers $a - 100$, for
+$a = 0, 1, \ldots, 20$, are divisible by 7?
+
+%code
+table(mod(a - 100, 7), a, 0, 20)
+
+%md
+The zeros are at $a = 2, 9, 16$: every 7th place, starting where $a \equiv 100 \pmod 7$. So we never have to divide:
+for each prime $p$, find the first position and then step by $p$, as in the sieve of Eratosthenes. Add $\log p$ at
+each position; where the total is close to the size of the number, the number is (very likely) smooth. Only those
+few candidates are factored for real.
+
+The same works for polynomial values. Which $a^2 + 1$ are divisible by 5?
+
+%code
+table(mod(a^2 + 1, 5), a, 0, 12)
+
+%md
+Zeros at $a \equiv 2$ and $a \equiv 3 \pmod 5$: the two **roots** of $x^2 + 1$ modulo 5 ($2^2 + 1 = 5$ and
+$3^2 + 1 = 10$). For a polynomial $f$, the prime $p$ divides $f(a)$ exactly when $a$ is a root of $f$ modulo $p$.
+Some primes give two roots, some none: $a^2 + 1$ is never divisible by 3, since $f(0), f(1), f(2)$ are $1, 2, 5$,
+none divisible by 3. So for a polynomial the sieve steps from each root, and primes without roots are skipped.
+
+**Try this.** Run `table(mod(a^2 + 1, 13), a, 0, 25)`. Where are the zeros? Which two roots does $x^2 + 1$ have mod 13?
+
+%md
+## 4. Two worlds that agree modulo N
+
+Here is the new idea. Take $N = 65$ and $m = 8$, so that $m^2 + 1 = 65 \equiv 0 \pmod{65}$. So $m$ behaves like a
+square root of $-1$ modulo 65. Compare computing with $i$ (where $i^2 = -1$) and with 8 modulo 65:
+
+%code
+expand((3 - 2*i)*(1 + i))
+mod((3 - 2*8)*(1 + 8), 65)
+mod(5 + 8, 65)
+
+%md
+With $i$: $(3 - 2i)(1 + i) = 5 + i$. Put 8 in place of $i$ everywhere: both sides give 13 modulo 65. That is no
+accident. Multiplying out uses only the rules of arithmetic and $i^2 = -1$; modulo 65, $8^2 = -1$ holds as well. So
+**any** calculation with numbers $a + b\,i$ can be done first in the world of $i$ and then translated, $i \mapsto 8$,
+and the answer is right modulo 65.
+
+In general: take a polynomial $f$ and a number $m$ with $f(m) \equiv 0 \pmod N$. Let $\alpha$ be a root of $f$ (for
+$f = x^2 + 1$, $\alpha = i$). Numbers $a - b\alpha$ multiply like polynomials in $\alpha$, and replacing $\alpha$ by
+$m$ keeps every result correct modulo $N$. So if a set of pairs $(a, b)$ has
+
+$$\prod (a - b m) = X^2 \text{ (a square of whole numbers)} \quad\text{and}\quad \prod (a - b\alpha) = \beta^2 \text{ (a square in the world of } \alpha),$$
+
+then translating $\beta^2$ gives $\beta(m)^2 \equiv \prod (a - bm) = X^2 \pmod N$. That is a congruence of squares,
+exactly as in section 1, and $\gcd(X - \beta(m), N)$ is a factor half of the time.
+
+**Smooth in the world of $\alpha$.** The size of $a - b\alpha$ is measured by its **norm**, a whole number. For
+$x^2 + 1$ it is $a^2 + b^2$; in general it is $F(a, b) = b^d f(a/b)$, and norms multiply:
+$(3 - 2i)(1 + i) = 5 + i$ has norms $13 \cdot 2 = 26$. We call $a - b\alpha$ smooth when its norm is smooth. The
+primes dividing norms are the roots from section 3 again: $p$ divides $F(a, b)$ exactly when $a \equiv b r \pmod p$
+for a root $r$ of $f$ mod $p$.
+
+**Why bother?** Because the two numbers that must be smooth, $a - bm$ and $F(a, b)$, can both be far smaller than
+$\sqrt N$. For $N = 2^{128} + 1$ there is a neat polynomial: $2 (2^{128} + 1) = (2^{43})^3 + 2$, so $f(x) = x^3 + 2$
+and $m = 2^{43}$. Here is the pair $a = -100$, $b = 1$ in both worlds:
 
 %code
 m = 2^43
-a = -100; b = 1
+a = -100; b = 1;
 factor(a - b*m)
 factor(a^3 + 2*b^3)
 
 %md
-Both sides break into primes below 300: the pair is **smooth on both sides**. The rational side is about $10^{13}$
-and the algebraic side about $10^6$, while the quadratic sieve would be looking at numbers near $\sqrt N \approx 10^{19}$.
-Smaller numbers are far more likely to be smooth, and that is the whole advantage.
+Both sides split into primes below 300. The first number is about $10^{13}$, the norm about $10^6$; the quadratic
+sieve would need smooth numbers near $\sqrt N \approx 10^{19}$. (This pair has $b = 1$ and a small $a$. Over the
+whole region the sieve searches, with $b$ in the hundreds, $a - bm$ is more like $10^{15}$ and the norm $10^{12}$:
+still far below $10^{19}$.) After section 2, you know what that is worth.
+
+**Try this.** Change `a` to `-101` and `-99`. Are both sides still smooth? Most pairs fail on at least one side,
+which is why we need a sieve.
 
 %md
-## 2. The whole method on $2^{128} + 1$
+# Part B: the real method
 
-`gnfs(N)` runs the number field sieve. Its result is the pair of factors, smaller first, as a row you can use in
-the next line; the explanation below it shows each step (`explain = false` hides explanations, here and for every
-command). Without a polynomial it tries the special forms that the
-algebraic factoring of lesson 3 recognizes ($N$ divides $b^k \pm 1$) and base-$m$ polynomials, and picks the one with
-the best score.
+## 5. The whole method on $2^{128} + 1$
+
+`gnfs(N)` runs the number field sieve. Its result is two numbers whose product is $N$, smaller first (when $N$ has
+more than two prime factors, they need not be prime). Its cost is counted in **work units**, basic operations, as in
+lesson 6: they compare runs fairly on any computer. With `explain = "teach"` its
+explanation walks through every step with this run's own numbers: the polynomial, the factor bases, real relations
+you can check, the matrix, the two square roots and the gcd. (`explain = true` gives the short log instead, and
+`explain = false` hides explanations.)
 
 %code
+explain = "teach";
 gnfs(2^128 + 1)
 
 %md
-How to read the explanation:
+Read the explanation step by step, then check yourself:
 
-1. **Polynomial.** For $2^{128} + 1$ it picks $x^3 + 2$, $m = 2^{43}$ from the form $2^{128} + 1$.
-2. **Factor bases.** On the rational side, the primes $p$ up to a bound $B$. On the algebraic side, the pairs
-   $(p, r)$ with $f(r) \equiv 0 \pmod p$: the prime $p$ divides the norm of $a - b\alpha$ exactly when
-   $a \equiv b r \pmod p$. (These pairs are the prime ideals of degree one; the norm alone cannot tell which root,
-   and it matters.)
-3. **Sieve.** For each line $b = 1, 2, \ldots$ and $|a| \le A$, add $\log p$ at every $a \equiv b m \pmod p$ on the
-   rational side and every $a \equiv b r \pmod p$ on the algebraic side, exactly like the sieve of Eratosthenes.
-   Where both totals come close to the size of the number, check by division. One leftover **large prime** per side
-   is allowed; it is useful only if another relation has the same one.
-4. **Linear algebra.** Each relation is a vector of exponents mod 2 (plus the signs). Relations that share a rare
-   prime are added together first, which shrinks the matrix, then Gaussian elimination finds sets whose exponents
-   are all even. Even exponents on the algebraic side are not quite enough for a square in $\mathbb{Z}[\alpha]$
-   (units and the class group get in the way), so there are 24 more columns: **quadratic characters**, the
-   Legendre symbols $\left(\frac{a - b s}{q}\right)$ for primes $q$ outside the factor base. A real square gives $+1$
-   for every one of them. Characters make a square very likely, not certain; if a set still is not a square, the
-   square root step notices and moves on to the next set.
-5. **Square roots.** The rational one comes from halving the exponents. The algebraic one, $\beta$ with
-   $\beta^2 = f'(\alpha)^2 \prod (a - b\alpha)$, is the hard part of the method: Galileo takes a prime $q$ where $f$
-   has $d$ roots, takes square roots of the product at each root modulo $q$, lifts them to modulo $q^{k}$ (Hensel's
-   lemma, Newton's method for $p$-adic numbers) until $q^k$ is larger than the coefficients of $\beta$, and
-   interpolates. The coefficients have thousands of digits, but they are exact. (The factor $f'(\alpha)^2$
-   guarantees that $\beta$ has whole-number coefficients.)
-6. **gcd.** $X = f'(m) \prod \sqrt{a - b m}$ and $Y = \beta(m)$ satisfy $X^2 \equiv Y^2 \pmod N$. If $X \equiv \pm Y$
-   the set was unlucky and the next one is tried.
+* **Step 2.** Why is there no pair $(7, r)$ in the algebraic factor base? (Hint: section 3, and cubes modulo 7.)
+* **Step 3.** Pick one of the relations shown and check it with `factor(a - b*m)` and `factor(a^3 + 2*b^3)`.
+* **Step 3.** Why are relations with one large prime worth keeping, though one alone can never be part of a square?
+* **Step 4.** Why do we need more relations than primes? (Section 1: rows of exponents mod 2.)
+* **Step 6.** Check the last line: `X^2 - Y^2` should be divisible by $N$. Copy $X$ and $Y$ from the explanation and
+  run `mod(X^2 - Y^2, 2^128 + 1)`.
+
+Three things deserve a word more than the explanation gives:
+
+* **Quadratic characters (step 4).** In the world of $\alpha$, even exponents do not quite guarantee a square, much
+  as $-1$ has even exponents (no primes at all) yet is not the square of a whole number. Numbers like $-1$ that
+  divide 1 are called **units**, and the world of $\alpha$ can have more of them, plus a subtler obstruction (the
+  class group). The fix is a test. The **Legendre symbol** $(x \mid q)$ is $+1$ when $x$ is a nonzero square modulo
+  the prime $q$ and $-1$ when it is not. Pick a prime $q$ and a root $s$ of $f$ mod $q$; replacing $\alpha$ by $s$
+  turns a true square $\beta^2$ into a square mod $q$, so $\prod (a - bs)$ must give $+1$. A product that only
+  looks like a square fails such a test about half the time, so 24 tests (24 more columns, each test written as 0
+  for $+1$ and 1 for $-1$, so that the matrix also makes them add up to $+1$) let a fake through only rarely. When
+  one does slip through, the square-root step notices and tries the next set.
+* **Why $f'$ (step 5).** A square root of $\prod (a - b\alpha)$ can have fractions in its coefficients. Multiplying
+  by $f'(\alpha)^2$, where $f'$ is the derivative of $f$, rules that out (a theorem, not obvious). To keep the two
+  sides equal modulo $N$, the rational side is multiplied by the matching $f'(m)^2$, which is why $X$ contains $f'(m)$.
+* **The algebraic square root (step 5)** is the hardest part of the method. Galileo works modulo a prime $q$ where
+  $f$ has $d$ roots, takes ordinary square roots there, and then sharpens them to square roots modulo $q^2$, $q^4$,
+  … (**Hensel lifting**, Newton's method done with remainders) until $q^k$ is larger than any coefficient of
+  $\beta$, which then can be read off. You don't need the details to follow the method.
 
 %md
-## 3. When the polynomial factors
+## 6. When the polynomial factors
 
-Some special forms give a polynomial that is not irreducible. Then the number field sieve has nothing to do: if
-$f = g h$ then $f(m) = g(m) h(m)$, and $\gcd(g(m), N)$ often is a factor already. This is exactly the algebraic
-factoring of lesson 3. Sophie Germain's identity $x^4 + 4 = (x^2 + 2x + 2)(x^2 - 2x + 2)$ with $x = 2^{20}$ gives
-$2^{80} + 4 = 4 (2^{78} + 1)$:
+If $f = g \cdot h$, then $f(m) = g(m)\,h(m)$, and the primes of $N$ are shared between $g(m)$ and $h(m)$. A gcd
+finds them without any sieving. Sophie Germain's identity from [lesson 3](03-algebraic-factoring.ipynb),
+$x^4 + 4 = (x^2 + 2x + 2)(x^2 - 2x + 2)$, with $x = 2^{20}$ gives $2^{80} + 4 = 4 (2^{78} + 1)$. `gnfs(N, f, m)`
+uses your own polynomial (it needs $f(m)$ divisible by $N$):
 
 %code
 gnfs(2^78 + 1, x^4 + 4, 2^20)
 
 %md
-`gnfs(N, f, m)` uses your polynomial; $f(m)$ must be divisible by $N$. That is how one special form can give a
-cheap algebraic split while the same idea with an irreducible $f$ powers the sieve.
+So the same special form can give a cheap algebraic split (when $f$ factors) or a fast sieve (when it does not).
+
+**Try this.** `gnfs(10^40 + 1, x^5 + 1, 10^8)`. What happens, and why? (What is $x^5 + 1$ over the integers?)
 
 %md
-## 4. Choosing the polynomial
+## 7. Choosing the polynomial
 
-The time of the sieve depends mostly on how large the two norms are. `nfspoly(N)` lists polynomials with a
-**score**: the estimated number of bits of both norms over a typical sieve region, plus Murphy's $\alpha$, which
-rewards polynomials that have many roots modulo small primes (their values are divisible by small primes more often
-than random numbers). Lower is better.
+The sieve's speed depends mostly on how large the two numbers $a - bm$ and $F(a, b)$ are. `nfspoly(N)` lists
+candidate polynomials with a **score**: estimated bits of the two numbers together, plus a correction for how often
+small primes divide $f$'s values. That correction is called Murphy's alpha, written "alpha" here; it has nothing to
+do with the root $\alpha$ of $f$. Lower is better. In teaching mode it explains each column with the top
+row's numbers:
 
 %code
 nfspoly(2^128 + 1)
 
 %md
-The degree is a balance. A higher degree makes $m = N^{1/d}$ and so the rational norm smaller, but the algebraic
-norm grows like $A^d$. Try two of them on the same number:
+The degree is a balance: a higher degree makes $m \approx N^{1/d}$ and so $a - bm$ smaller, but the norm grows like
+$a^d$. The explanation lists both sizes for each degree. Try degree 4 on the same number and compare the work
+units with the run in section 5:
 
 %code
+explain = true;
 gnfs(2^128 + 1, x^4 + 1, 2^32)
 
 %md
-For a number without a special form, only the base-$m$ polynomials remain, and their coefficients are as large as
-$m$:
+For a number without a special form, only **base $m$** remains: pick $m \approx N^{1/d}$ and write $N$ in base $m$;
+the digits are the coefficients of $f$, so $f(m) = N$. Those digits are as large as $m$:
 
 %code
+explain = "teach";
 N = semiprime(40, 1)
 nfspoly(N)
 
 %md
-Compare the scores with the special form above: about 113 bits against 93 for $2^{128} + 1$, which has about the
-same size. Twenty bits more in the norms means far fewer smooth pairs. That is why the special number field sieve
-reaches numbers about 1.5 times as long as the general one with the same work. Serious programs spend hours
-searching for good polynomials (Kleinjung's method, root sieving); `nfspoly` only tries a few values of $m$.
+About 113 bits against 93 for $2^{128} + 1$, a number of the same size. Twenty bits more on the numbers that must
+be smooth means far fewer smooth pairs (section 2). That is why the **special** number field sieve, for numbers
+like $b^k \pm 1$, reaches much longer numbers than the **general** one with the same work: in the cost formula of
+section 9 its constant is 1.53 instead of 1.92, and it has factored numbers of over 300 digits while the general
+record is 250.
 
-### Searching harder: `polyselect`
+**Try this.** `nfspoly(N, 3)` lists only degree 3. Compare its best score with the degree-4 one above.
 
-`polyselect(N, d, generations)` searches more widely, in three steps:
+%md
+## 8. Searching harder: `polyselect`
 
-1. **Base $m$:** write $N$ in base $m \approx N^{1/d}$, which gives $f$ with $f(m) = N$.
-2. **Root sieve:** rotations $f + (jx + k)(x - m)$ keep the common root $m$ for free. A sieve over $j$ and $k$
-   finds the rotation with the most roots modulo small primes, that is the most negative $\alpha$.
-3. **Evolution:** a population of candidates (leading coefficient, shift of $m$, rotation) is mutated, and the
-   fittest survive by **Murphy's $E$**. $E$ is the average of $\rho(u_f)\,\rho(u_g)$ over the sieve region, where
-   Dickman's $\rho(u)$ is the chance that a number of size $B^u$ has no prime factor above $B$. It estimates how
-   often both norms are smooth at the same time.
+Serious factorizations spend a few percent of their time just choosing the polynomial. `polyselect(N, d, generations)`
+shows the three standard steps; the teaching explanation after the table walks through each with its numbers:
 
-Real sieves use a skewed region: much wider in $a$ than in $b$ when the coefficients of $f$ shrink from $a_0$ to
-$a_d$. So the table also shows the best **skew** and the **lognorm**, the size of $F(a, b)$ over that region:
+1. **Base $m$**, as above.
+2. **Root sieve**: adding $(jx + k)(x - m)$ to $f$ keeps $f(m) = N$ but changes how many roots $f$ has modulo small
+   primes. More roots means values divisible by small primes more often (section 3), so smooth more often.
+3. **Evolution**: many candidates are changed at random and the best survive, judged by **Murphy's $E$**, an
+   estimate of the chance that both numbers are smooth.
+
+Unlike `nfspoly`, `polyselect` allows a leading coefficient $a_d$ other than 1 (a **monic** polynomial is one with
+leading coefficient 1). Then $m$ is about $(N/a_d)^{1/d}$ and may also be moved a few units ("m shift"), so the $m$
+in each row differs from `nfspoly`'s. The table's columns: leading coefficient, shift of $m$, rotation $(j, k)$, the
+**skew** (real sieves search a region that many times wider in $a$ than in $b$), the **lognorm** (the natural
+logarithm of how large $F(a, b)$ typically is there), alpha and $E$. The bounds $B$ and the area in the first line
+are the sieve that $E$ imagines; they only matter for comparing.
 
 %code
 polyselect(N, 4, 20)
 
 %md
-The search mostly improves $\alpha$ and the leading coefficient. Galileo's own sieve wants a monic $f$ and sieves a
-rectangle without skew, so `polyselect` also runs a monic search scored by `gnfs`'s own estimate, and prints a
-`gnfs(...)` line to paste. On this 40-digit number, `gnfs(N)` with its own polynomial took $1.6 \cdot 10^8$ work units,
-and with the polynomial from `polyselect` $1.6 \cdot 10^7$, ten times less. On another 38-digit semiprime the gain was
-3.7 times. Run both and compare; each takes from seconds to a few minutes.
+`polyselect`'s value is not the best row of the table but a second pair [f(x) m], from a search that keeps $f$
+monic because Galileo's own sieve needs that, and scores on its plain rectangle (see the end of the explanation). So
+`r = polyselect(N, 4, 20)` and then `gnfs(N, r(1, 1), r(1, 2))` uses it. On this 40-digit number that took
+$1.6 \cdot 10^7$ work units, against $1.6 \cdot 10^8$ for `gnfs(N)` with its own polynomial: ten times less. (Each run
+takes from seconds to a few minutes, so it is not run here; try it.)
 
-The same search on RSA-100 (the 100-digit RSA challenge number, factored in 1991) raises $E$ about twentyfold over
+The same search on RSA-100, the 100-digit RSA challenge number factored in 1991, raises $E$ about twentyfold over
 plain base $m$:
 
 %code
@@ -168,70 +329,108 @@ load(RSA);
 polyselect(RSA100, 4, 30)
 
 %md
-Two cautions. First, $E$ only compares polynomials for the same $N$ and the same sieve: a polynomial chosen for a
-skewed lattice sieve can be worse in a rectangle, which is why there are two searches. Second, a better polynomial
-saves a constant factor, typically tens of percent at record sizes, but it does not change how the cost grows with
-$N$. Evolution or a neural network could tune the search; they cannot remove the $L_N[1/3]$ in the running time.
+Keep two things in mind. $E$ only compares polynomials for the same $N$ and the same kind of sieve. And a better
+polynomial saves a constant factor, it does not change how the cost grows with $N$.
 
 %md
-## 5. General numbers and the race against the quadratic sieve
+## 9. The race against the quadratic sieve
 
-Here is the general number field sieve on a 30-digit semiprime:
+The theory says: for large $N$ the number field sieve's cost grows like
+$L(1/3) = e^{1.92 (\ln N)^{1/3} (\ln \ln N)^{2/3}}$, the quadratic sieve's like $L(1/2)$. The $1/3$ in the exponent
+wins in the end. But "in the end" is far away. Here is the general number field sieve on a 30-digit semiprime, and
+the scoreboard of lesson 6 with both methods:
 
 %code
+explain = true;
 gnfs(semiprime(30, 1))
-
-%md
-And the scoreboard of lesson 6, with `"nfs"` as a method:
 
 %code
 sb = scoreboard(["qs" "nfs"], 20:4:32, 1, 30)
 scoreplot(sb)
 
 %md
-The quadratic sieve wins at these sizes, by a factor of about 30. That is not a flaw of the lesson: also in serious
-implementations the number field sieve only overtakes the quadratic sieve at around 100 digits, because its steps
-(two factor bases, characters, the algebraic square root) cost more and its advantage, the $1/3$ in the exponent,
-grows slowly. With this code on a normal computer:
+(Ignore the fitted growth laws in the scoreboard's explanation: four sizes are too few to tell the laws apart, as it
+says itself.) At these sizes the quadratic sieve wins by a factor of about 30. That is not a flaw of the lesson: in serious
+programs too, the number field sieve only overtakes the quadratic sieve at around 100 digits. Its extra steps (two
+factor bases, characters, the algebraic square root) cost more, and its advantage grows slowly. With this code on a
+normal computer:
 
-* the 51-digit part of $2^{193} - 1$ (special form, polynomial $x^4 - 8$): about 7 s, quadratic sieve about 2 s,
+* the 51-digit part of $2^{193} - 1$ (special form, $x^4 - 8$): about 7 s, quadratic sieve about 2 s;
 * the Fermat number $2^{256} + 1$ (78 digits, special form $x^5 + 16$, $m = 2^{52}$): the special number field
-  sieve splits it as $1238926361552897 \times p_{62}$ in under 3 minutes, while the quadratic sieve of lesson 6 does
-  not finish in 5 minutes.
+  sieve splits it as $1238926361552897$ times a 62-digit prime in under 3 minutes; the quadratic sieve of lesson 6 does not
+  finish in 5 minutes.
 
-Larger numbers need what real programs (CADO-NFS, msieve) add: lattice sieving instead of line sieving, two or three
-large primes per side, block Lanczos or block Wiedemann for matrices with millions of rows, and good polynomials. With
-those, RSA-250 took about 2700 core-years.
+Record factorizations add what this teaching version leaves out: lattice sieving, two or three large primes per
+side, block methods for matrices with millions of rows, and long polynomial searches. RSA-250 took about 2700
+core-years.
 
 %md
 ## Summary
 
-* Two worlds: $\mathbb{Z}$ and $\mathbb{Z}[\alpha]$ with $f(\alpha) = 0$, joined by $\alpha \mapsto m$ modulo $N$.
-* A relation is a pair $(a, b)$ with $a - bm$ and the norm $b^d f(a/b)$ both smooth; a sieve finds them.
-* Linear algebra mod 2, with signs and quadratic characters, picks a square on both sides; the algebraic square root
-  is computed $q$-adically.
-* Special forms give tiny polynomials (SNFS); forms whose polynomial factors are split by algebra alone.
-* `gnfs(N)`, `gnfs(N, f, m)`, `nfspoly(N)`, and the method `"nfs"` in `labrun` and `scoreboard`.
-* `polyselect(N, d)`: base $m$, a root sieve for $\alpha$ and an evolutionary search by Murphy's $E$, plus a monic
-  pair for `gnfs`.
+* $X^2 \equiv Y^2 \pmod N$ with $X \not\equiv \pm Y$ gives a factor $\gcd(X - Y, N)$. Squares are built from many
+  **smooth** numbers by solving a linear system mod 2 on their exponents.
+* Smooth numbers get rare fast as numbers grow, so the size of the numbers that must be smooth decides everything.
+* The number field sieve uses $f(m) \equiv 0 \pmod N$ and a root $\alpha$ of $f$: two worlds, joined by
+  $\alpha \mapsto m$, that agree modulo $N$. Its numbers $a - bm$ and $F(a, b)$ are about $N^{1/d}$ times small
+  factors, far smaller than the quadratic sieve's $\sqrt N$ when $N$ is large.
+* A sieve finds pairs where both are smooth; linear algebra mod 2 (with characters) picks a square on both sides;
+  square roots and a gcd finish.
+* Special forms give tiny polynomials (SNFS); a polynomial that factors gives a factor by algebra alone.
+* Commands: `gnfs(N)`, `gnfs(N, f, m)`, `nfspoly(N)`, `polyselect(N, d, generations)`, and `explain = "teach"` for
+  step-by-step explanations.
 
-**Try it:** run `gnfs(2^128 + 1, x^5 + 4, 2^26)` (degree 5) and compare the work with degree 3 and 4. Run
-`gnfs(10^40 + 1, x^5 + 1, 10^8)` and explain what happens (what is $x^5 + 1$ over the integers?). Compare
-`labrun("nfs", 2^128 + 1)` with `labrun("ecm", 2^128 + 1)`: why does ECM win here, where one factor has only 17
-digits?
+## Exercises
+
+1. **By hand.** $N = 2041$, $\sqrt N \approx 45.2$. Compute `table([x, mod(x^2, N)], x, 46, 52)`, find a set of
+   remainders (it may take more than two) whose product is a square, and factor 2041 with a gcd.
+2. **Degree.** Run `gnfs(2^128 + 1, x^5 + 4, 2^26)` (degree 5) and compare the work with degrees 3 and 4. Which is
+   fastest, and does `nfspoly` predict it?
+3. **Reducible polynomials.** Explain what `gnfs(10^40 + 1, x^5 + 1, 10^8)` does (section 6).
+4. **The right tool.** (`labrun(method, N)` from lesson 6 runs one method on one number.) Compare `labrun("nfs", 2^128 + 1)` with `labrun("ecm", 2^128 + 1)`. Why does the elliptic
+   curve method win here? (How many digits does the smaller factor have?)
+5. **Smoothness.** Using `smooth` from section 2, estimate how many of 1000 numbers near $10^{15}$ are 100-smooth.
+   What does that say about using the bound 100 for the numbers in section 5?
+
+## Hints and answers
+
+* **Section 1, Try this.** $57^2 \equiv 1600 = 40^2$: $X = 57$, $Y = 40$, $\gcd(57 - 40, 1649) = 17$ and
+  $\gcd(57 + 40, 1649) = 97$.
+* **Section 2, Try this.** With bound 1000: 266, 41 and 4 of 1000, so seven to fourteen times as many smooth
+  numbers. But there are 168 primes up to 1000 against 25 up to 100, so you also need about seven times as many,
+  and each one costs more to check. Which bound is best depends on the size of the numbers; real programs choose it
+  by experiment.
+* **Section 3, Try this.** Zeros at $a \equiv 5$ and $a \equiv 8 \pmod{13}$: $5^2 + 1 = 26$, $8^2 + 1 = 65$.
+* **Section 4, Try this.** Usually not: one side or the other has a large prime factor.
+* **Step 2 question.** $a^3 + 2 \equiv 0 \pmod 7$ needs a cube equal to $5$ mod 7, but cubes mod 7 are only 0, 1 and 6.
+* **Section 7, Try this.** Best degree 3 score 118.1, against 113.2 for degree 4: for 40 digits degree 4 is better.
+* **Exercise 1.** The smooth remainders are $46^2 \equiv 75 = 3 \cdot 5^2$, $47^2 \equiv 168 = 2^3 \cdot 3 \cdot 7$,
+  $49^2 \equiv 360 = 2^3 \cdot 3^2 \cdot 5$ and $51^2 \equiv 560 = 2^4 \cdot 5 \cdot 7$. Over the primes 2, 3, 5, 7
+  their rows mod 2 are $[0\ 1\ 0\ 0]$, $[1\ 1\ 0\ 1]$, $[1\ 0\ 1\ 0]$, $[0\ 0\ 1\ 1]$, and only all four
+  together add up to zeros. So $X = 46 \cdot 47 \cdot 49 \cdot 51$, $Y = 2^5 \cdot 3^2 \cdot 5^2 \cdot 7 = 50400$, and
+  $\gcd(X - Y, 2041) = 13$, $\gcd(X + Y, 2041) = 157$. (Going on to $x = 59$: $59^2 \equiv 1440$ has the same row
+  as 360, so 49 and 59 alone also work.)
+* **Exercise 2.** Degree 3 about $1.7 \cdot 10^6$ work units, degree 4 $2.2 \cdot 10^6$, degree 5 $4.1 \cdot 10^6$.
+  `nfspoly` predicted that order: scores 92.9, 96.9 and 102.7.
+* **Exercise 3.** $x^5 + 1 = (x + 1)(x^4 - x^3 + x^2 - x + 1)$, so $g(m) = 10^8 + 1$ shares a factor with $N$:
+  `gnfs` returns $10^8 + 1 = 100000001$ and $N / (10^8 + 1)$ at once. Neither is prime ($10^8 + 1 = 17 \cdot 5882353$),
+  which is fine: the method only promised a split.
+* **Exercise 4.** The smaller factor, 59649589127497217, has only 17 digits. ECM's cost depends on the size of the
+  smallest factor, the sieves' cost on the size of $N$.
+* **Exercise 5.** About 1 in 1000, almost none: the sieve in section 5 uses a much larger bound (a few thousand) plus a large prime,
+  because its numbers are about $10^{12}$ to $10^{15}$.
 
 %md
 ## Sources
 
 1. A. K. Lenstra and H. W. Lenstra (eds.), *The Development of the Number Field Sieve*, Lecture Notes in Math. 1554, Springer (1993).
 2. J. P. Buhler, H. W. Lenstra and C. Pomerance, "Factoring integers with the number field sieve", in [1], 50–94.
-3. C. Pomerance, "A tale of two sieves", *Notices of the AMS* 43 (1996) 1473–1485.
+3. C. Pomerance, "A tale of two sieves", *Notices of the AMS* 43 (1996) 1473–1485. The best first reading on both sieves.
 4. A. K. Lenstra, H. W. Lenstra, M. S. Manasse and J. M. Pollard, "The factorization of the ninth Fermat number", *Math. Comp.* 61 (1993) 319–349.
 5. R. P. Brent and J. M. Pollard, "Factorization of the eighth Fermat number", *Math. Comp.* 36 (1981) 627–630.
-6. M. E. Briggs, *An Introduction to the General Number Field Sieve*, master's thesis, Virginia Tech (1998).
+6. M. E. Briggs, *An Introduction to the General Number Field Sieve*, master's thesis, Virginia Tech (1998). A gentle, complete walk-through.
 7. B. A. Murphy, *Polynomial Selection for the Number Field Sieve Integer Factorisation Algorithm*, PhD thesis, Australian National University (1999).
 8. P. L. Montgomery, "Square roots of products of algebraic numbers", *Proc. Symp. Applied Math.* 48 (1994) 567–571; J.-M. Couveignes, "Computing a square root for the number field sieve", in [1], 95–102.
 9. F. Boudot, P. Gaudry, A. Guillevic, N. Heninger, E. Thomé and P. Zimmermann, "Comparing the difficulty of factorization and discrete logarithm: a 240-digit experiment", *CRYPTO 2020*; the RSA-250 announcement (2020).
 10. R. Crandall and C. Pomerance, *Prime Numbers: A Computational Perspective*, 2nd ed., Springer (2005), section 6.2.
 11. T. Kleinjung, "On polynomial selection for the general number field sieve", *Mathematics of Computation* 75 (2006) 2037–2047.
-12. S. Bai, C. Bouvier, A. Kruppa and P. Zimmermann, "Better polynomials for GNFS", *Mathematics of Computation* 85 (2016) 861–873 (root sieve and size optimization in CADO-NFS).
+12. S. Bai, C. Bouvier, A. Kruppa and P. Zimmermann, "Better polynomials for GNFS", *Mathematics of Computation* 85 (2016) 861–873.
