@@ -1,7 +1,7 @@
 %md
 # Number theory 3: Modular arithmetic
 
-*Learning path: number theory, part 4 of 5.* [Index](README.md) · Previous: [Algebraic factoring](03-algebraic-factoring.ipynb) · Next: [Cryptography](05-cryptography.ipynb)
+*Learning path: number theory, part 4 of 6.* [Index](README.md) · Previous: [Algebraic factoring](03-algebraic-factoring.ipynb) · Next: [Cryptography](05-cryptography.ipynb)
 
 Clock arithmetic: 5 hours after 9 o'clock it is 2 o'clock, because $9 + 5 = 14$ and we only keep the remainder after
 dividing by 12. Gauss turned this into a whole arithmetic in 1801, and it is the arithmetic of computers, check digits,

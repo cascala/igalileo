@@ -10,6 +10,7 @@ cryptography. Every method is written as a short Galileo function, so you can ch
 | 3 | [Algebraic factoring](03-algebraic-factoring.ipynb) | the $10^{300} + 1$ mystery, cyclotomic polynomials, which primes divide $\Phi_d(b)$, Sophie Germain's identity, Aurifeuillean factors and the Cunningham Project, hunting for new identities with `factorsearch` |
 | 4 | [Modular arithmetic](04-modular-arithmetic.ipynb) | congruences, divisibility tests, fast powers, Fermat's little theorem and Euler's theorem, inverses, the Chinese remainder theorem, orders and primitive roots |
 | 5 | [Cryptography](05-cryptography.ipynb) | shift ciphers, the Diffie–Hellman key exchange, RSA keys, encryption and signatures, breaking small keys, the quantum threat |
+| 6 | [The factoring lab](06-factoring-lab.ipynb) | RSA-like test numbers, a scoreboard of nine factoring methods with fitted growth laws, scoring your own method, a search for new factoring programs (and why its wins vanish on new numbers), hunting for leaks of $p$ in features of $N$ with corrected p-values |
 
 Prerequisites: the [Numbers](../foundations/01-numbers.ipynb) lesson of the foundations path.
 

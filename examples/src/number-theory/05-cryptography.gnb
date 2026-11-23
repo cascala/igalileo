@@ -1,7 +1,7 @@
 %md
 # Number theory 4: Cryptography
 
-*Learning path: number theory, part 5 of 5.* [Index](README.md) · Previous: [Modular arithmetic](04-modular-arithmetic.ipynb)
+*Learning path: number theory, part 5 of 6.* [Index](README.md) · Previous: [Modular arithmetic](04-modular-arithmetic.ipynb) · Next: [The factoring lab](06-factoring-lab.ipynb)
 
 Until 1976 two people could only communicate secretly if they had first met, or used a courier, to agree on a secret
 key. Then Diffie and Hellman, and a year later Rivest, Shamir and Adleman, showed how to do it with nothing but
@@ -187,7 +187,7 @@ ML-DSA), based on lattices instead of primes, and browsers have started using th
 it with `factor` (does it work? how long does it take?). What goes wrong if $p = q$? Why must $\gcd(e, \varphi(n)) = 1$?
 In Diffie–Hellman, what happens if $g$ is not a primitive root, for example $g = p - 1$?
 
-This is the end of the number theory path. Related paths: [Group theory](../group-theory/README.md), where the
+Next, the [factoring lab](06-factoring-lab.ipynb) puts all the factoring methods on a scoreboard and searches for new ones. Related paths: [Group theory](../group-theory/README.md), where the
 numbers $1, \ldots, p - 1$ under multiplication mod $p$ reappear as a cyclic group.
 
 %md
