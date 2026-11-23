@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Galileo</title>
-<meta name="description" content="Galileo is a small computer algebra system: symbolic math, plots, differential geometry and general relativity. It runs in your browser, with nothing to install.">
+<meta name="description" content="Galileo is a small, free computer algebra system with interactive lessons: solve equations, take derivatives, factor big numbers, draw fractals and 3D plots. It runs in your browser, with nothing to install.">
 <meta property="og:title" content="Galileo: computer algebra in your browser">
-<meta property="og:description" content="Symbolic math, 3D plots, curvature tensors and black holes, all running locally in your browser.">
+<meta property="og:description" content="Algebra, calculus, primes, fractals and 3D plots, with interactive lessons. Free, and it runs right in your browser.">
 <meta property="og:image" content="img/playground.png">
 <link rel="icon" href="logo.svg" type="image/svg+xml">
 <style>
@@ -78,20 +78,20 @@ footer { border-top: 1px solid var(--line); color: var(--muted); font-size: 14px
 
   <div class="hero">
     <div>
-      <h1>Symbolic math and <em>general relativity</em>, in your browser.</h1>
-      <p>Galileo is a small computer algebra system. Take derivatives, invert symbolic matrices, draw 3D surfaces and compute the curvature of a black hole. Everything runs locally in your browser.</p>
+      <h1>Math you can <em>play with</em>, right in your browser.</h1>
+      <p>Galileo is a small, free computer algebra system. Solve equations, take derivatives, factor big numbers, draw fractals and 3D surfaces, and learn as you go with interactive lessons. Nothing to install: everything runs on your own device.</p>
       <div class="cta">
         <a class="btn primary" href="playground/">Open the playground</a>
-        <a class="btn" href="lab/lab/index.html?path=galileo-tour.ipynb">Notebooks (JupyterLite)</a>
+        <a class="btn" href="playground/#lesson/foundations/01-numbers">Start the first lesson</a>
       </div>
-      <p class="try">Try: <a href="playground/?code=WyJwbG90M2Qoc2luKHgpKmNvcyh5KSwgeCwgLXBpLCBwaSwgeSwgLXBpLCBwaSkiXQ">plot3d(sin(x)*cos(y), …)</a> · <a href="playground/?code=WyJnID0gbWV0cmljLmdlbmVyYXRlKHNjaHdhcnpzY2hpbGQpIiwia3JldHNjaG1hbm4oZykiXQ">kretschmann(schwarzschild)</a></p>
+      <p class="try">Try: <a href="playground/?code=WyJzb2x2ZSh4XjIgLSB4IC0gMSwgeCkiXQ">solve(x^2 - x - 1, x)</a> · <a href="playground/?code=WyJmYWN0b3IoMl42NyAtIDEpIl0">factor(2^67 - 1)</a> · <a href="playground/?code=WyJNID0gbWFuZGVsYnJvdCgtMi4yLCAwLjgsIC0xLjIsIDEuMiwgMTgwKTsiLCJzY2F0dGVyKE0sIFtyZSBpbV0pIl0">mandelbrot(…)</a> · <a href="playground/?code=WyJwbG90M2Qoc2luKHgpKmNvcyh5KSwgeCwgLXBpLCBwaSwgeSwgLXBpLCBwaSkiXQ">plot3d(sin(x)*cos(y), …)</a></p>
     </div>
     <a class="shot" href="playground/"><img src="img/playground.png" alt="The Galileo playground showing a derivative, a symbolic matrix inverse and an interactive 3D surface" width="1200" height="900"></a>
   </div>
 
   <section>
     <h2>What it does</h2>
-    <p class="sub">A compact language with exact arithmetic. Each line is a statement; every result is shown.</p>
+    <p class="sub">Type math the way you would write it. Answers are exact, and every result is shown.</p>
     <div class="grid">
       <div class="card"><h3>Algebra and calculus</h3><p>Exact fractions, derivatives, expansion, factoring and simplification.</p><pre>deriv(x^3*sin(x), x)
 simplify(sin(y)^2 + cos(y)^2)</pre></div>
@@ -99,14 +99,14 @@ simplify(sin(y)^2 + cos(y)^2)</pre></div>
 det([1 x; x 1])</pre></div>
       <div class="card"><h3>Plots in 2D and 3D</h3><p>Functions, parametric curves and surfaces you can rotate and zoom.</p><pre>surface((2+cos(v))*cos(u), (2+cos(v))*sin(u),
   sin(v), u, 0, 2*pi, v, 0, 2*pi)</pre></div>
-      <div class="card"><h3>Differential geometry</h3><p>Metrics, Christoffel symbols, Riemann, Ricci and Einstein tensors, geodesics.</p><pre>g = metric.generate(schwarzschild)
-kretschmann(g)</pre></div>
+      <div class="card"><h3>Primes and big numbers</h3><p>Whole numbers of any size, primality tests and fast factoring.</p><pre>factor(2^67 - 1)
+isprime(2^127 - 1)</pre></div>
     </div>
   </section>
 
   <section>
     <h2>Learn by doing</h2>
-    <p class="sub">Interactive lessons. Read, change the code, press Run.</p>
+    <p class="sub">Interactive lessons: read, change the code, press Run. Start with Foundations if you like, or jump to whatever catches your eye. School math is enough to begin.</p>
     <div class="paths">
       <!-- paths:start -->
       <div class="card">
@@ -135,19 +135,19 @@ kretschmann(g)</pre></div>
         <ol><li><a href="playground/#lesson/chaos/01-chaos">Chaos</a></li><li><a href="playground/#lesson/chaos/02-fractals">Fractals</a></li></ol>
       </div>
       <div class="card">
+        <h3><a href="playground/#lesson/discovery/01-kepler">Discovering physical laws</a></h3>
+        <p>Four lessons that find Kepler&#x27;s and Newton&#x27;s laws in planet data, then the term Einstein added for Mercury.</p>
+        <ol><li><a href="playground/#lesson/discovery/01-kepler">Kepler&#x27;s third law from planet data</a></li><li><a href="playground/#lesson/discovery/02-newton">From Kepler to Newton</a></li><li><a href="playground/#lesson/discovery/03-mercury">Mercury doesn&#x27;t fit</a></li><li><a href="playground/#lesson/discovery/04-proof">Proving the precession</a></li></ol>
+      </div>
+      <div class="card">
         <h3><a href="playground/#lesson/differential-geometry/01-curves">Differential geometry</a></h3>
         <p>Seven lessons from curves to the Riemann tensor, drawn in interactive 3D.</p>
         <ol><li><a href="playground/#lesson/differential-geometry/01-curves">Curves</a></li><li><a href="playground/#lesson/differential-geometry/02-metrics">Metrics and coordinates</a></li><li><a href="playground/#lesson/differential-geometry/03-surfaces">Surfaces</a></li><li><a href="playground/#lesson/differential-geometry/04-gaussian-curvature">Gaussian curvature</a></li><li><a href="playground/#lesson/differential-geometry/05-parallel-transport">Christoffel symbols and parallel transport</a></li><li><a href="playground/#lesson/differential-geometry/06-geodesics">Geodesics</a></li><li><a href="playground/#lesson/differential-geometry/07-riemann-tensor">The Riemann tensor</a></li></ol>
       </div>
       <div class="card">
         <h3><a href="playground/#lesson/general-relativity/01-spacetime">General relativity</a></h3>
-        <p>Nine lessons from flat spacetime to black holes, gravitational waves and the age of the universe.</p>
+        <p>For the adventurous, after differential geometry: nine lessons from flat spacetime to black holes, gravitational waves and the age of the universe.</p>
         <ol><li><a href="playground/#lesson/general-relativity/01-spacetime">Spacetime and special relativity</a></li><li><a href="playground/#lesson/general-relativity/02-equivalence-principle">The equivalence principle</a></li><li><a href="playground/#lesson/general-relativity/03-einstein-equations">Einstein&#x27;s equations</a></li><li><a href="playground/#lesson/general-relativity/04-black-holes">Black holes</a></li><li><a href="playground/#lesson/general-relativity/05-orbits">Orbits and the precession of Mercury</a></li><li><a href="playground/#lesson/general-relativity/06-light">Light bending and black hole shadows</a></li><li><a href="playground/#lesson/general-relativity/07-clocks-and-gps">Clocks, redshift and GPS</a></li><li><a href="playground/#lesson/general-relativity/08-gravitational-waves">Gravitational waves</a></li><li><a href="playground/#lesson/general-relativity/09-cosmology">Cosmology</a></li></ol>
-      </div>
-      <div class="card">
-        <h3><a href="playground/#lesson/discovery/01-kepler">Discovering physical laws</a></h3>
-        <p>Four lessons that find Kepler&#x27;s and Newton&#x27;s laws in planet data, then the term Einstein added for Mercury.</p>
-        <ol><li><a href="playground/#lesson/discovery/01-kepler">Kepler&#x27;s third law from planet data</a></li><li><a href="playground/#lesson/discovery/02-newton">From Kepler to Newton</a></li><li><a href="playground/#lesson/discovery/03-mercury">Mercury doesn&#x27;t fit</a></li><li><a href="playground/#lesson/discovery/04-proof">Proving the precession</a></li></ol>
       </div>
       <!-- paths:end -->
     </div>
@@ -165,7 +165,8 @@ kretschmann(g)</pre></div>
   </section>
 
   <footer>
-    Galileo is open source (Apache 2.0): <a href="https://github.com/cascala/galileo-rs">engine</a> · <a href="https://github.com/cascala/igalileo">notebooks and this site</a> · <a href="https://github.com/cascala/galileo">original Scala version</a>
+    Galileo is made by Joris Esch. <a href="https://github.com/cascala/galileo-rs/blob/main/CITATION.cff">How to cite it</a>.<br>
+    It is open source (Apache 2.0): <a href="https://github.com/cascala/galileo-rs">engine</a> · <a href="https://github.com/cascala/igalileo">notebooks and this site</a> · <a href="https://github.com/cascala/galileo">original Scala version</a>
   </footer>
 </div>
 </body>

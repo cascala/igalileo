@@ -2,7 +2,9 @@
 
 # iGalileo
 
-iGalileo is a Jupyter kernel for [Galileo](https://github.com/cascala/galileo-rs), a computer algebra system written in Rust. In a notebook you can do symbolic algebra, calculus, matrices, tensors and differential geometry, with interactive 2D and 3D plots.
+iGalileo is a Jupyter kernel for [Galileo](https://github.com/cascala/galileo-rs), a computer algebra system written in Rust. In a notebook you can do symbolic algebra, calculus, matrices, number theory and differential geometry, with interactive 2D and 3D plots.
+
+**▶ [Try Galileo in your browser](https://cascala.github.io/igalileo/)**: nothing to install. Open the [playground](https://cascala.github.io/igalileo/playground/), start the [first lesson](https://cascala.github.io/igalileo/playground/#lesson/foundations/01-numbers), or use [notebooks in JupyterLite](https://cascala.github.io/igalileo/lab/lab/index.html).
 
 ![JupyterLab running Galileo, with plots](doc/jupyterlab_plot.png)
 
@@ -113,3 +115,11 @@ The mathematics happens in the `galileo` executable from [galileo-rs](https://gi
 Version 0.2.1 and earlier used a JVM kernel built on the Scala version of Galileo. Those images are still on Docker Hub under their version tags.
 
 Feedback and bug reports are welcome as [issues](https://github.com/cascala/igalileo/issues/new).
+
+## Citing Galileo
+
+Galileo is created by Joris Esch ([cascala](https://github.com/cascala)). If you use it in teaching, research or writing, please cite it: GitHub's **Cite this repository** button (in the sidebar) gives APA and BibTeX, from [CITATION.cff](CITATION.cff).
+
+## License
+
+Apache 2.0.

@@ -1,0 +1,19 @@
+cff-version: 1.2.0
+message: "If you use Galileo in your teaching, research or writing, please cite it as below."
+title: "iGalileo: Galileo in Jupyter and in the browser"
+abstract: "iGalileo brings the Galileo computer algebra system to Jupyter notebooks and to the browser (a playground and JupyterLite), with interactive lessons from arithmetic to number theory, chaos and differential geometry."
+type: software
+authors:
+  - family-names: Esch
+    given-names: Joris
+    alias: cascala
+version: "0.3.0"
+license: Apache-2.0
+url: "https://cascala.github.io/igalileo/"
+repository-code: "https://github.com/cascala/igalileo"
+keywords:
+  - computer algebra
+  - symbolic mathematics
+  - mathematics education
+  - Jupyter
+  - WebAssembly

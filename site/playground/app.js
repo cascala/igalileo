@@ -12,8 +12,8 @@
     'parametric(cos(3*t), sin(2*t), t, 0, 2*pi)',
     'plot3d(sin(x)*cos(y), x, -pi, pi, y, -pi, pi)',
     'surface((2 + cos(v))*cos(u), (2 + cos(v))*sin(u), sin(v), u, 0, 2*pi, v, 0, 2*pi)',
-    'g = metric.generate(schwarzschild)',
-    'kretschmann(metric.generate(schwarzschild))',
+    'solve(x^2 - x - 1, x)',
+    'factor(2^67 - 1)',
   ];
 
   // ---------- engine ----------

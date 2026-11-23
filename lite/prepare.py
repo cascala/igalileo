@@ -26,12 +26,12 @@ GROUPS = [
      "Symmetry, cyclic groups, permutations, card shuffles and Lagrange's theorem.", None),
     ("chaos", "Chaos and fractals",
      "The logistic map, bifurcations, the Lorenz butterfly, the Mandelbrot set and Julia sets.", None),
+    ("discovery", "Discovering physical laws",
+     "Four lessons that find Kepler's and Newton's laws in planet data, then the term Einstein added for Mercury.", None),
     ("differential-geometry", "Differential geometry",
      "Seven lessons from curves to the Riemann tensor, drawn in interactive 3D.", None),
     ("general-relativity", "General relativity",
-     "Nine lessons from flat spacetime to black holes, gravitational waves and the age of the universe.", None),
-    ("discovery", "Discovering physical laws",
-     "Four lessons that find Kepler's and Newton's laws in planet data, then the term Einstein added for Mercury.", None),
+     "For the adventurous, after differential geometry: nine lessons from flat spacetime to black holes, gravitational waves and the age of the universe.", None),
 ]
 
 
