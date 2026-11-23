@@ -12,3 +12,7 @@ __pycache__/
 *.egg-info/
 build/
 _site/
+
+# secrets
+.dockerhub-token
+.env
