@@ -359,6 +359,88 @@ factor(n)
 %md
 That is why the primes in an RSA key must be chosen so that $p - 1$ has a large prime factor.
 
+### Groups hide the factors
+
+Why does $p - 1$ work at all? The numbers $1, \dots, n - 1$ that share no factor with $n$ form a group under
+multiplication mod $n$, written $(\mathbb{Z}/n)^*$. For $n = pq$ the Chinese remainder theorem (lesson 4) says that
+working mod $n$ is the same as working mod $p$ and mod $q$ at once:
+
+$$(\mathbb{Z}/n)^* \cong (\mathbb{Z}/p)^* \times (\mathbb{Z}/q)^*,$$
+
+a group of order $p - 1$ times a group of order $q - 1$. The order of an element mod $n$ (the first power that gives 1)
+is the lcm of its orders mod $p$ and mod $q$. With $p = 1009$ and $q = 2003$, the order of 3 is 168 mod $p$ and
+1001 mod $q$, and mod $n$ it is $\operatorname{lcm}(168, 1001) = 24024$:
+
+%code
+p = 1009; q = 2003; n = p*q
+multorder(3, p)
+multorder(3, q)
+multorder(3, n)
+
+%md
+A factoring method of this kind looks for an exponent $E$ that kills the group on the $p$ side but not on the $q$
+side. Then $3^E \equiv 1 \pmod p$ but not mod $q$, and $\gcd(3^E - 1, n) = p$. Pollard's $p - 1$ takes $E$ = all small
+prime powers. `pm1(n, B)` runs it with an explicit bound $B$ and says what happened. For Cole's number $2^{67} - 1$
+from section 4, one prime has $p - 1 = 2^3 \cdot 3^3 \cdot 5 \cdot 67 \cdot 2677$, so a bound of 3000 is enough:
+
+%code
+pm1(2^67 - 1, 3000)
+
+%md
+**Knowing the group order is as hard as factoring.** If you knew the order of $(\mathbb{Z}/n)^*$, which is
+$\varphi(n) = (p - 1)(q - 1)$, then $p + q = n - \varphi(n) + 1$, and $p$ and $q$ are the roots of
+$x^2 - (p + q)x + n$:
+
+%code
+phi = (p - 1)*(q - 1)
+s = n - phi + 1
+solve(x^2 - s*x + n, x)
+
+%md
+So the whole difficulty hides in the group's order. The methods below differ only in which group they use.
+
+**Elliptic curves (Lenstra, 1985).** The weakness of $p - 1$ is that the group mod $p$ is fixed. When $p - 1$ has a
+large prime factor, as for $p = 7000000001087$ with $p - 1 = 2 \cdot 3500000000543$, the method is stuck. Lenstra
+swapped in the points of an elliptic curve $y^2 = x^3 + ax + b$ mod $p$, which also form a group. By Hasse's theorem,
+its order lies between $p + 1 - 2\sqrt p$ and $p + 1 + 2\sqrt p$, and it changes from curve to curve. Each new curve
+is a new chance at a group order made of small primes. `ecm(n, curves, B1)` tries random curves with bound B1.
+`factor` and `algfactor` also try a few curves after rho, and more when you give `algfactor` a larger effort:
+
+%code
+p = 7000000001087;
+factor(p - 1)
+n = p*nextprime(10^40);
+pm1(n)
+ecm(n, 100, 2000)
+
+%md
+**Class groups of quadratic forms (Gauss, Shanks, Schnorr–Lenstra).** A binary quadratic form
+$a x^2 + b x y + c y^2$ has discriminant $D = b^2 - 4ac$. Gauss showed that the forms of one negative discriminant,
+counted up to a change of variables, form a finite group, the *class group*. `classgroup(D)` lists one reduced form
+for each class, with its order under composition (`composeforms`, `formpow`). The forms of order 2 are called
+*ambiguous*. For $D = -4N$, the ambiguous forms other than the identity are exactly the factorizations of $N$. Here
+$N = 391$ splits as $17 \cdot 23$ through the form $(17, 0, 23)$, which is $17x^2 + 23y^2$:
+
+%code
+classgroup(-4*391)
+
+%md
+To factor $N$, raise a form to a large exponent made of small primes (as in $p - 1$), then square until you reach the
+identity. The form one step before it has order 2, so it is ambiguous, and its coefficients reveal a factor
+(`classfactor`). This works when the class number has only small prime factors. Shanks' SQUFOF (`squfof`) is a fast
+walk through the same forms: it follows the continued fraction of $\sqrt{kN}$ until a square turns up. Both suit
+numbers up to about 25 digits:
+
+%code
+n = nextprime(10^8)*nextprime(3*10^8);
+classfactor(n)
+squfof(n)
+
+%md
+All three groups have about $p$ or $\sqrt N$ elements. A method succeeds when the group's order happens to be made of
+small primes, and only ECM lets you keep drawing new groups. The record methods, the quadratic and number field
+sieves, work differently: they collect many small factorizations and combine them into Fermat's $a^2 - b^2$.
+
 ### The limits
 
 Rho finds a factor $p$ in about $\sqrt p$ steps. A product of two 20-digit primes therefore needs about $10^{10}$
@@ -369,8 +451,9 @@ itself is computed instantly. Modern methods go much further:
 * the **quadratic sieve** (Carl Pomerance, 1981) and the **number field sieve** (1990s) build Fermat's difference of
   squares from many small factorizations; their running time grows more slowly than any power of $n$;
 * the elliptic curve method (Hendrik Lenstra, 1985) is rho's successor for finding medium-size factors;
-* the record is **RSA-250**, a 250-digit number split in 2020 by the number field sieve, after about 2700 years of
-  computer time;
+* RSA-250, a 250-digit number, was split in 2020 by the number field sieve after about 2700 core-years of computer
+  time. In September 2026, RSA-260 (Eric Lu, Cognition) and then RSA-896, 270 digits (Stephen Weis), were factored
+  with GPU versions of the same method. `load(RSA)` loads all the RSA challenge numbers and the known factors;
 * a large quantum computer running **Shor's algorithm** (1994) could factor in polynomial time; none big enough
   exists yet.
 
@@ -384,7 +467,10 @@ That gap, multiplying is easy and factoring is hard, is exactly what RSA encrypt
   $p$. Built in as `pollard`.
 * Primality: Fermat's test `powmod(a, n - 1, n)` can be fooled by Carmichael numbers like 561; Miller–Rabin
   (`isprime`) cannot, in practice.
-* Pollard's $p - 1$ finds $p$ quickly when $p - 1$ has only small prime factors.
+* Pollard's $p - 1$ finds $p$ quickly when $p - 1$ has only small prime factors (`pm1(n, B)`).
+* $(\mathbb{Z}/pq)^* \cong (\mathbb{Z}/p)^* \times (\mathbb{Z}/q)^*$, and knowing a group's order is as hard as
+  factoring. ECM (`ecm`) swaps in elliptic curve groups whose order varies; class groups of quadratic forms
+  (`classgroup`, `classfactor`, `squfof`) turn elements of order 2 into factors.
 * `factor` combines them, on numbers of any size; it gives up when what remains has only large prime factors.
 
 **Try it:** factor $n = 999\,962\,000\,357$ with `fermat` (start at `isqrt(n) + 1`) and with `rho`; which is faster,
@@ -405,3 +491,8 @@ Next: [Algebraic factoring](03-algebraic-factoring.ipynb): why `factor(10^300 + 
 7. F. Boudot, P. Gaudry, A. Guillevic, N. Heninger, E. Thomé and P. Zimmermann, "Factorization of RSA-250" (February 2020), announcement on the NMBRTHRY mailing list.
 8. J. M. Pollard, "Theorems on factorization and primality testing", *Proc. Cambridge Philosophical Society* 76 (1974) 521–528 (the $p - 1$ method).
 9. R. M. Robinson, "Mersenne and Fermat numbers", *Proc. American Mathematical Society* 5 (1954) 842–846.
+10. H. W. Lenstra Jr., "Factoring integers with elliptic curves", *Annals of Mathematics* 126 (1987) 649–673.
+11. C. P. Schnorr and H. W. Lenstra Jr., "A Monte Carlo factoring algorithm with linear storage", *Mathematics of Computation* 43 (1984) 289–311.
+12. J. E. Gower and S. S. Wagstaff Jr., "Square form factorization", *Mathematics of Computation* 77 (2008) 551–588 (Shanks' SQUFOF).
+13. H. Cohen, *A Course in Computational Algebraic Number Theory*, Springer (1993), Chapter 5 (binary quadratic forms and their composition).
+14. RSA Factoring Challenge, Wikipedia (RSA-260 factored 3 September 2026, RSA-896 factored 19 September 2026).
