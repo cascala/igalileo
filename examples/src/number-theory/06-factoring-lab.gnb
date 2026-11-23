@@ -1,0 +1,246 @@
+%md
+# Number theory 6: The factoring lab
+
+*Learning path: number theory, part 6 of 7.* [Index](README.md) · Previous: [Cryptography](05-cryptography.ipynb) · Next: [The number field sieve](07-number-field-sieve.ipynb)
+
+RSA is safe as long as nobody can factor $N = pq$ quickly. The best known method, the number field sieve, needs time
+that grows like $L(1/3) = e^{1.92 (\ln N)^{1/3} (\ln \ln N)^{2/3}}$, and nobody has found anything fundamentally
+better since 1990. This lesson is a laboratory for trying anyway. You will
+
+* make **test numbers**: random semiprimes with two primes of the same size, like RSA keys,
+* run every classic method on them and put the results on a **scoreboard** that measures how the cost grows,
+* score **your own** factoring function the same way,
+* let Galileo **search** through thousands of small factoring programs for a better one, and check honestly whether
+  what it finds is real,
+* **hunt for leaks**: test whether any cheap property of $N$ gives away even one bit of $p$.
+
+Expect mostly negative results. That is the point of a lab: a claim of a new factoring method must survive numbers it
+was not tuned on, and a claim of a leak must survive a correction for how many things were tried.
+
+%md
+## 1. Test numbers
+
+`semiprime(d, seed)` is a number with exactly $d$ digits that is the product of two random primes of about $d/2$
+digits each. The same seed always gives the same number, so experiments can be repeated. `semifactors` gives the two
+primes, smaller first (you would not have them in real life; the lab uses them to check answers).
+
+%code
+N = semiprime(30, 1)
+semifactors(30, 1)
+isprime(N)
+
+%md
+## 2. One method on one number
+
+`labrun(method, N)` runs a method with a time limit and reports the factor and the **work**: the number of
+multiplications modulo $N$ (roughly). Work is the same on every computer and in the browser, so it is a fair
+measure; on a normal computer the time is shown too. The built-in methods are
+
+* `"trial"`: trial division, about $\sqrt N$ steps,
+* `"fermat"`: Fermat's method from lesson 2, fast only if $p$ and $q$ are very close,
+* `"hart"`: Hart's one-line method (2012), about $N^{1/3}$,
+* `"rho"`: Pollard's rho, about $N^{1/4}$,
+* `"pm1"`: Pollard's $p - 1$, fast only when $p - 1$ is made of small primes,
+* `"squfof"`: Shanks' square forms, $N^{1/4}$ with tiny numbers,
+* `"classgroup"`: the class group method of Schnorr and Lenstra,
+* `"ecm"`: Lenstra's elliptic curves, whose cost depends on the size of $p$,
+* `"qs"`: the quadratic sieve, the fastest method for numbers below about 100 digits.
+
+%code
+labrun("rho", semiprime(20, 1))
+labrun("qs", semiprime(40, 1))
+
+%md
+## 3. The scoreboard
+
+`scoreboard(methods, digits, trials, seconds)` runs each method on `trials` semiprimes of every size in `digits`, with
+at most `seconds` per number, and stops a method at the first size where it solves nothing. Below each table it fits
+three growth laws to the costs: $N^a$ (exponential in the number of digits), $L(1/2)$ (the quadratic sieve's law) and
+$L(1/3)$ (the number field sieve's).
+
+%code
+sb = scoreboard(["rho" "squfof" "ecm"], 12:4:36, 2, 1)
+
+%md
+Rho should grow like $N^{1/4}$; the measured exponent is a bit higher because numbers above 19 digits no longer fit
+in one 64-bit word, so each multiplication gets slower too. SQUFOF is close to $1/4$. ECM grows much more slowly,
+because its cost depends on the size of $p$ in a sub-exponential way. The quadratic sieve has a fixed start-up cost
+(building a factor base, sieving a whole interval) that hides its growth on small numbers, so it gets its own range:
+
+%code
+sq = scoreboard("qs", 30:4:50, 2, 3)
+
+%md
+The plot shows log₁₀ of the cost against the number of digits. A method whose cost is $N^a$ gives a straight line
+with slope $a$; $L(1/2)$ and $L(1/3)$ curves bend down, because they grow more slowly than any power of $N$. The thin
+reference lines all start at the first point, so you can compare slopes. With only a few sizes the three growth
+laws are hard to tell apart; the slope over a wide range is the honest summary.
+
+%code
+scoreplot(sb, sq)
+
+%md
+## 4. Score your own method
+
+Any function `f(n)` that returns a factor can go on the scoreboard. Here is Fermat's method from lesson 2, written in
+Galileo: start at $a = \lceil \sqrt n \rceil$ and step up until $a^2 - n$ is a square $b^2$; then $n = (a - b)(a + b)$.
+
+%code
+fstep(n, a) := if(isqrt(a^2 - n)^2 == a^2 - n, a - isqrt(a^2 - n), fstep(n, a + 1));
+myfermat(n) := fstep(n, isqrt(n) + 1);
+myfermat(8051)
+scoreboard(["myfermat" "rho"], 8:2:14, 2, 1)
+
+%md
+For your own functions, work counts evaluation steps of the Galileo program, so compare them by time on a computer.
+Fermat dies quickly on balanced semiprimes: $p$ and $q$ are of the same size but not close, and the number of steps
+grows like $(q - p)^2 / \sqrt N$.
+
+## 5. Factoring programs
+
+To search for new methods, Galileo needs a language in which a method is small enough to generate at random. It has
+two kinds of programs.
+
+**`iter(f, h, x0)`**: start with $x = x_0$ and at every step $i$ replace $x$ by $f(x, y, i)$ modulo $N$, where $y$ is
+the value of $x$ at the last step that was a power of 2. Multiply up the values $h$ and check $\gcd(\cdot, N)$ every
+32 steps. Pollard's rho is `iter(x^2 + 1, x - y, 2)`: the sequence $x^2 + 1$ repeats modulo $p$ long before it repeats
+modulo $N$, and $x - y$ then has the factor $p$. Pollard's $p - 1$ is `iter(pow(x, i), x - 1, 2)`: $x$ becomes
+$2^{i!}$.
+
+**`rel(s, fb)`**: at step $i$ compute $s$ and $r = s^2 \bmod N$ (between $-N/2$ and $N/2$). If $r = t^2$ is a square,
+then $s^2 \equiv t^2$ and $\gcd(s - t, N)$ is often a factor. With a factor base of `fb` small primes, every $r$ that
+splits completely over them is kept, and linear algebra modulo 2 multiplies some of them into a square: this is
+Dixon's method, the idea behind the quadratic sieve. Fermat is `rel(rt + i, 0)` and Hart's method is `rel(rti, 0)`.
+
+The names are `x`, `y`, `i`, `rt` $= \lceil\sqrt N\rceil$, `rti` $= \lceil\sqrt{iN}\rceil$, `B` $= \lfloor N^{1/3}\rfloor$,
+`d0`, `d1` (the last two digits of $N$ in base $B$) and small integers; the operations are `+ - *`, powers `a^k`,
+`pow(a, i)`, `luc(a)` (the Lucas sequence $V_i(a)$, Williams' $p + 1$ method) and `inv(a)` (an inverse modulo $N$;
+when it does not exist, $\gcd(a, N)$ is a factor, the trick behind ECM).
+
+%code
+N = semiprime(18, 4);
+labrun("iter(x^2 + 1, x - y, 2)", N)
+labrun("iter(x^2 - 2, x - y, 2)", N, 0.5)
+labrun("rel(rti, 64)", N)
+
+%md
+`iter(x^2 - 2, x - y, 2)` fails at once: $2^2 - 2 = 2$, so the sequence never moves and $x - y$ is always 0. Even
+with another start, $x^2 - 2$ is a famous bad choice: with $x = u + 1/u$ it becomes $u^2 + 1/u^2$, so the sequence is
+$u^{2^i} + u^{-2^i}$ and behaves like a power map instead of a random one. (The search below rediscovers why the
+constant matters.) Programs go on the scoreboard like any method:
+
+%code
+scoreboard(["iter(x^2 + 1, x - y, 2)" "iter(x^4 + 1, x - y, 2)" "rel(rti, 64)"], 12:2:18, 3, 1)
+
+%md
+## 6. Searching for a better algorithm
+
+`algosearch(seconds, mode)` generates programs and scores them by the total work on a fixed **training set** of 12
+semiprimes with 12 to 18 digits. A program that misses a number is charged 8 times the limit. Modes:
+
+* `"evolve"` (default): start from random programs, keep the best, mutate them (replace a piece, change a constant,
+  switch between `iter` and `rel`) and recombine pieces of two good ones,
+* `"random"`: just random programs, the baseline any clever search must beat,
+* `"exhaustive"`: every program in order of size, the brute-force search.
+
+Programs that compute the same values on a test modulus are scored only once. At the end, the best five are run on a
+**held-out set** of 24 other semiprimes, one size larger than any in training, next to Pollard rho, and a paired
+test gives a p-value for the difference.
+
+%code
+r = algosearch(10)
+
+%md
+Look at the two "work vs rho" columns. On the training numbers the winners look up to about twice as fast as rho. On the
+held-out numbers the advantage disappears. This is **overfitting**: the cost of rho on one number is very random (it
+depends on when a sequence happens to repeat modulo $p$), and among thousands of variants of $x \mapsto x^2 + c$ some
+are lucky on exactly those 12 numbers. The search does rediscover the classics on its own: quadratic and quartic maps
+$x \mapsto (x + c)^2 + \ldots$ with `x - y` (rho), and sometimes `pow(x, i)` ($p - 1$). Longer runs on a computer
+(`algosearch(300)`) find the same kinds of programs.
+
+The brute-force search finds the same thing in its own way: the first programs that work at all are rho with small
+constants.
+
+%code
+algosearch(5, "exhaustive")
+
+%md
+`leaderboard()` collects the best programs of every search in this session. To test a candidate seriously, put it on
+the scoreboard at sizes it never saw: `scoreboard(r[0], 12:2:24, 6, 2)`.
+
+%code
+leaderboard()
+
+%md
+Why can't the search find something like the quadratic sieve? It can express Dixon's method (`rel(rti, 64)`), whose
+cost grows only like $L(1/2)$, but at 12 to 18 digits rho is still faster: sub-exponential methods only win on big
+numbers. A search scored on small numbers prefers rho; one scored on 40-digit numbers would need far more time per
+program. That is a real lesson about algorithm search: the training sizes decide what it can discover.
+
+## 7. Hunting for leaks
+
+If some cheap property of $N$ told us one bit of $p$, that would be a start. `leakhunt(digits, samples, seed)` makes
+semiprimes with known factors and computes about 45 features of $N$: residues $N \bmod m$, Jacobi symbols $(a/N)$,
+leading digits, digits in base 3 and 7, the bit count, the fractional part of $\sqrt N$, the first terms and the period
+of the continued fraction of $\sqrt N$, and for small $N$ the class number $h(-4N)$. Each feature is tested against
+properties of the smaller prime $p$ with a chi-squared test of independence on the first half of the samples. With
+about 500 tests, some p-values below 0.01 appear by chance alone, so they are corrected (Benjamini–Hochberg) and the
+best one per property is tested again on the second half. Finally a naive Bayes classifier combines all features to
+predict each property; its accuracy is compared with always guessing the more common answer.
+
+Three properties are **controls** that must leak: $p \equiv q \pmod 3$ is decided by $N \bmod 3$ (if $N \equiv 1$ then
+$p \equiv q$), the same for mod 4, and the second bit of $p$ depends on how big $N$ is (a small $N$ needs a small $p$).
+If the controls did not show up, the test would be broken.
+
+%code
+leakhunt(14, 4000)
+
+%md
+The controls light up with p-values far below $10^{-100}$, so the test is sensitive. Nothing else survives the
+correction and the held-out check: no residue, digit pattern or continued fraction term of $N$ says anything about
+$p \bmod 4$, $p \bmod 3$, a middle bit or the bit count of $p$, and the naive Bayes accuracy for those stays at chance.
+Runs with 20000 numbers of 16 digits and 10000 of 30 digits on a computer give the same answer.
+
+Small numbers are a trap. With 6 digits, $p$ is one of only about a hundred primes between 317 and 1000, so the
+leading digits of $N$ already say roughly how big $p$ is, and within such a short list, size, residues and bits of
+$p$ are tangled up. Everything seems to leak:
+
+%code
+leakhunt(6, 3000)
+
+%md
+Two of these are real mathematics, though. The class number $h(-4N)$ catches the Legendre symbol $(p/q)$: that is
+genus theory (Gauss, 1801) and Rédei (1934), the 2-part of the class group of discriminant $-4pq$ depends on $(p/q)$
+and on $p, q \bmod 4$. And the length of the period of the continued fraction of $\sqrt N$ tells something about
+$p \bmod 4$: an odd period means $N$ is a sum of two squares, which happens only when $p \equiv q \equiv 1 \pmod 4$.
+Both features are honest leaks for any size of $N$, but computing them takes about $\sqrt N$ steps, far more than
+factoring $N$ with rho. The other "leaks" at 6 digits are the size effect and disappear at 10 digits and more.
+
+## Summary
+
+* `semiprime(d, seed)`, `semifactors(d, seed)`: reproducible RSA-like test numbers.
+* `labrun(method, N)`: one run with its work; methods `trial fermat hart rho pm1 squfof classgroup ecm qs`, programs
+  `iter(f, h, x0)` and `rel(s, fb)`, or your own function.
+* `scoreboard(methods, digits, trials, seconds)` and `scoreplot`: how the cost grows, fitted to $N^a$, $L(1/2)$,
+  $L(1/3)$.
+* `algosearch(seconds, mode)`, `leaderboard()`: search for factoring programs; trust only held-out results.
+* `leakhunt(digits, samples)`: features of $N$ against bits of $p$, with corrected p-values and controls.
+
+**Try it:** add a primitive idea of your own as a Galileo function and put it on the scoreboard against `"rho"`.
+Run `algosearch(60, "random")` and `algosearch(60)` with the same budget: does evolution beat random sampling? Change
+the seed of `leakhunt` and check that the controls stay and the rest stays quiet. Can you think of a feature of $N$
+that is cheap to compute and that the hunt does not test yet?
+
+%md
+## Sources
+
+1. J. M. Pollard, "A Monte Carlo method for factorization", *BIT* 15 (1975) 331–334; "Theorems on factorization and primality testing", *Proc. Cambridge Phil. Soc.* 76 (1974) 521–528.
+2. R. P. Brent, "An improved Monte Carlo factorization algorithm", *BIT* 20 (1980) 176–184.
+3. W. B. Hart, "A one line factoring algorithm", *J. Aust. Math. Soc.* 92 (2012) 61–69.
+4. J. E. Gower and S. S. Wagstaff, "Square form factorization", *Math. Comp.* 77 (2008) 551–588.
+5. C. P. Schnorr and H. W. Lenstra, "A Monte Carlo factoring algorithm with linear storage", *Math. Comp.* 43 (1984) 289–311.
+6. H. W. Lenstra, "Factoring integers with elliptic curves", *Annals of Math.* 126 (1987) 649–673.
+7. C. Pomerance, "The quadratic sieve factoring algorithm", *EUROCRYPT '84*, LNCS 209 (1985) 169–182.
+8. R. Crandall and C. Pomerance, *Prime Numbers: A Computational Perspective*, 2nd ed., Springer (2005), chapters 5 and 6.
+9. Y. Benjamini and Y. Hochberg, "Controlling the false discovery rate", *J. Royal Stat. Soc. B* 57 (1995) 289–300.
+10. L. Rédei, "Arithmetischer Beweis des Satzes über die Anzahl der durch vier teilbaren Invarianten der absoluten Klassengruppe im quadratischen Zahlkörper", *J. reine angew. Math.* 171 (1934) 55–60.

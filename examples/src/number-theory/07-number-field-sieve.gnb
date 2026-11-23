@@ -1,0 +1,193 @@
+%md
+# Number theory 7: The number field sieve
+
+*Learning path: number theory, part 7 of 7.* [Index](README.md) · Previous: [The factoring lab](06-factoring-lab.ipynb)
+
+Every record factorization since the 1990s, up to RSA-250 (250 digits, 2020), was done with the **number field
+sieve**. Its cost grows like $L(1/3) = e^{1.92 (\ln N)^{1/3} (\ln \ln N)^{2/3}}$, while the quadratic sieve of the
+last lessons grows like $L(1/2)$. This lesson builds the method up from one idea and runs Galileo's own (small,
+plain) implementation on real numbers. You will see
+
+* why a polynomial $f$ with $f(m) \equiv 0 \pmod N$ gives two worlds that agree modulo $N$,
+* how pairs $(a, b)$ that are smooth in **both** worlds are found by a sieve,
+* how linear algebra and a square root in a number field turn them into a factor,
+* why numbers like $2^{128} + 1$ are much easier (the special number field sieve), and how the algebraic factoring of
+  [lesson 3](03-algebraic-factoring.ipynb) can finish the job before any sieving starts,
+* an honest race against the quadratic sieve.
+
+%md
+## 1. One number, two worlds
+
+The quadratic sieve looks for $x$ with $x^2 \bmod N$ small, so that it splits into small primes. Those numbers are
+about $\sqrt N$, which is what makes it slow for large $N$. The number field sieve gets much smaller numbers by
+working in two worlds at once.
+
+Take a polynomial $f$ of degree $d$ and a whole number $m$ with $f(m) \equiv 0 \pmod N$. The simplest way: choose
+$m \approx N^{1/d}$ and write $N$ in base $m$; the digits are the coefficients, so $f(m) = N$ exactly. Let $\alpha$
+be a root of $f$ (a complex number). Numbers $a - b\alpha$ with whole $a, b$ can be added and multiplied like
+polynomials in $\alpha$, and replacing $\alpha$ by $m$ keeps every product correct **modulo $N$**, because
+$f(\alpha) = 0$ and $f(m) \equiv 0$. So if a set $S$ of pairs has
+
+$$\prod_{S} (a - b m) = X^2 \quad\text{and}\quad \prod_{S} (a - b\alpha) = \beta^2,$$
+
+then $X^2 \equiv \beta(m)^2 \pmod N$, and as in the quadratic sieve $\gcd(X - \beta(m), N)$ is a factor half of the
+time.
+
+For $N = 2^{128} + 1$ there is a much better polynomial than base $m$: $2 (2^{128} + 1) = (2^{43})^3 + 2$, so
+$f(x) = x^3 + 2$ with $m = 2^{43}$. In the world of $\alpha = \sqrt[3]{-2}$, the size of $a - b\alpha$ is measured by
+its **norm** $a^3 + 2 b^3$, a small number. Here is the pair $a = -100$, $b = 1$ in both worlds:
+
+%code
+m = 2^43
+a = -100; b = 1
+factor(a - b*m)
+factor(a^3 + 2*b^3)
+
+%md
+Both sides break into primes below 300: the pair is **smooth on both sides**. The rational side is about $10^{13}$
+and the algebraic side about $10^6$, while the quadratic sieve would be looking at numbers near $\sqrt N \approx 10^{19}$.
+Smaller numbers are far more likely to be smooth, and that is the whole advantage.
+
+%md
+## 2. The whole method on $2^{128} + 1$
+
+`gnfs(N)` runs the number field sieve and prints each step. Without a polynomial it tries the special forms that the
+algebraic factoring of lesson 3 recognizes ($N$ divides $b^k \pm 1$) and base-$m$ polynomials, and picks the one with
+the best score.
+
+%code
+gnfs(2^128 + 1)
+
+%md
+How to read the report:
+
+1. **Polynomial.** For $2^{128} + 1$ it picks $x^3 + 2$, $m = 2^{43}$ from the form $2^{128} + 1$.
+2. **Factor bases.** On the rational side, the primes $p$ up to a bound $B$. On the algebraic side, the pairs
+   $(p, r)$ with $f(r) \equiv 0 \pmod p$: the prime $p$ divides the norm of $a - b\alpha$ exactly when
+   $a \equiv b r \pmod p$. (These pairs are the prime ideals of degree one; the norm alone cannot tell which root,
+   and it matters.)
+3. **Sieve.** For each line $b = 1, 2, \ldots$ and $|a| \le A$, add $\log p$ at every $a \equiv b m \pmod p$ on the
+   rational side and every $a \equiv b r \pmod p$ on the algebraic side, exactly like the sieve of Eratosthenes.
+   Where both totals come close to the size of the number, check by division. One leftover **large prime** per side
+   is allowed; it is useful only if another relation has the same one.
+4. **Linear algebra.** Each relation is a vector of exponents mod 2 (plus the signs). Relations that share a rare
+   prime are added together first, which shrinks the matrix, then Gaussian elimination finds sets whose exponents
+   are all even. Even exponents on the algebraic side are not quite enough for a square in $\mathbb{Z}[\alpha]$
+   (units and the class group get in the way), so there are 24 more columns: **quadratic characters**, the
+   Legendre symbols $\left(\frac{a - b s}{q}\right)$ for primes $q$ outside the factor base. A real square gives $+1$
+   for every one of them. Characters make a square very likely, not certain; if a set still is not a square, the
+   square root step notices and moves on to the next set.
+5. **Square roots.** The rational one comes from halving the exponents. The algebraic one, $\beta$ with
+   $\beta^2 = f'(\alpha)^2 \prod (a - b\alpha)$, is the hard part of the method: Galileo takes a prime $q$ where $f$
+   has $d$ roots, takes square roots of the product at each root modulo $q$, lifts them to modulo $q^{k}$ (Hensel's
+   lemma, Newton's method for $p$-adic numbers) until $q^k$ is larger than the coefficients of $\beta$, and
+   interpolates. The coefficients have thousands of digits, but they are exact. (The factor $f'(\alpha)^2$
+   guarantees that $\beta$ has whole-number coefficients.)
+6. **gcd.** $X = f'(m) \prod \sqrt{a - b m}$ and $Y = \beta(m)$ satisfy $X^2 \equiv Y^2 \pmod N$. If $X \equiv \pm Y$
+   the set was unlucky and the next one is tried.
+
+%md
+## 3. When the polynomial factors
+
+Some special forms give a polynomial that is not irreducible. Then the number field sieve has nothing to do: if
+$f = g h$ then $f(m) = g(m) h(m)$, and $\gcd(g(m), N)$ often is a factor already. This is exactly the algebraic
+factoring of lesson 3. Sophie Germain's identity $x^4 + 4 = (x^2 + 2x + 2)(x^2 - 2x + 2)$ with $x = 2^{20}$ gives
+$2^{80} + 4 = 4 (2^{78} + 1)$:
+
+%code
+gnfs(2^78 + 1, x^4 + 4, 2^20)
+
+%md
+`gnfs(N, f, m)` uses your polynomial; $f(m)$ must be divisible by $N$. That is how one special form can give a
+cheap algebraic split while the same idea with an irreducible $f$ powers the sieve.
+
+%md
+## 4. Choosing the polynomial
+
+The time of the sieve depends mostly on how large the two norms are. `nfspoly(N)` lists polynomials with a
+**score**: the estimated number of bits of both norms over a typical sieve region, plus Murphy's $\alpha$, which
+rewards polynomials that have many roots modulo small primes (their values are divisible by small primes more often
+than random numbers). Lower is better.
+
+%code
+nfspoly(2^128 + 1)
+
+%md
+The degree is a balance. A higher degree makes $m = N^{1/d}$ and so the rational norm smaller, but the algebraic
+norm grows like $A^d$. Try two of them on the same number:
+
+%code
+gnfs(2^128 + 1, x^4 + 1, 2^32)
+
+%md
+For a number without a special form, only the base-$m$ polynomials remain, and their coefficients are as large as
+$m$:
+
+%code
+N = semiprime(40, 1)
+nfspoly(N)
+
+%md
+Compare the scores with the special form above: about 113 bits against 93 for $2^{128} + 1$, which has about the
+same size. Twenty bits more in the norms means far fewer smooth pairs. That is why the special number field sieve
+reaches numbers about 1.5 times as long as the general one with the same work. Serious programs spend hours
+searching for good polynomials (Kleinjung's method, root sieving); `nfspoly` only tries a few values of $m$.
+
+%md
+## 5. General numbers and the race against the quadratic sieve
+
+Here is the general number field sieve on a 30-digit semiprime:
+
+%code
+gnfs(semiprime(30, 1))
+
+%md
+And the scoreboard of lesson 6, with `"nfs"` as a method:
+
+%code
+sb = scoreboard(["qs" "nfs"], 20:4:32, 1, 30)
+scoreplot(sb)
+
+%md
+The quadratic sieve wins at these sizes, by a factor of about 30. That is not a flaw of the lesson: also in serious
+implementations the number field sieve only overtakes the quadratic sieve at around 100 digits, because its steps
+(two factor bases, characters, the algebraic square root) cost more and its advantage, the $1/3$ in the exponent,
+grows slowly. With this code on a normal computer:
+
+* the 51-digit part of $2^{193} - 1$ (special form, polynomial $x^4 - 8$): about 7 s, quadratic sieve about 2 s,
+* the Fermat number $2^{256} + 1$ (78 digits, special form $x^5 + 16$, $m = 2^{52}$): the special number field
+  sieve splits it as $1238926361552897 \times p_{62}$ in under 3 minutes, while the quadratic sieve of lesson 6 does
+  not finish in 5 minutes.
+
+Larger numbers need what real programs (CADO-NFS, msieve) add: lattice sieving instead of line sieving, two or three
+large primes per side, block Lanczos or block Wiedemann for matrices with millions of rows, and good polynomials. With
+those, RSA-250 took about 2700 core-years.
+
+%md
+## Summary
+
+* Two worlds: $\mathbb{Z}$ and $\mathbb{Z}[\alpha]$ with $f(\alpha) = 0$, joined by $\alpha \mapsto m$ modulo $N$.
+* A relation is a pair $(a, b)$ with $a - bm$ and the norm $b^d f(a/b)$ both smooth; a sieve finds them.
+* Linear algebra mod 2, with signs and quadratic characters, picks a square on both sides; the algebraic square root
+  is computed $q$-adically.
+* Special forms give tiny polynomials (SNFS); forms whose polynomial factors are split by algebra alone.
+* `gnfs(N)`, `gnfs(N, f, m)`, `nfspoly(N)`, and the method `"nfs"` in `labrun` and `scoreboard`.
+
+**Try it:** run `gnfs(2^128 + 1, x^5 + 4, 2^26)` (degree 5) and compare the work with degree 3 and 4. Run
+`gnfs(10^40 + 1, x^5 + 1, 10^8)` and explain what happens (what is $x^5 + 1$ over the integers?). Compare
+`labrun("nfs", 2^128 + 1)` with `labrun("ecm", 2^128 + 1)`: why does ECM win here, where one factor has only 17
+digits?
+
+%md
+## Sources
+
+1. A. K. Lenstra and H. W. Lenstra (eds.), *The Development of the Number Field Sieve*, Lecture Notes in Math. 1554, Springer (1993).
+2. J. P. Buhler, H. W. Lenstra and C. Pomerance, "Factoring integers with the number field sieve", in [1], 50–94.
+3. C. Pomerance, "A tale of two sieves", *Notices of the AMS* 43 (1996) 1473–1485.
+4. A. K. Lenstra, H. W. Lenstra, M. S. Manasse and J. M. Pollard, "The factorization of the ninth Fermat number", *Math. Comp.* 61 (1993) 319–349.
+5. R. P. Brent and J. M. Pollard, "Factorization of the eighth Fermat number", *Math. Comp.* 36 (1981) 627–630.
+6. M. E. Briggs, *An Introduction to the General Number Field Sieve*, master's thesis, Virginia Tech (1998).
+7. B. A. Murphy, *Polynomial Selection for the Number Field Sieve Integer Factorisation Algorithm*, PhD thesis, Australian National University (1999).
+8. P. L. Montgomery, "Square roots of products of algebraic numbers", *Proc. Symp. Applied Math.* 48 (1994) 567–571; J.-M. Couveignes, "Computing a square root for the number field sieve", in [1], 95–102.
+9. F. Boudot, P. Gaudry, A. Guillevic, N. Heninger, E. Thomé and P. Zimmermann, "Comparing the difficulty of factorization and discrete logarithm: a 240-digit experiment", *CRYPTO 2020*; the RSA-250 announcement (2020).
+10. R. Crandall and C. Pomerance, *Prime Numbers: A Computational Perspective*, 2nd ed., Springer (2005), section 6.2.

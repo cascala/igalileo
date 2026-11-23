@@ -16,7 +16,8 @@ cascala/igalileo`, or open them on GitHub to read them with their results.
 * [Linear algebra](linear-algebra/README.md): vectors, matrices, systems of equations, eigenvalues.
 * [Number theory](number-theory/README.md): primes, prime factoring (trial division, Fermat, Pollard rho,
   Miller–Rabin), algebraic factoring (cyclotomic polynomials, Aurifeuillean factors, hunting for identities),
-  modular arithmetic, cryptography (Diffie–Hellman, RSA).
+  modular arithmetic, cryptography (Diffie–Hellman, RSA), a factoring lab (scoreboard, algorithm search,
+  leak hunt) and the number field sieve.
 * [Group theory](group-theory/README.md): symmetry, cyclic groups, permutations, Lagrange's theorem.
 * [Chaos and fractals](chaos/README.md): the logistic map, bifurcations, the Lorenz attractor, the Mandelbrot set.
 * [Differential geometry](differential-geometry/README.md): curves, surfaces, curvature, geodesics, the Riemann tensor.
