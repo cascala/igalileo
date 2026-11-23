@@ -11,6 +11,7 @@ cryptography. Every method is written as a short Galileo function, so you can ch
 | 4 | [Modular arithmetic](04-modular-arithmetic.ipynb) | congruences, divisibility tests, fast powers, Fermat's little theorem and Euler's theorem, inverses, the Chinese remainder theorem, orders and primitive roots |
 | 5 | [Cryptography](05-cryptography.ipynb) | shift ciphers, the Diffie–Hellman key exchange, RSA keys, encryption and signatures, breaking small keys, the quantum threat |
 | 6 | [The factoring lab](06-factoring-lab.ipynb) | RSA-like test numbers, a scoreboard of nine factoring methods with fitted growth laws, scoring your own method, a search for new factoring programs (and why its wins vanish on new numbers), hunting for leaks of $p$ in features of $N$ with corrected p-values |
+| 7 | [The number field sieve](07-number-field-sieve.ipynb) | one number in two worlds ($\mathbb{Z}$ and $\mathbb{Z}[\alpha]$), smooth pairs on both sides, sieving, quadratic characters, the square root in a number field, the special number field sieve on $2^{128} + 1$ and $2^{256} + 1$, polynomials that factor, a race against the quadratic sieve |
 
 Prerequisites: the [Numbers](../foundations/01-numbers.ipynb) lesson of the foundations path.
 

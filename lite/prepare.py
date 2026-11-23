@@ -21,7 +21,7 @@ GROUPS = [
     ("linear-algebra", "Linear algebra",
      "Vectors, matrices as transformations, systems of equations, eigenvalues, Fibonacci and Markov chains.", None),
     ("number-theory", "Number theory",
-     "Primes, factoring large numbers, algebraic factoring and hunting for identities, modular arithmetic, the cryptography built on them, and a lab that searches for new factoring algorithms.", None),
+     "Primes, factoring large numbers, algebraic factoring and hunting for identities, modular arithmetic, the cryptography built on them, a lab that searches for new factoring algorithms, and the number field sieve.", None),
     ("group-theory", "Group theory",
      "Symmetry, cyclic groups, permutations, card shuffles and Lagrange's theorem.", None),
     ("chaos", "Chaos and fractals",

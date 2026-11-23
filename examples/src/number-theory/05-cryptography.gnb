@@ -1,7 +1,7 @@
 %md
 # Number theory 4: Cryptography
 
-*Learning path: number theory, part 5 of 6.* [Index](README.md) · Previous: [Modular arithmetic](04-modular-arithmetic.ipynb) · Next: [The factoring lab](06-factoring-lab.ipynb)
+*Learning path: number theory, part 5 of 7.* [Index](README.md) · Previous: [Modular arithmetic](04-modular-arithmetic.ipynb) · Next: [The factoring lab](06-factoring-lab.ipynb)
 
 Until 1976 two people could only communicate secretly if they had first met, or used a courier, to agree on a secret
 key. Then Diffie and Hellman, and a year later Rivest, Shamir and Adleman, showed how to do it with nothing but

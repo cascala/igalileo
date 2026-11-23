@@ -1,7 +1,7 @@
 %md
 # Number theory 6: The factoring lab
 
-*Learning path: number theory, part 6 of 6.* [Index](README.md) · Previous: [Cryptography](05-cryptography.ipynb)
+*Learning path: number theory, part 6 of 7.* [Index](README.md) · Previous: [Cryptography](05-cryptography.ipynb) · Next: [The number field sieve](07-number-field-sieve.ipynb)
 
 RSA is safe as long as nobody can factor $N = pq$ quickly. The best known method, the number field sieve, needs time
 that grows like $L(1/3) = e^{1.92 (\ln N)^{1/3} (\ln \ln N)^{2/3}}$, and nobody has found anything fundamentally
