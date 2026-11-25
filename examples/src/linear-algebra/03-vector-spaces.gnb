@@ -1,0 +1,223 @@
+%md
+# Linear algebra 3: Vector spaces, bases and dimension
+
+*Learning path: linear algebra, part 3 of 9.* [Index](README.md) · Previous: [Linear systems](02-linear-systems.ipynb) · Next: [Determinants](04-determinants.ipynb)
+
+A color on a screen is a mix of red, green and blue: three numbers. Could two primary colors do? Could four be
+better? A sound is a mix of pure tones; a polynomial of degree 2 is a mix of $1$, $x$ and $x^2$. Behind all of these is
+one question: **how many independent ingredients does it take, and which ones?** The answer is the *dimension* of a
+*vector space*, and every matrix comes with four of them.
+
+**Who this is for.** You can solve systems by elimination and read the reduced row echelon form
+([lesson 2](02-linear-systems.ipynb)).
+
+**What you will be able to do afterwards:**
+
+1. decide whether a set of vectors is linearly independent, and what it spans;
+2. find a basis and the dimension of a subspace, and coordinates in a basis;
+3. find the four fundamental subspaces of a matrix and use rank + nullity = number of columns;
+4. treat polynomials and matrices as vectors, and write linear maps on them as matrices.
+
+Plan about an hour and a half.
+
+%md
+## 1. Spans and subspaces
+
+The **span** of some vectors is the set of all their linear combinations. Two vectors in space that do not lie on one
+line span a plane through the origin; one nonzero vector spans a line.
+
+A **subspace** is a set of vectors that contains 0 and is closed under addition and scaling: combinations of its
+vectors stay inside. Lines and planes through the origin are subspaces; a line that misses the origin is not (it does
+not contain 0, and the sum of two of its points leaves it).
+
+Is $b = [1\ 1\ 1]$ in the span of $[1\ 2\ 0]$ and $[0\ 1\ 1]$? That asks for $a, c$ with $a[1\ 2\ 0] + c[0\ 1\ 1] = b$:
+a system with these vectors as columns. Reduce the augmented matrix:
+
+%code
+rref([1 0 1; 2 1 1; 0 1 1])
+
+%md
+The last row reads $0 = 1$: no. The span is a plane, and $b$ is off it. And $[1\ 3\ 1]$?
+
+%code
+rref([1 0 1; 2 1 3; 0 1 1])
+
+%md
+Yes: $1\cdot[1\ 2\ 0] + 1\cdot[0\ 1\ 1] = [1\ 3\ 1]$. The span of the columns of a matrix $A$ is its **column space**
+$C(A)$, and *$Ax = b$ has a solution exactly when $b$ is in $C(A)$*.
+
+**Try this.** Is $[2\ 5\ 1]$ in the span of $[1\ 2\ 0]$ and $[0\ 1\ 1]$? Decide by hand: what would $a$ and $c$ have to be?
+
+%md
+## 2. Linear independence
+
+Vectors $v_1, \ldots, v_k$ are **linearly independent** if no one of them is a combination of the others;
+equivalently, the only combination giving 0 is the one with all coefficients 0. Put them as the columns of a matrix:
+independent means **the null space is just 0**, which means **a pivot in every column**, which means the rank is $k$.
+
+%code
+A = [1 2 3; 2 4 6; 1 1 1];
+rank(A)
+null(A)
+
+%md
+Three columns, rank 2: dependent. The null space vector $[1\ {-2}\ 1]$ says exactly how: column 1 $-$ 2 column 2 $+$
+column 3 $= 0$, so column 3 $= 2\cdot$column 2 $-$ column 1. Check: $2[2\ 4\ 1] - [1\ 2\ 1] = [3\ 6\ 1]$.
+
+%code
+V = [1 0 1; 2 1 0; 0 1 1];
+rank(V)
+null(V)
+
+%md
+Rank 3, empty null space: the columns of `V` are independent.
+
+Two facts follow from elimination. More than $n$ vectors in $\mathbb{R}^n$ are always dependent (more columns than
+possible pivots). And $n$ independent vectors in $\mathbb{R}^n$ span all of it (a pivot in every row too).
+
+**Try this.** Are $[1\ 1\ 0]$, $[0\ 1\ 1]$, $[1\ 0\ {-1}]$ independent? Look for a combination before asking Galileo.
+
+%md
+## 3. Basis, dimension and coordinates
+
+A **basis** of a subspace is a set of independent vectors that spans it: enough ingredients to make everything, and no
+redundant ones. Every basis of a subspace has the same number of vectors, its **dimension**. The plane spanned by
+$[1\ 2\ 0]$ and $[0\ 1\ 1]$ has dimension 2; $\mathbb{R}^3$ has dimension 3.
+
+With a basis, every vector has unique **coordinates**: the coefficients that build it. The columns of `V` are a basis of
+$\mathbb{R}^3$. The coordinates of $[1\ 1\ 1]$ in that basis solve $Vc = [1\ 1\ 1]$:
+
+%code
+coords = V\[1; 1; 1]
+V*coords
+
+%md
+So $[1\ 1\ 1] = \tfrac13[1\ 2\ 0] + \tfrac13[0\ 1\ 1] + \tfrac23[1\ 0\ 1]$. Different bases give different coordinates for
+the same vector, like describing a place in miles or in kilometers, or from a different corner. Choosing a good basis
+is half of linear algebra: lessons 5 to 8 are about finding the best one for a job.
+
+**Try this.** Find the coordinates of $[1\ 0\ 0]$ in the basis given by the columns of `V`. Which matrix has all three
+coordinate vectors, of $[1\ 0\ 0]$, $[0\ 1\ 0]$ and $[0\ 0\ 1]$, as its columns?
+
+%md
+## 4. The four fundamental subspaces
+
+An $m \times n$ matrix $A$ with rank $r$ has four subspaces attached to it:
+
+| subspace | lives in | dimension | how to find it |
+|---|---|---|---|
+| column space $C(A)$ | $\mathbb{R}^m$ | $r$ | the pivot columns of $A$ |
+| null space $N(A)$ | $\mathbb{R}^n$ | $n - r$ | `null(A)`: one vector per free variable |
+| row space $C(A^T)$ | $\mathbb{R}^n$ | $r$ | the nonzero rows of `rref(A)` |
+| left null space $N(A^T)$ | $\mathbb{R}^m$ | $m - r$ | `null(transpose(A))` |
+
+The middle column is the **rank–nullity theorem**: $\dim C(A) + \dim N(A) = r + (n - r) = n$, the number of columns.
+Every column either has a pivot or gives a free variable. For our $A$:
+
+%code
+rref(A)
+null(A)
+null(transpose(A))
+
+%md
+Rank 2. Column space: columns 1 and 2 of $A$ (the pivot columns), a plane in $\mathbb{R}^3$. Row space: the rows
+$[1\ 0\ {-1}]$ and $[0\ 1\ 2]$ of the reduced form, a plane. Null space: the line through $[1\ {-2}\ 1]$. Left null
+space: the line through $[-2\ 1\ 0]$, which says row 2 $= 2\cdot$row 1.
+
+Look at the dot products: the null space vector is perpendicular to both rows of the row space.
+
+%code
+dot([1 0 -1], [1 -2 1])
+dot([0 1 2], [1 -2 1])
+
+%md
+That is no accident: $Ax = 0$ says exactly that $x$ has dot product 0 with every row of $A$. **The null space is
+perpendicular to the row space**, and likewise the left null space is perpendicular to the column space. Together the
+two pairs split $\mathbb{R}^n$ and $\mathbb{R}^m$ into perpendicular pieces, which is the starting point of
+[lesson 5](05-orthogonality.ipynb).
+
+**Try this.** For $B = [1\ 2;\ 2\ 4;\ 3\ 6]$ predict the dimensions of all four subspaces before computing any of them.
+
+%md
+## 5. Vectors that are not arrows
+
+Anything you can add and scale, following the usual rules, is a vector. Polynomials of degree at most 2,
+$p(x) = a + bx + cx^2$, form a vector space with basis $1, x, x^2$ and dimension 3; $p$ has coordinates $[a\ b\ c]$.
+
+**Differentiation is a linear map** on this space: $(p + q)' = p' + q'$ and $(cp)' = cp'$. Its matrix has as columns
+the coordinates of the derivatives of the basis vectors: $1' = 0$, $x' = 1$, $(x^2)' = 2x$.
+
+%code
+D = [0 1 0; 0 0 2; 0 0 0];
+D*[5; 3; 2]
+deriv(5 + 3*x + 2*x^2, x)
+
+%md
+The matrix turns $[5\ 3\ 2]$, that is $5 + 3x + 2x^2$, into $[3\ 4\ 0]$, that is $3 + 4x$. Its null space is the
+constants (the derivative kills them); its column space is the polynomials of degree at most 1 (rank 2, and
+$2 + 1 = 3$ as rank–nullity demands).
+
+**Matrices are vectors too.** The $2\times2$ matrices form a space of dimension 4. Here is a question about them that
+becomes a linear system: *which matrices $X$ commute with $A = [1\ 1;\ 0\ 2]$*, that is, $AX = XA$?
+
+%code
+A2 = [1 1; 0 2];
+X = [a b; c d];
+expand(A2*X - X*A2)
+
+%md
+Four linear equations in $a, b, c, d$. Writing them as a matrix by hand is tedious; the **Kronecker product** does it
+in one line. Stack the columns of $X$ into one vector, $\mathrm{vec}(X) = [a\ c\ b\ d]$. Then
+$\mathrm{vec}(AX) = (I \otimes A)\,\mathrm{vec}(X)$ and $\mathrm{vec}(XA) = (A^T \otimes I)\,\mathrm{vec}(X)$, where
+`kron(P, Q)` replaces every entry $p_{ij}$ of $P$ by the block $p_{ij}Q$:
+
+%code
+K = kron(eye(2), A2) - kron(transpose(A2), eye(2))
+null(K)
+
+%md
+The null space has dimension 2. Unstack the columns $[a\ c\ b\ d]$: the first is $X = [-1\ 1;\ 0\ 0]$, the second
+$X = I$. So the matrices that commute with $A$ are exactly $sI + t[-1\ 1;\ 0\ 0]$, a 2-dimensional space, which contains
+$A$ itself ($s = 2$, $t = 1$). The same trick solves the **Sylvester equation** $AX + XB = C$ of control theory.
+
+**Try this.** Use `deriv` and the matrix `D` to check that $D^3 = 0$. Why must three derivatives kill every polynomial
+of degree 2?
+
+%md
+## Exercises
+
+1. **Independent?** Are $[1\ 2\ 3]$, $[4\ 5\ 6]$, $[7\ 8\ 10]$ independent? And with $9$ instead of $10$?
+2. **Basis of a plane.** Find a basis for the plane $x + 2y + 3z = 0$ in $\mathbb{R}^3$. (It is the null space of
+   which matrix?) What is its dimension?
+3. **Four subspaces.** For $B = [1\ 2;\ 2\ 4;\ 3\ 6]$ give a basis of each of the four subspaces.
+4. **Rank–nullity.** A $5 \times 7$ matrix has rank 3. What are the dimensions of its four subspaces? Can a
+   $5\times 7$ matrix have independent columns?
+5. **Commuting matrices.** Which $2\times 2$ matrices commute with $[0\ 1;\ 0\ 0]$? Use `kron` and `null`.
+
+%md
+## Hints and answers
+
+* **Section 1, Try this.** First entries: $a = 2$; third entries: $c = 1$; second: $2\cdot2 + 1 = 5$. Yes.
+* **Section 2, Try this.** $[1\ 1\ 0] - [0\ 1\ 1] = [1\ 0\ {-1}]$: dependent (rank 2).
+* **Section 3, Try this.** `V\[1; 0; 0]` $= [1/3\ \ {-2/3}\ \ 2/3]$. The matrix of all three is `inv(V)`.
+* **Section 4, Try this.** Rank 1 (every column is a multiple of $[1\ 2\ 3]$): column space dimension 1, null space
+  $2 - 1 = 1$, row space 1, left null space $3 - 1 = 2$.
+* **Section 5, Try this.** `D^3` is the zero matrix: each derivative lowers the degree by one.
+* **Exercise 1.** `rank([1 4 7; 2 5 8; 3 6 10])` is 3: independent. With 9 the rank is 2:
+  $[7\ 8\ 9] = 2[4\ 5\ 6] - [1\ 2\ 3]$.
+* **Exercise 2.** The null space of $[1\ 2\ 3]$: `null([1 2 3])` gives $[-2\ 1\ 0]$ and $[-3\ 0\ 1]$. Dimension 2.
+* **Exercise 3.** Column space: $[1\ 2\ 3]$. Row space: $[1\ 2]$. Null space: $[-2\ 1]$. Left null space:
+  `null(transpose(B))`, two vectors such as $[-2\ 1\ 0]$ and $[-3\ 0\ 1]$.
+* **Exercise 4.** Column space 3, row space 3, null space $7 - 3 = 4$, left null space $5 - 3 = 2$. Independent columns
+  need rank 7, but the rank is at most 5: never.
+* **Exercise 5.** `null(kron(eye(2), N) - kron(transpose(N), eye(2)))` with `N = [0 1; 0 0]` gives $I$ and $N$: the
+  matrices $sI + tN = [s\ t;\ 0\ s]$.
+
+%md
+## Sources
+
+1. G. Strang, *Introduction to Linear Algebra*, 6th ed., Wellesley-Cambridge Press (2023), chapter 3.
+2. G. Strang, "The fundamental theorem of linear algebra", *American Mathematical Monthly* 100 (1993) 848–855.
+3. S. Axler, *Linear Algebra Done Right*, 4th ed., Springer (2024), open access, chapter 2.
+4. R. A. Horn and C. R. Johnson, *Topics in Matrix Analysis*, Cambridge University Press (1991), chapter 4 (the
+   Kronecker product).

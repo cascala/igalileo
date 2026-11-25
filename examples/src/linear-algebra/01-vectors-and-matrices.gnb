@@ -1,18 +1,24 @@
 %md
 # Linear algebra 1: Vectors and matrices
 
-*Learning path: linear algebra, part 1 of 2.* [Index](README.md) · Next: [Eigenvalues](02-eigenvalues.ipynb)
+*Learning path: linear algebra, part 1 of 9.* [Index](README.md) · Next: [Linear systems](02-linear-systems.ipynb)
 
-Linear algebra is the mathematics of arrows and of the transformations that keep straight lines straight. It runs
-computer graphics, search engines, machine learning and quantum mechanics. In this lesson you will learn
+A computer game turns a 3D world into the picture on your screen; a phone straightens a photo of a page; a robot arm
+works out where its hand is from the angles of its joints. All three do the same thing millions of times a second:
+multiply a **matrix** by a **vector**. This lesson is about what that multiplication means, and why it is always the
+same kind of transformation: one that keeps straight lines straight and the origin in place.
 
-* vectors: adding, scaling, length, the **dot product** and angles,
-* a matrix as a **transformation** of the plane, and what its columns mean,
-* multiplying matrices = doing one transformation after another,
-* the **determinant**: how much a matrix scales areas,
-* solving systems of linear equations, and what row reduction, rank and the null space tell you.
+**Who this is for.** You know coordinates in the plane, Pythagoras and the sine and cosine
+([foundations](../foundations/README.md) up to trigonometry). Nothing else.
 
-You need the [foundations](../foundations/README.md) up to trigonometry.
+**What you will be able to do afterwards:**
+
+1. add and scale vectors, and compute lengths, dot products and angles;
+2. read a matrix as a transformation: its columns are where the unit arrows go;
+3. multiply matrices, and explain why $AB$ means "first $B$, then $A$";
+4. find the matrix of a rotation, a reflection, a shear, and undo one with the inverse.
+
+Plan about an hour.
 
 %md
 ## 1. Vectors
@@ -37,7 +43,21 @@ p = legend(p, "u = [3 4]", "v = [4 -2]", "u + v = [7 2]", "v again, starting at 
 labels(title(p, "Adding vectors: head to tail"), "first component", "second component")
 
 %md
-### Length, dot product and angle
+A sum of multiples, $a u + b v$, is a **linear combination** of $u$ and $v$. Here is a question that will run through
+the whole course: *which vectors can you reach as linear combinations?* With $u = [3\ 4]$ and $v = [4\ {-2}]$, can you
+reach $[1\ 0]$? That needs $3a + 4b = 1$ and $4a - 2b = 0$, two equations for two unknowns:
+
+%code
+solve([3*a + 4*b == 1, 4*a - 2*b == 0], [a, b])
+
+%md
+So $[1\ 0] = \tfrac{1}{11}u + \tfrac{2}{11}v$. In fact every vector of the plane is a combination of these two, because
+they point in different directions. Two arrows on one line, like $[1\ 2]$ and $[2\ 4]$, only reach that line.
+
+**Try this.** Write $[0\ 1]$ as a combination of $u$ and $v$, first by hand, then with `solve`.
+
+%md
+## 2. Length, dot product and angle
 
 The **length** of $[a\ b]$ is $\sqrt{a^2 + b^2}$ (Pythagoras), computed by `norm`. The **dot product** multiplies
 matching components and adds: $u\cdot v = u_1v_1 + u_2v_2$. It measures how much two arrows point the same way:
@@ -45,25 +65,36 @@ matching components and adds: $u\cdot v = u_1v_1 + u_2v_2$. It measures how much
 $$u \cdot v = |u|\,|v|\cos\theta,$$
 
 where $\theta$ is the angle between them. So $\cos\theta = \dfrac{u\cdot v}{|u|\,|v|}$, and a dot product of 0 means
-the arrows are **perpendicular**:
+the arrows are **perpendicular** (orthogonal):
 
 %code
 norm(u)
 dot(u, v)
 dot(u, [4 -3])
-acos(dot([1 0], [1 1])/(norm([1 0])*norm([1 1])))
 eval(acos(dot(u, v)/(norm(u)*norm(v)))*180/pi)
 
 %md
-$[3\ 4]$ and $[4\ {-3}]$ are perpendicular, $[1\ 0]$ and $[1\ 1]$ make an angle of $\pi/4 = 45^\circ$, and $u$ and $v$
-make an angle of about $79.7^\circ$. Everything works the same in three dimensions (or a thousand) with more components;
-`cross(a, b)` gives a vector perpendicular to two vectors in 3D:
+$[3\ 4]$ has length 5, $[3\ 4]$ and $[4\ {-3}]$ are perpendicular, and $u$ and $v$ make an angle of about $79.7^\circ$.
+Why does the formula hold? Expand $|u - v|^2 = (u - v)\cdot(u - v) = |u|^2 + |v|^2 - 2\,u\cdot v$ and compare with the
+law of cosines for the triangle with sides $u$, $v$, $u - v$: $|u - v|^2 = |u|^2 + |v|^2 - 2|u||v|\cos\theta$.
+
+Everything works the same in three dimensions (or a thousand) with more components. In 3D, `cross(a, b)` gives a
+vector perpendicular to both $a$ and $b$, with length equal to the area of the parallelogram they span:
 
 %code
 cross([1 0 0], [0 1 0])
+cross([1 2 3], [4 5 6])
+dot(cross([1 2 3], [4 5 6]), [1 2 3])
 
 %md
-## 2. Matrices transform the plane
+A vector of length 1 is a **unit vector**. Divide any nonzero vector by its length to get one: `u/norm(u)` is
+$[3/5\ \ 4/5]$.
+
+**Try this.** Find the angle between the diagonal of a cube, $[1\ 1\ 1]$, and one of its edges, $[1\ 0\ 0]$. (By hand:
+$\cos\theta = 1/\sqrt3$.)
+
+%md
+## 3. Matrices transform the plane
 
 A $2\times2$ matrix $A$ turns a vector $x$ (written as a column) into another vector $Ax$: each component of $Ax$ is
 the dot product of a row of $A$ with $x$.
@@ -72,11 +103,16 @@ the dot product of a row of $A$ with $x$.
 A = [2 1; 1 2];
 A*[1; 0]
 A*[0; 1]
-A*[1; 1]
+A*[3; -1]
 
 %md
 The images of $[1\ 0]$ and $[0\ 1]$ are the **columns** of $A$. That is all you need to know about a linear
-transformation: since $x = x_1[1\ 0] + x_2[0\ 1]$, its image is $x_1\cdot(\text{column 1}) + x_2\cdot(\text{column 2})$.
+transformation: since $x = x_1[1\ 0] + x_2[0\ 1]$, its image is
+
+$$Ax = x_1\cdot(\text{column 1}) + x_2\cdot(\text{column 2}),$$
+
+a linear combination of the columns. Check: $3\cdot[2\ 1] - 1\cdot[1\ 2] = [5\ 1]$. This "column picture" is worth
+more than the row-times-column rule, and we will use it again and again.
 
 To see what $A$ does to the whole plane, look at what it does to the unit circle, the points $[\cos t\ \sin t]$. `w`
 is the image of the circle point at angle $t$; `w(1)` and `w(2)` are its two components:
@@ -85,8 +121,8 @@ is the image of the circle point at angle $t$; `w(1)` and `w(2)` are its two com
 w = A*[cos(t); sin(t)]
 
 %md
-The plot shows the unit circle (blue) and its image, an ellipse (red), with the images of the two unit arrows. Axes:
-the two coordinates of the plane. `parametric(X, Y, t, 0, 2*pi)` draws the point $(X, Y)$ for $t$ from 0 to $2\pi$:
+The plot shows the unit circle and its image, an ellipse, with the images of the two unit arrows. Axes: the two
+coordinates of the plane. `parametric(X, Y, t, 0, 2*pi)` draws the point $(X, Y)$ for $t$ from 0 to $2\pi$:
 
 %code
 p = show(parametric(cos(t), sin(t), t, 0, 2*pi), parametric(w(1), w(2), t, 0, 2*pi), parametric(2*s, s, s, 0, 1), parametric(s, 2*s, s, 0, 1));
@@ -95,143 +131,158 @@ labels(title(p, "A matrix turns circles into ellipses"), "x", "y")
 
 %md
 The ellipse is stretched most along the diagonal $y = x$ and least along $y = -x$. Those two directions are special:
-there $A$ only stretches without turning. They are the **eigenvectors** of lesson 2.
+there $A$ only stretches without turning. They are the **eigenvectors** of [lesson 6](06-eigenvalues.ipynb).
 
-### Rotations
+Why do lines stay lines? A line is $p + s\,d$; its image is $A(p + s\,d) = Ap + s\,Ad$, again a line. That property,
+$A(au + bv) = aAu + bAv$, is what **linear** means.
 
-The matrix that rotates every vector by an angle $t$ has as columns the rotated unit arrows
-$[\cos t\ \sin t]$ and $[-\sin t\ \cos t]$:
+**Try this.** Without computing, predict where $A$ sends $[1\ 1]$ and $[1\ {-1}]$. Then check.
+
+%md
+## 4. A gallery of transformations
+
+Since the columns are the images of $[1\ 0]$ and $[0\ 1]$, you can write down a matrix by drawing where those two arrows
+go.
+
+* **Rotation** by an angle $t$: $[1\ 0]$ goes to $[\cos t\ \sin t]$, and $[0\ 1]$ to $[-\sin t\ \cos t]$.
+* **Reflection** in the $x$-axis: $[1\ 0]$ stays, $[0\ 1]$ flips to $[0\ {-1}]$.
+* **Shear**: $[1\ 0]$ stays, $[0\ 1]$ leans over to $[1\ 1]$, like a deck of cards pushed sideways.
+* **Projection** onto the $x$-axis: $[1\ 0]$ stays, $[0\ 1]$ is flattened to $[0\ 0]$.
 
 %code
 R = [cos(t), -sin(t); sin(t), cos(t)];
+F = [1 0; 0 -1];
+H = [1 1; 0 1];
+Px = [1 0; 0 0];
 subs(R, t, pi/2)*[1; 0]
+F*[2; 3]
+H*[2; 3]
+Px*[2; 3]
 
 %md
-(Commas separate the entries here, because inside brackets a space followed by a minus sign starts a new entry.)
+(In `R` the entries are separated by commas, because inside brackets a space followed by a minus sign starts a new
+entry.)
 
-## 3. Multiplying matrices
+To draw what they do, follow the outline of the unit square. `c(z)` clamps $z$ to the interval $[0, 1]$ (written with
+`abs` so that it works in a formula), and as $s$ runs from 0 to 4 the point `sq` walks once around the square:
+right along the bottom, up, back along the top, down. `M*sq` is the image of that walk under a matrix $M$. Axes: the
+coordinates $x$ and $y$.
 
-Doing transformation $B$ and then $A$ is again a linear transformation, with matrix $AB$ (the **product**). Entry
-$(i, j)$ of $AB$ is the dot product of row $i$ of $A$ with column $j$ of $B$. Rotating by $s$ and then by $t$ is rotating
-by $s + t$, and the product shows the addition formulas of trigonometry:
+%code
+c(z) := (abs(z) - abs(z - 1) + 1)/2;
+sq = [c(s) - c(s - 2); c(s - 1) - c(s - 3)];
+r = subs(R, t, pi/6)*sq;
+h = H*sq;
+f = F*sq;
+p = show(parametric(sq(1), sq(2), s, 0, 4), parametric(r(1), r(2), s, 0, 4), parametric(h(1), h(2), s, 0, 4), parametric(f(1), f(2), s, 0, 4));
+p = legend(p, "unit square", "rotated by 30 degrees", "sheared by H = [1 1; 0 1]", "reflected by F = [1 0; 0 -1]");
+labels(title(p, "Four transformations of the unit square"), "x", "y")
+
+%md
+The rotation and the reflection keep the shape; the shear turns the square into a parallelogram with the same base
+and height (so the same area). The projection would flatten it to the segment from 0 to 1 on the $x$-axis.
+
+**Try this.** Write down the matrix that reflects the plane in the line $y = x$. (Where do $[1\ 0]$ and $[0\ 1]$ go?)
+Apply it to $[2\ 5]$.
+
+%md
+## 5. Multiplying matrices
+
+Doing transformation $B$ and then $A$ is again a linear transformation, with matrix $AB$ (the **product**). Its
+columns are $A$ times the columns of $B$; equivalently, entry $(i, j)$ is the dot product of row $i$ of $A$ with
+column $j$ of $B$. Rotating by $s$ and then by $t$ is rotating by $s + t$, and the product shows the addition formulas
+of trigonometry:
 
 %code
 Rs = [cos(s), -sin(s); sin(s), cos(s)];
-expand(R*Rs)
+R*Rs
 
 %md
-The top left entry is $\cos t\cos s - \sin t \sin s = \cos(t + s)$. As with the symmetries of the
-[group theory path](../group-theory/README.md), order matters: $AB \ne BA$ in general.
+The top left entry is $\cos s\cos t - \sin s \sin t = \cos(s + t)$, the bottom left $\sin(s + t)$. Order matters:
+$AB \ne BA$ in general. Shearing then reflecting is not reflecting then shearing:
 
 %code
-B = [1 1; 0 1];
-A*B
-B*A
+F*H
+H*F
 
 %md
-## 4. The determinant
-
-The unit square (area 1) is turned into the parallelogram spanned by the two columns of $A$. Its area, with a sign, is
-the **determinant**: for $[a\ b;\ c\ d]$ it is $ad - bc$. Every area is multiplied by $|\det A|$, so the ellipse above
-has area $\pi\cdot|\det A| = 3\pi$:
+Some rules, all following from "first $B$, then $A$": $(AB)C = A(BC)$ (you may regroup); $A(B + C) = AB + AC$; and the
+**identity** $I$ = `eye(n)`, which leaves every vector alone, has $AI = IA = A$. Powers repeat a transformation:
+three shears push three times as far.
 
 %code
-det(A)
-det([a b; c d])
-det(R)
-det([1 2; 2 4])
+H^3
 
 %md
-Rotations have determinant 1 (they keep areas). A negative determinant means the transformation flips the plane over,
-like a mirror. A determinant of 0 means the plane is squashed onto a line: $[1\ 2;\ 2\ 4]$ sends everything onto
-multiples of $[1\ 2]$, and there is no way back. Exactly the matrices with $\det A \ne 0$ have an **inverse**
-$A^{-1}$ that undoes them:
+**Try this.** Compute $F^2$ for the reflection. Explain the answer without computing. Then guess $R^n$ for the
+rotation.
+
+%md
+## 6. Undoing a transformation: the inverse
+
+The **inverse** $A^{-1}$ undoes $A$: $A^{-1}A = AA^{-1} = I$. Undoing a shear is shearing back; undoing a rotation by
+$t$ is rotating by $-t$:
 
 %code
+inv(H)
 inv(A)
 inv(A)*A
+simplify(inv(R))
+
+%md
+For a $2\times2$ matrix there is a formula you should know by heart:
+
+$$\begin{pmatrix} a & b\\ c & d\end{pmatrix}^{-1} = \frac{1}{ad - bc}\begin{pmatrix} d & -b\\ -c & a\end{pmatrix}.$$
+
+%code
 inv([a b; c d])
 
 %md
-## 5. Systems of linear equations
+It fails when $ad - bc = 0$. Then the matrix squashes the plane onto a line (or a point), and no matrix can undo
+that: the projection `Px` sent both $[2\ 3]$ and $[2\ 0]$ to $[2\ 0]$; which one should the inverse return? The
+number $ad - bc$ is the **determinant**, the subject of [lesson 4](04-determinants.ipynb).
 
-Two equations in two unknowns,
+The inverse of a product reverses the order, $(AB)^{-1} = B^{-1}A^{-1}$, like taking off socks and shoes: what went on
+last comes off first.
 
-$$2x + y = 3, \qquad x + 3y = 5,$$
-
-are one matrix equation $Ax = b$ with $A = [2\ 1;\ 1\ 3]$ and $b = [3;\ 5]$. Each equation is a line in the plane; the
-solution is where they cross. The plot shows both lines, solved for $y$: $y = 3 - 2x$ and $y = (5 - x)/3$, with $x$
-across and $y$ up:
-
-%code
-p = legend(plot(3 - 2*x, (5 - x)/3, x, -1, 3), "2x + y = 3", "x + 3y = 5");
-labels(title(p, "Two equations, two lines, one crossing point"), "x", "y")
+**Try this.** Find the inverse of $[2\ 1;\ 5\ 3]$ with the formula, then check with `inv`.
 
 %md
-`A\b` solves $Ax = b$ ("divide by $A$ from the left"), and `solve` works with the equations directly:
+## Exercises
 
-%code
-[2 1; 1 3]\[3; 5]
-solve([2*x + y == 3, x + 3*y == 5], [x, y])
-
-%md
-The lines cross at $(4/5, 7/5)$.
-
-### Row reduction
-
-By hand you eliminate unknowns: subtract multiples of one equation from another. Done systematically on the table of
-coefficients (with the right-hand side as a last column) this is **Gaussian elimination**, and the end result, where
-each equation has one leading 1 and zeros above and below it, is the **reduced row echelon form**, `rref`. For
-
-$$x + y + z = 6, \qquad x - y = 0, \qquad 2x + y - z = 0:$$
-
-%code
-rref([1 1 1 6; 1 -1 0 0; 2 1 -1 0])
+1. **Combinations.** Is $[1\ 2\ 3]$ a linear combination of $[1\ 0\ 1]$ and $[0\ 1\ 1]$? Is $[1\ 2\ 4]$?
+2. **Angles.** Find a nonzero vector perpendicular to both $[1\ 1\ 0]$ and $[0\ 1\ 1]$ in two ways: with `cross`, and by
+   solving two equations $x\cdot a = 0$, $x\cdot b = 0$.
+3. **Build a matrix.** Find the matrix that first rotates by $90^\circ$ and then reflects in the $x$-axis. Which single
+   reflection is it?
+4. **Powers.** Compute $R^2$ for the rotation $R$ and simplify; which angle does it rotate by? What is $R^{12}$ for
+   $t = \pi/6$?
+5. **No inverse.** Show that $[1\ 2;\ 2\ 4]$ has no inverse, and find two different vectors that it sends to the same
+   place.
 
 %md
-Read it row by row: $x = 6/5$, $y = 6/5$, $z = 18/5$.
+## Hints and answers
 
-### When there is no single answer
-
-Three planes can also meet in a whole line, or not at all. Replace the third equation by $2x + 2y + 2z = 12$, which is
-just twice the first:
-
-%code
-M = [1 1 1; 1 -1 0; 2 2 2];
-rref([M, [6; 0; 12]])
-rank(M)
-null(M)
-
-%md
-The last row of the reduced form is all zeros: the third equation said nothing new. The **rank**, the number of
-independent equations, is 2, less than the 3 unknowns, so one unknown is free. The rows read $x + z/2 = 3$ and
-$y + z/2 = 3$: for any $z$ there is a solution. The **null space** `null(M)` holds the directions you can move in without
-changing $Mx$: here multiples of $[-1/2\ \ {-1/2}\ \ 1]$. All solutions are one solution plus the null space:
-$[3\ 3\ 0] + z\,[-1/2\ \ {-1/2}\ \ 1]$, a line in space.
-
-If the right-hand side were $[6;\ 0;\ 13]$ instead, the last row would read $0 = 1$: no solution at all.
-
-%code
-rref([M, [6; 0; 13]])
-
-%md
-## Summary
-
-* Vectors add head to tail; `norm` is the length, `dot` measures angles ($u\cdot v = 0$: perpendicular), `cross` in 3D.
-* A matrix is a transformation; its columns are the images of the unit vectors. `A*x` applies it.
-* The product $AB$ is "first $B$, then $A$"; not commutative.
-* `det(A)` is the area scaling factor; $\det A = 0$ means no inverse. `inv(A)`.
-* Systems $Ax = b$: `A\b`, `solve`, `rref`; `rank` counts independent equations, `null` gives the free directions.
-
-**Try it:** find the matrix that reflects the plane in the line $y = x$ (where do $[1\ 0]$ and $[0\ 1]$ go?) and check
-that its determinant is $-1$. Which matrix rotates by $90^\circ$, and what is its square? Find all solutions of
-$x + 2y + 3z = 0$, $4x + 5y + 6z = 0$, $7x + 8y + 9z = 0$.
-
-Next: [Eigenvalues](02-eigenvalues.ipynb): the directions a matrix only stretches.
+* **Section 1, Try this.** $3a + 4b = 0$, $4a - 2b = 1$ gives $a = 2/11$, $b = -3/22$.
+* **Section 2, Try this.** $\cos\theta = 1/\sqrt3$, $\theta \approx 54.7^\circ$: `eval(acos(1/sqrt(3))*180/pi)`.
+* **Section 3, Try this.** $A[1\ 1] = [3\ 3]$ (stretched by 3) and $A[1\ {-1}] = [1\ {-1}]$ (unchanged): the two
+  special directions.
+* **Section 4, Try this.** $[0\ 1;\ 1\ 0]$; it sends $[2\ 5]$ to $[5\ 2]$.
+* **Section 5, Try this.** $F^2 = I$: reflecting twice puts everything back. $R^n$ rotates by $nt$:
+  $[\cos nt, -\sin nt;\ \sin nt, \cos nt]$.
+* **Section 6, Try this.** $ad - bc = 1$, inverse $[3\ {-1};\ {-5}\ 2]$.
+* **Exercise 1.** $a[1\ 0\ 1] + b[0\ 1\ 1] = [a\ \ b\ \ a + b]$, so the third entry must be the sum of the first two:
+  $[1\ 2\ 3]$ yes ($a = 1$, $b = 2$), $[1\ 2\ 4]$ no.
+* **Exercise 2.** `cross([1 1 0], [0 1 1])` $= [1\ {-1}\ 1]$; `solve([x + y == 0, y + z == 0], [x, y])` leaves $z$ free
+  and gives the same direction.
+* **Exercise 3.** `F*subs(R, t, pi/2)` $= [0\ {-1};\ {-1}\ 0]$: reflection in the line $y = -x$.
+* **Exercise 4.** `simplify(R*R)` rotates by $2t$; for $t = \pi/6$, $R^{12}$ is a full turn, $I$.
+* **Exercise 5.** $ad - bc = 4 - 4 = 0$. It sends $[2\ 0]$ and $[0\ 1]$ both to $[2\ 4]$: the columns lie on one line.
 
 %md
 ## Sources
 
-1. G. Strang, *Introduction to Linear Algebra*, 5th ed., Wellesley-Cambridge Press (2016). Chapters 1–3.
-2. S. Axler, *Linear Algebra Done Right*, 4th ed., Springer (2024), open access. Chapters 1–3.
-3. C. F. Gauss, *Theoria motus corporum coelestium* (1809): elimination for least-squares orbit fitting.
+1. G. Strang, *Introduction to Linear Algebra*, 6th ed., Wellesley-Cambridge Press (2023), chapters 1 and 2.
+2. D. C. Lay, S. R. Lay and J. J. McDonald, *Linear Algebra and Its Applications*, 6th ed., Pearson (2021), chapter 1.
+3. S. Axler, *Linear Algebra Done Right*, 4th ed., Springer (2024), open access, chapters 1 to 3.
+4. 3Blue1Brown, *Essence of Linear Algebra* (video series, 2016), chapters 1 to 4.

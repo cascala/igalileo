@@ -19,7 +19,7 @@ GROUPS = [
     ("foundations", "Foundations",
      "Nine lessons from arithmetic to calculus, differential equations and conic sections. Start here.", None),
     ("linear-algebra", "Linear algebra",
-     "Vectors, matrices as transformations, systems of equations, eigenvalues, Fibonacci and Markov chains.", None),
+     "Nine lessons for a first course: vectors and matrices, elimination and LU, vector spaces, determinants, least squares and QR, eigenvalues, symmetric matrices and Cholesky, the SVD, and the matrix exponential with the Jordan form.", None),
     ("multivariable", "Multivariable calculus",
      "Seven lessons for Calculus III: contour maps, gradients, optimization and Lagrange multipliers, multiple integrals and the bell curve, vector fields, and the theorems of Green, Stokes and Gauss.", None),
     ("number-theory", "Number theory",

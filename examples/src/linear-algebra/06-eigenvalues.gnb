@@ -1,17 +1,24 @@
 %md
-# Linear algebra 2: Eigenvalues
+# Linear algebra 6: Eigenvalues and eigenvectors
 
-*Learning path: linear algebra, part 2 of 2.* [Index](README.md) · Previous: [Vectors and matrices](01-vectors-and-matrices.ipynb)
+*Learning path: linear algebra, part 6 of 9.* [Index](README.md) · Previous: [Orthogonality](05-orthogonality.ipynb) · Next: [Symmetric matrices](07-symmetric-matrices.ipynb)
 
 Most vectors are turned by a matrix. A few special directions are only stretched: the **eigenvectors**, and the
-stretch factors are the **eigenvalues**. They explain what a matrix does in the long run, which is why they show up in
-vibrations, Google's PageRank, population models and quantum mechanics. You will learn
+stretch factors are the **eigenvalues**. They tell you what a matrix does when you apply it again and again, which is
+why they show up in vibrations, Google's PageRank, population models, the stability of a bridge and quantum mechanics.
 
-* what eigenvectors and eigenvalues are, and how to find them from $\det(A - \lambda I) = 0$,
-* how they **diagonalise** a matrix, and why that makes powers $A^n$ easy,
-* the Fibonacci numbers and the golden ratio, from the eigenvalues of a $2\times2$ matrix,
-* a Markov chain (tomorrow's weather) and its steady state,
-* rotations (complex eigenvalues) and symmetric matrices (perpendicular eigenvectors).
+**Who this is for.** You know matrices as transformations ([lesson 1](01-vectors-and-matrices.ipynb)), null spaces
+([lesson 3](03-vector-spaces.ipynb)) and determinants ([lesson 4](04-determinants.ipynb)). Section 6 uses complex
+numbers ([foundations 6](../foundations/06-complex-numbers.ipynb)).
+
+**What you will be able to do afterwards:**
+
+1. find eigenvalues from $\det(A - \lambda I) = 0$ and eigenvectors as null spaces;
+2. diagonalize $A = VDV^{-1}$ and use it to compute powers $A^n$;
+3. explain the long-run behavior of Fibonacci numbers and of a Markov chain with eigenvalues;
+4. recognize complex eigenvalues (rotation) and matrices that cannot be diagonalized.
+
+Plan about an hour and a half.
 
 %md
 ## 1. Directions that are only stretched
@@ -48,7 +55,7 @@ labels(title(p, "Eigenvectors are the axes of the ellipse"), "x", "y")
 ## 2. Finding them
 
 $Av = \lambda v$ means $(A - \lambda I)v = 0$ with $v \ne 0$: the matrix $A - \lambda I$ squashes some direction to 0,
-so its determinant is 0 (lesson 1). That gives an equation for $\lambda$, the **characteristic equation**:
+so its determinant is 0 (lesson 4). That gives an equation for $\lambda$, the **characteristic equation**:
 
 $$\det(A - \lambda I) = 0.$$
 
@@ -60,7 +67,7 @@ solve(charpoly(A, x) == 0, x)
 eig(A)
 
 %md
-For each eigenvalue, the eigenvectors are the null space of $A - \lambda I$ (lesson 1). `eye(2)` is the identity
+For each eigenvalue, the eigenvectors are the null space of $A - \lambda I$ (lesson 3). `eye(2)` is the identity
 matrix $I$:
 
 %code
@@ -75,7 +82,20 @@ columns `V` together with the diagonal matrix `D` of the matching eigenvalues:
 [V, D] = eig(A)
 
 %md
-## 3. Diagonalising, and powers
+Two checks that catch most mistakes: the eigenvalues add up to the **trace** (the sum of the diagonal) and multiply to
+the determinant. Here $3 + 1 = 4 = 2 + 2$ and $3\cdot1 = 3 = \det A$. For a $2\times2$ matrix this even gives the
+characteristic polynomial at once: $\lambda^2 - (\text{trace})\lambda + \det = 0$.
+
+%code
+trace(A)
+det(A)
+
+%md
+**Try this.** Find the eigenvalues of $[4\ 1;\ 2\ 3]$ from trace and determinant (they add to 7 and multiply to 10),
+then the eigenvectors by hand. Check with `[V, D] = eig([4 1; 2 3])`.
+
+%md
+## 3. Diagonalizing, and powers
 
 In the eigenvector directions $A$ simply multiplies by the eigenvalues. Written with matrices:
 
@@ -94,6 +114,12 @@ A^5
 For large $n$ the largest eigenvalue wins: $A^n v$ points more and more along the eigenvector with $\lambda = 3$,
 whatever $v$ you start with (unless $v$ has no component along it). That is how Google's PageRank finds the most
 important web pages: it repeatedly multiplies by a huge matrix and watches which direction wins.
+
+Diagonalizing needs $n$ independent eigenvectors. Distinct eigenvalues always give them; a repeated eigenvalue may not
+(section 6).
+
+**Try this.** Compute $A^{10}$ for $A = [1\ 2;\ 2\ 1]$ with eigenvalues $3$ and $-1$: guess the entries from
+$V D^{10} V^{-1}$ before computing `A^10`. (Hint: $3^{10} = 59049$.)
 
 ## 4. Fibonacci and the golden ratio
 
@@ -123,6 +149,10 @@ to $\varphi$. The table has $n$, $F_n$, $F_{n+1}/F_n$ and Binet's formula:
 %code
 phi = (1 + sqrt(5))/2;
 table([n, F(n), eval(F(n + 1)/F(n)), eval((phi^n - (1 - phi)^n)/sqrt(5))], n, 1, 15)
+
+%md
+**Try this.** The sequence $a_{n+1} = a_n + 2a_{n-1}$ starts $0, 1, 1, 3, 5, 11, \ldots$. Find its matrix and
+eigenvalues. Which number does $a_{n+1}/a_n$ approach?
 
 %md
 ## 5. A Markov chain: tomorrow's weather
@@ -163,7 +193,10 @@ difference from the steady state shrinks by a factor $0.4$ every day.
 The eigenvector for $\lambda = 1$ is $[5\ 1]$; scaled so its entries add up to 1 it is $[5/6\ \ 1/6]$: in the long run,
 5 days in 6 are sunny.
 
-## 6. Rotations and symmetric matrices
+**Try this.** Change the weather so that rain follows rain with probability 0.7 (and sun follows rain with 0.3).
+What is the new steady state?
+
+## 6. Complex eigenvalues, and when diagonalizing fails
 
 A rotation by $90^\circ$ turns every arrow, so no real direction is preserved. Its eigenvalues are complex, $\pm i$:
 multiplying by $i$ is a quarter turn in the complex plane ([foundations lesson 6](../foundations/06-complex-numbers.ipynb)).
@@ -172,36 +205,64 @@ multiplying by $i$ is a quarter turn in the complex plane ([foundations lesson 6
 eig([0 -1; 1 0])
 
 %md
-A **symmetric** matrix ($A = A^T$, equal to its mirror image across the diagonal) is the opposite case: its eigenvalues
-are always real and its eigenvectors perpendicular, so it simply stretches along perpendicular axes, as our $A$ did.
-This is the **spectral theorem**, and it is what untilted the conics of
-[foundations lesson 9](../foundations/09-geometry-and-conics.ipynb). A $3\times3$ example; the dot products of the
-eigenvector columns are all 0:
+A real matrix with complex eigenvalues $a \pm bi$ turns as well as stretches: it rotates by the angle of $a + bi$ and
+scales by $|a + bi|$. For $[3\ {-2};\ 1\ 1]$ the eigenvalues are $2 \pm i$, with $|2 + i| = \sqrt5 > 1$: powers of
+this matrix spiral outward.
 
 %code
-S = [2 0 0; 0 3 4; 0 4 9];
-[V, D] = eig(S)
-dot(column(V, 1), column(V, 2))
-dot(column(V, 1), column(V, 3))
-dot(column(V, 2), column(V, 3))
+eig([3 -2; 1 1])
 
 %md
-## Summary
+Finally, not every matrix can be diagonalized. The shear $[1\ 1;\ 0\ 1]$ of lesson 1 has the eigenvalue 1 twice
+(it is triangular: the eigenvalues are on the diagonal), but only one eigenvector direction, $[1\ 0]$. Two repeated
+eigenvalues, one eigenvector: there are not enough eigenvectors for $V$. Such matrices are handled by the
+**Jordan form** of [lesson 9](09-jordan-and-matrix-exponential.ipynb).
 
-* $Av = \lambda v$: eigenvectors are only stretched, by the eigenvalue $\lambda$.
-* Eigenvalues solve $\det(A - \lambda I) = 0$ (`charpoly`, `eig`); eigenvectors span `null(A - λ*eye(n))` (`eigvec`).
-* `[V, D] = eig(A)`: $A = VDV^{-1}$, so $A^n = VD^nV^{-1}$ and the largest eigenvalue dominates.
-* Fibonacci grows like the golden ratio; a Markov chain settles on the eigenvector with eigenvalue 1.
-* Rotations have complex eigenvalues; symmetric matrices have real ones with perpendicular eigenvectors.
+%code
+eig([1 1; 0 1])
+eigvec([1 1; 0 1])
 
-**Try it:** change the weather so that rain follows rain with probability 0.8. What is the new steady state, and how
-fast is it reached? Find the eigenvalues of $[1\ 1;\ 0\ 1]$ (a shear): why is there only one eigenvector direction?
-The sequence $a_{n+1} = a_n + 2a_{n-1}$ starts $0, 1, 1, 3, 5, 11, \ldots$: which number does $a_{n+1}/a_n$ approach?
+%md
+The opposite case is the best one: **symmetric** matrices ($A = A^T$), like our $A = [2\ 1;\ 1\ 2]$, always have real
+eigenvalues and perpendicular eigenvectors. They are the subject of [lesson 7](07-symmetric-matrices.ipynb).
+
+**Try this.** Find the eigenvalues of the rotation by $90^\circ$ and of the shear $[1\ k;\ 0\ 1]$ for any $k \ne 0$.
+
+%md
+## Exercises
+
+1. **By hand.** Find the eigenvalues and eigenvectors of $[5\ 4;\ 1\ 2]$. Check trace and determinant.
+2. **Triangular.** What are the eigenvalues of $[1\ 2\ 3;\ 0\ 4\ 5;\ 0\ 0\ 6]$? Why can you read them off?
+3. **Powers.** Diagonalize $A = [0.5\ 0.5;\ 0.5\ 0.5]$ and explain why $A^n = A$ for every $n \ge 1$.
+4. **Population.** Each year, young rabbits become adults, and each adult has 2 young: $[y;\ a] \mapsto [2a;\ y]$.
+   How fast does the population grow in the long run, and in which proportion of young to adults?
+5. **Inverse and shift.** If $Av = \lambda v$, show that $A^{-1}v = \lambda^{-1}v$ and $(A + 3I)v = (\lambda + 3)v$.
+
+%md
+## Hints and answers
+
+* **Section 2, Try this.** $\lambda = 2$ and $5$ (roots of $\lambda^2 - 7\lambda + 10$); eigenvectors $[-1\ 2]$ and
+  $[1\ 1]$ (Galileo scales the first as $[-1/2\ 1]$).
+* **Section 3, Try this.** $A^{10} = \tfrac12[3^{10} + 1,\ 3^{10} - 1;\ 3^{10} - 1,\ 3^{10} + 1] = [29525\ 29524;\
+  29524\ 29525]$.
+* **Section 4, Try this.** $M = [1\ 2;\ 1\ 0]$, eigenvalues $2$ and $-1$ (`eig([1 2; 1 0])`); the ratio approaches 2.
+* **Section 5, Try this.** `eig([9/10 3/10; 1/10 7/10])`: eigenvector $[3\ 1]$ for $\lambda = 1$, so sun $3/4$ of the
+  time.
+* **Section 6, Try this.** Rotation: $\pm i$. Shear: 1 twice, with only the eigenvector $[1\ 0]$.
+* **Exercise 1.** $\lambda^2 - 7\lambda + 6 = 0$: $\lambda = 1$ with $[-1\ 1]$, $\lambda = 6$ with $[4\ 1]$. Trace 7,
+  determinant 6.
+* **Exercise 2.** $1, 4, 6$: $A - \lambda I$ is triangular, so its determinant is the product of the diagonal
+  $(1 - \lambda)(4 - \lambda)(6 - \lambda)$.
+* **Exercise 3.** Eigenvalues 1 (eigenvector $[1\ 1]$) and 0 (eigenvector $[-1\ 1]$); $1^n = 1$ and $0^n = 0$, so
+  $D^n = D$. (It is the projection onto the line $y = x$.)
+* **Exercise 4.** `eig([0 2; 1 0])`: $\pm\sqrt2$. The population grows by $\sqrt2 \approx 1.41$ per year, with
+  young : adults $= \sqrt2 : 1$ (the eigenvector $[\sqrt2\ 1]$).
+* **Exercise 5.** Multiply $Av = \lambda v$ by $A^{-1}$ and divide by $\lambda$; and $(A + 3I)v = Av + 3v$.
 
 %md
 ## Sources
 
-1. G. Strang, *Introduction to Linear Algebra*, 5th ed., Wellesley-Cambridge Press (2016). Chapter 6.
+1. G. Strang, *Introduction to Linear Algebra*, 6th ed., Wellesley-Cambridge Press (2023), chapter 6.
 2. A. A. Markov, "Extension of the law of large numbers to dependent quantities" (in Russian), *Izvestiya Fiz.-Mat. Obsch. Kazan Univ.* 15 (1906) 135–156.
 3. J. Binet, "Mémoire sur l'intégration des équations linéaires aux différences finies", *Comptes Rendus* 17 (1843) 559–567.
 4. S. Brin and L. Page, "The anatomy of a large-scale hypertextual Web search engine", *Computer Networks and ISDN Systems* 30 (1998) 107–117.
