@@ -13,6 +13,9 @@ cascala/igalileo`, or open them on GitHub to read them with their results.
 
 ## Mathematics
 
+* [Multivariable calculus](multivariable/README.md): contour maps, partial derivatives and the gradient,
+  optimization, Lagrange multipliers, multiple integrals and the bell curve, vector fields and line integrals,
+  and the theorems of Green, Stokes and Gauss. For students in a first multivariable course.
 * [Linear algebra](linear-algebra/README.md): vectors, matrices, systems of equations, eigenvalues.
 * [Number theory](number-theory/README.md): primes, prime factoring (trial division, Fermat, Pollard rho,
   Miller–Rabin), algebraic factoring (cyclotomic polynomials, Aurifeuillean factors, hunting for identities),

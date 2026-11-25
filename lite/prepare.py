@@ -20,6 +20,8 @@ GROUPS = [
      "Nine lessons from arithmetic to calculus, differential equations and conic sections. Start here.", None),
     ("linear-algebra", "Linear algebra",
      "Vectors, matrices as transformations, systems of equations, eigenvalues, Fibonacci and Markov chains.", None),
+    ("multivariable", "Multivariable calculus",
+     "Seven lessons for Calculus III: contour maps, gradients, optimization and Lagrange multipliers, multiple integrals and the bell curve, vector fields, and the theorems of Green, Stokes and Gauss.", None),
     ("number-theory", "Number theory",
      "Primes, factoring large numbers, algebraic factoring and hunting for identities, modular arithmetic, the cryptography built on them, a lab that searches for new factoring algorithms, and the number field sieve.", None),
     ("group-theory", "Group theory",

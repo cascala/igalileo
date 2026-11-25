@@ -1,0 +1,217 @@
+%md
+# Multivariable calculus 7: Green, Stokes and Gauss
+
+*Learning path: multivariable calculus, part 7 of 7.* [Index](README.md) · Previous: [Vector fields and line integrals](06-vector-fields-and-line-integrals.ipynb)
+
+The fundamental theorem of calculus says $\int_a^b f'(x)\,dx = f(b) - f(a)$: to add up a derivative over an interval,
+look only at the boundary, the two end points. Multivariable calculus has three versions of this one idea, for
+regions in the plane, surfaces and solids. They are the theorems behind Maxwell's equations, fluid flow and heat.
+This lesson states each one, tests it with Galileo on examples you can check by hand, and explains why it is true.
+
+**Who this is for.** You have done [lesson 5](05-multiple-integrals.ipynb) (multiple integrals, polar and spherical
+coordinates) and [lesson 6](06-vector-fields-and-line-integrals.ipynb) (line integrals, curl).
+
+**What you will be able to do afterwards:**
+
+1. compute divergence and curl, and say what each measures;
+2. state Green's theorem and use it to trade a line integral for a double integral (and back);
+3. compute the flux of a field through a surface, and use the divergence theorem;
+4. recognise Stokes' theorem as Green's theorem on a curved surface.
+
+Plan about an hour and a half; it can be split after section 3.
+
+%md
+## 1. Circulation and Green's theorem
+
+In lesson 6 the vortex $F = [-y, x]$ did work $2\pi$ around the unit circle; its 2D curl is $Q_x - P_y = 2$. And the
+disk has area $\pi$. Notice: $2\pi = 2 \cdot \pi$ = (curl) × (area). That is no accident. **Green's theorem:** for a
+region $D$ whose boundary $C$ is traversed counterclockwise,
+
+$$\oint_C P\,dx + Q\,dy = \iint_D \left(\frac{\partial Q}{\partial x} - \frac{\partial P}{\partial y}\right) dA.$$
+
+The left side is the **circulation** around the boundary, the right side adds up the little bits of rotation
+inside. Test it on something less symmetric, $F = [x^2 - y^3,\ x^3 + y^2]$ on the unit disk:
+
+%code
+F = [x^2 - y^3, x^3 + y^2]
+lineint(F, [x y], [cos(t), sin(t)], t, 0, 2*pi)
+c = curl(F, [x y])
+int(int(subs(subs(c, x, r*cos(theta)), y, r*sin(theta))*r, r, 0, 1), theta, 0, 2*pi)
+
+%md
+Both $\tfrac{3\pi}{2}$. (The curl is $3x^2 + 3y^2 = 3r^2$, and $\int_0^{2\pi}\int_0^1 3r^2\cdot r\,dr\,d\theta = \tfrac{3\pi}{2}$.)
+
+**Why it is true.** Cut $D$ into tiny squares. Around one square of size $h \times h$ the circulation is about
+$(Q_x - P_y)\,h^2$ (do the four sides with a Taylor expansion). Add up all squares: every inner edge is traversed
+twice, in opposite directions, and cancels. Only the outer boundary survives.
+
+**Area from the boundary.** With $F = [-y, x]/2$ the curl is 1, so the circulation is the **area**. A planimeter, a
+mechanical instrument that measures the area of a map by tracing its boundary, works exactly this way. The area of
+the ellipse $[a\cos t, b\sin t]$:
+
+%code
+lineint([-y/2, x/2], [x y], [a*cos(t), b*sin(t)], t, 0, 2*pi)
+
+%md
+**Try this.** Use Green's theorem to compute $\oint_C (y + e^{x^2})\,dx + (2x + \cos y^2)\,dy$ around the unit circle.
+The integrand looks hopeless, but what is $Q_x - P_y$?
+
+%md
+## 2. Divergence: sources and sinks
+
+The **divergence** of $F = [P, Q, R]$ is $\nabla\cdot F = P_x + Q_y + R_z$. It measures how much the field spreads
+out from a point: the outflow per unit volume. The source $[x, y, z]$ has divergence 3 everywhere; the vortex
+$[-y, x, 0]$ has divergence 0 (it only turns).
+
+%code
+div([x, y, z], [x y z])
+div([-y, x, 0], [x y z])
+div([x*y, y*z, z*x], [x y z])
+
+%md
+Two identities hold for every smooth field, because mixed partial derivatives are equal: the curl of a gradient is
+0, and the divergence of a curl is 0.
+
+%code
+curl(grad(x^2*y*z + sin(x*z), [x y z]), [x y z])
+div(curl([x*y^2, y*z^3, x^3*z], [x y z]), [x y z])
+
+%md
+**Try this.** Compute by hand $\nabla\cdot[x^2, -2xy, z]$ and check it.
+
+%md
+## 3. Flux through a surface
+
+How much of a field passes through a surface? Parametrize the surface by $r(u, v)$. A small patch is spanned by
+$r_u\,du$ and $r_v\,dv$; its area and direction are given by the cross product $n = r_u \times r_v$. The **flux** is
+
+$$\iint_S F\cdot dS = \iint F(r(u, v))\cdot (r_u \times r_v)\,du\,dv.$$
+
+For the unit sphere, $r = [\sin u\cos v,\ \sin u\sin v,\ \cos u]$ with $0 \le u \le \pi$, $0 \le v \le 2\pi$, the normal
+$r_u \times r_v = \sin u\cdot r$ points outward. The flux of $[x, y, z]$: on the sphere $F = r$, $F\cdot n = \sin u$,
+and $\int_0^{2\pi}\int_0^\pi \sin u\,du\,dv = 4\pi$.
+
+%code
+S = [sin(u)*cos(v), sin(u)*sin(v), cos(u)]
+flux([x, y, z], [x y z], S, u, 0, pi, v, 0, 2*pi)
+
+%md
+How to read the call: `flux(F, [x y z], [x(u,v) y(u,v) z(u,v)], u, a, b, v, c, d)`. The direction counts: swapping
+$u$ and $v$ flips $n$ and the sign. `surfint(f, ...)` integrates a scalar instead; with $f = 1$ it gives the area:
+
+%code
+surfint(1, [x y z], R*S, u, 0, pi, v, 0, 2*pi)
+
+%md
+**Try this.** Compute the flux of $[0, 0, z]$ out of the unit sphere by hand (hint: $F\cdot n = \cos^2 u\sin u$) and
+check.
+
+%md
+## 4. The divergence theorem
+
+The flux of $[x, y, z]$ out of the unit sphere was $4\pi$; its divergence is 3, and the ball has volume
+$\tfrac43\pi$; $3 \cdot \tfrac43\pi = 4\pi$. **Gauss's divergence theorem:** for a solid $E$ with outward boundary
+surface $S$,
+
+$$\iint_S F\cdot dS = \iiint_E \nabla\cdot F\,dV.$$
+
+What flows out through the skin was produced inside. Test it on $F = [x^3, y^3, z^3]$ and the unit ball:
+
+%code
+G = [x^3, y^3, z^3]
+flux(G, [x y z], S, u, 0, pi, v, 0, 2*pi)
+d = div(G, [x y z])
+int(int(int(3*r^2*r^2*sin(theta), r, 0, 1), theta, 0, pi), phi, 0, 2*pi)
+
+%md
+Both $\tfrac{12\pi}{5}$. (For the flux Galileo rewrites powers like $\cos^4 v$ as multiple angles, $\cos 4v$ and
+$\cos 2v$, before integrating; you can do the same with `trigreduce`.) The divergence is $3(x^2 + y^2 + z^2) = 3r^2$, and in spherical coordinates
+$dV = r^2\sin\theta\,dr\,d\theta\,d\varphi$.
+
+**Gauss's law.** The electric field of a point charge, $E = [x, y, z]/r^3$, has divergence 0 away from the origin
+(check it below), yet its flux out of any sphere around the charge is $4\pi$, whatever the radius. All the
+"source" sits at the single point where $E$ is not defined: the charge. That is Gauss's law of electrostatics.
+
+%code
+E = [x, y, z]/(x^2 + y^2 + z^2)^(3/2)
+simplify(div(E, [x y z]))
+flux(E, [x y z], R*S, u, 0, pi, v, 0, 2*pi)
+
+%md
+**Try this.** Use the divergence theorem to find the flux of $[x + y^2, y + z^2, z + x^2]$ out of the ball of radius
+2, without computing any surface integral.
+
+%md
+## 5. Stokes' theorem
+
+Green's theorem on a curved surface is **Stokes' theorem**: for a surface $S$ with boundary curve $C$,
+
+$$\oint_C F\cdot dr = \iint_S (\nabla\times F)\cdot dS.$$
+
+The circulation around the rim equals the flux of the curl through any surface spanning it. Test it with
+$F = [-y, x, z]$, the upper half of the unit sphere ($0 \le u \le \pi/2$), whose rim is the unit circle in the
+$xy$-plane:
+
+%code
+H = [-y, x, z]
+lineint(H, [x y z], [cos(t), sin(t), 0], t, 0, 2*pi)
+flux(curl(H, [x y z]), [x y z], S, u, 0, pi/2, v, 0, 2*pi)
+
+%md
+Both $2\pi$. The flat disk spans the same circle and gives the same flux: the curl is $[0, 0, 2]$, and $2 \times$
+(area $\pi$). Any surface with the same rim gives the same answer. That is why the curl must have zero divergence:
+the flux of a curl through a **closed** surface (no rim) is 0.
+
+%md
+## 6. One idea, four theorems
+
+| dimension | theorem | derivative | boundary |
+|---|---|---|---|
+| 1 | fundamental theorem | $f'$ on $[a, b]$ | $f(b) - f(a)$ |
+| 1 | line integrals | $\nabla\varphi$ along a curve | $\varphi(\text{end}) - \varphi(\text{start})$ |
+| 2 | Green, Stokes | curl through a surface | circulation around the rim |
+| 3 | Gauss | divergence in a solid | flux through the skin |
+
+In the language of differential forms all four are one statement, $\int_\Omega d\omega = \int_{\partial\Omega}\omega$
+(the general Stokes theorem). The [differential geometry path](../differential-geometry/README.md) goes in that
+direction.
+
+%md
+## Exercises
+
+1. **Green both ways.** Verify Green's theorem for $F = [xy, x^2]$ on the square $0 \le x, y \le 1$: compute the four
+   line integrals of the sides (counterclockwise) and the double integral.
+2. **Area of an astroid.** Use $\tfrac12\oint x\,dy - y\,dx$ to find the area inside $[\cos^3 t, \sin^3 t]$.
+3. **Flux through a cylinder.** Find the flux of $F = [x, y, 0]$ out of the side of the cylinder $x^2 + y^2 = 1$,
+   $0 \le z \le 2$ (parametrize by $[\cos v, \sin v, u]$; check that your normal points outward). Then use the
+   divergence theorem for the closed cylinder, including the top and bottom.
+4. **Gauss's law.** Show that the flux of $E$ from section 4 through the sphere of radius 1 centred at $(3, 0, 0)$
+   (which does not contain the charge) is 0, using the divergence theorem. Then check with `flux`.
+5. **Stokes.** Compute $\oint_C F\cdot dr$ for $F = [y, z, x]$ around the triangle with corners $(1, 0, 0)$,
+   $(0, 1, 0)$, $(0, 0, 1)$, using Stokes' theorem with the flat triangle as the surface.
+
+%md
+## Hints and answers
+
+* **Section 1, Try this.** $Q_x - P_y = 2 - 1 = 1$, so the integral is the area of the disk, $\pi$.
+* **Section 2, Try this.** $2x - 2x + 1 = 1$.
+* **Section 3, Try this.** $\int_0^{2\pi}\int_0^\pi \cos^2u\sin u\,du\,dv = 2\pi\cdot\tfrac23 = \tfrac{4\pi}{3}$.
+* **Section 4, Try this.** The divergence is $3$, the volume $\tfrac{32\pi}{3}$, so the flux is $32\pi$.
+* **Exercise 1.** $Q_x - P_y = 2x - x = x$, and $\iint x\,dA = \tfrac12$. The sides give $0$, $1$, $-\tfrac12$, $0$.
+* **Exercise 2.** $\tfrac{3\pi}{8}$.
+* **Exercise 3.** $r_u \times r_v = [-\cos v, -\sin v, 0]$ points inward for $[\cos v, \sin v, u]$; swap the order (or
+  the sign). Outward flux through the side: $4\pi$. The divergence is 2 and the volume $2\pi$: $4\pi$, and the top and
+  bottom contribute 0 ($F$ has no $z$-part).
+* **Exercise 4.** $\nabla\cdot E = 0$ in the whole ball, which does not contain the origin, so the flux is 0.
+* **Exercise 5.** $\nabla\times F = [-1, -1, -1]$; with the upward normal $[1, 1, 1]$ (unnormalised, over the
+  triangle's projection of area $\tfrac12$) the flux is $-3 \cdot \tfrac12 = -\tfrac32$.
+
+%md
+## Sources
+
+1. G. Green, *An Essay on the Application of Mathematical Analysis to the Theories of Electricity and Magnetism*,
+   Nottingham (1828).
+2. V. J. Katz, "The history of Stokes' theorem", *Mathematics Magazine* 52 (1979) 146–156.
+3. J. Stewart, *Calculus: Early Transcendentals*, 9th ed., Cengage (2020), sections 16.4 to 16.9.
+4. H. M. Schey, *Div, Grad, Curl, and All That*, 4th ed., Norton (2005).
+5. M. Spivak, *Calculus on Manifolds*, Benjamin (1965), chapter 5, for the general Stokes theorem.
