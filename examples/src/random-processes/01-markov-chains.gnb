@@ -1,0 +1,196 @@
+%md
+# Random processes 1: Markov chains
+
+*Learning path: random processes, part 1 of 3.* [Index](README.md) · Next: [Random walks, Brownian motion and arrivals](02-random-walks-and-brownian-motion.ipynb)
+
+Will it rain tomorrow? A simple but surprisingly good forecast says: tomorrow will probably be like today. A
+gambler with 2 dollars bets 1 dollar at a time against a casino: how likely is she to reach 4 dollars before going
+broke? How many coin tosses do you wait, on average, before you see two heads in a row? All three are questions about
+a **Markov chain**: a system that jumps between states at random, where the chance of the next state depends only on
+the current one, not on the history. Andrey Markov introduced them in 1906; today they run weather models, search
+engines, speech recognition and the Monte Carlo methods of physics and statistics.
+
+**Who this is for.** Students who know matrix multiplication ([linear algebra 1](../linear-algebra/01-vectors-and-matrices.ipynb))
+and basic probability ([statistics 2](../statistics/02-probability-and-simulation.ipynb)).
+
+**What you will be able to do afterwards:**
+
+1. write a transition matrix and use its powers to predict several steps ahead;
+2. find the long-run (stationary) distribution exactly;
+3. compute absorption probabilities, for example in the gambler's ruin;
+4. compute expected waiting times by first-step analysis;
+5. simulate a chain and compare with the exact answers.
+
+Plan about 50 minutes. Each section ends with a **Try this**; exercises, hints and answers are at the end.
+
+%md
+## 1. The transition matrix
+
+Take three kinds of weather: 1 sunny, 2 cloudy, 3 rainy. Row $i$ of the **transition matrix** $P$ holds the chances of
+tomorrow's weather when today is $i$; each row adds up to 1:
+
+%code
+P = [3/5 1/5 1/5; 3/10 2/5 3/10; 1/5 3/10 1/2]
+
+%md
+If today is sunny, tomorrow is sunny with chance $3/5$. What about the day after? To be rainy in two days, the weather
+goes through some state $k$ tomorrow: $\sum_k P_{1k} P_{k3}$, which is entry $(1, 3)$ of $P^2$. In general $P^n$ holds
+the $n$-step chances:
+
+%code
+P^2
+eval(P^10, 4)
+
+%md
+After ten days the rows of $P^{10}$ are almost equal: the weather ten days from now hardly depends on today. The chain
+**forgets** where it started.
+
+**Try this.** What is the chance that it rains the day after tomorrow, if it is cloudy today? Read it off $P^2$.
+
+%md
+## 2. The long run: the stationary distribution
+
+The common row of $P^n$ for large $n$ is the **stationary distribution** $\pi$: the share of days with each kind of
+weather in the long run. It does not change under one more step, $\pi P = \pi$, and its entries add up to 1. That is
+a linear system, which Galileo solves exactly:
+
+%code
+stationary(P)
+
+%md
+So in the long run $21/55 \approx 38\%$ of days are sunny. The theory behind this (Perron and Frobenius): when every
+state can reach every other and the chain does not cycle with a fixed period, the stationary distribution is unique
+and $P^n$ converges to it from any start. Let us check by simulation. `randchain(P, 1, n)` walks $n$ days from a sunny
+start:
+
+%code
+seed(1);
+randchain(P, 1, 20)
+
+%code
+seed(2);
+days = randchain(P, 1, 20000);
+sunny = 0;
+for d in days
+  if d == 1
+    sunny = sunny + 1;
+  end
+end
+eval(sunny / 20001, 4)
+eval(21/55, 4)
+
+%md
+This is the **ergodic theorem** for Markov chains: the share of time spent in a state converges to its stationary
+probability. It is why simulating a chain long enough can measure averages that are impossible to compute directly,
+the idea behind Markov chain Monte Carlo (and behind PageRank, in the [graphs path](../graphs/03-colorings-orderings-and-networks.ipynb)).
+
+**Try this.** Change the matrix so that a rainy day is followed by rain with chance $9/10$ (and by sun or clouds with
+$1/20$ each). How does the stationary distribution change?
+
+%md
+## 3. Absorption: the gambler's ruin
+
+A gambler has 2 dollars and bets 1 dollar at a time on a fair coin. She stops when she has 0 (ruined) or 4 (her
+goal). Her fortune is a chain on the states 0, 1, 2, 3, 4, which we number 1 to 5. States 0 and 4 are **absorbing**:
+once there, the chain stays ($P_{ii} = 1$).
+
+%code
+G = [1 0 0 0 0; 1/2 0 1/2 0 0; 0 1/2 0 1/2 0; 0 0 1/2 0 1/2; 0 0 0 0 1]
+absorption(G)
+
+%md
+Row $i$ gives the chances of ending ruined (column 1) or at the goal (column 2) from fortune $i - 1$. With 2 dollars
+it is 50:50, and with 1 dollar she reaches 4 with chance only $1/4$. The note gives the expected number of bets: 4 from
+the middle.
+
+How does Galileo find this? Split $P$ into the part $Q$ among the transient states and the part $R$ into the absorbing
+ones. A path is absorbed after $0, 1, 2, \dots$ transient steps, so the absorption chances are
+$B = (I + Q + Q^2 + \cdots) R = (I - Q)^{-1} R$.
+
+Now the casino's game: she wins each bet with chance only $2/5$.
+
+%code
+H = [1 0 0 0 0; 3/5 0 2/5 0 0; 0 3/5 0 2/5 0; 0 0 3/5 0 2/5; 0 0 0 0 1];
+absorption(H)
+
+%md
+From 2 dollars her chance to double up has dropped from $1/2$ to $4/13 \approx 0.31$: a small house edge, a large
+effect over many bets.
+
+**Try this.** In the fair game with goal 4, the chance to reach the goal from fortune $i$ is $i/4$. Guess the rule for
+goal $N$, and test it on a fair game with goal 6 (a $7 \times 7$ matrix).
+
+%md
+## 4. Waiting times: first-step analysis
+
+How many fair coin tosses until two heads in a row? Track how much of the pattern we have: state 1 (nothing), state 2
+(one H), state 3 (HH, done). A tail sends us back to state 1:
+
+%code
+C = [1/2 1/2 0; 1/2 0 1/2; 0 0 1]
+hitting(C, 3)
+
+%md
+From the start it takes 6 tosses on average. The method is **first-step analysis**: write $h_i$ for the expected wait
+from state $i$. One toss happens, then we continue from wherever we land:
+
+$$h_1 = 1 + \tfrac12 h_1 + \tfrac12 h_2, \qquad h_2 = 1 + \tfrac12 h_1 + \tfrac12 h_3, \qquad h_3 = 0.$$
+
+Solving gives $h_2 = 4$ and $h_1 = 6$. Surprisingly, waiting for heads then tails is shorter:
+
+%code
+D = [1/2 1/2 0; 0 1/2 1/2; 0 0 1]
+hitting(D, 3)
+
+%md
+For HT, after a first H, a further H does not set us back (we still have the H), so the wait is only 4.
+
+**Try this.** How long, on average, until three heads in a row? Build the $4 \times 4$ chain.
+
+%md
+## Summary
+
+* A Markov chain is given by its transition matrix $P$ (rows add up to 1); $P^n$ gives the $n$-step chances.
+* The stationary distribution solves $\pi P = \pi$; for a connected, non-periodic chain $P^n$ converges to it and
+  time averages along one path converge to it too.
+* Absorption chances are $B = (I - Q)^{-1} R$.
+* Expected waiting times follow from first-step analysis: $h_i = 1 + \sum_j P_{ij} h_j$.
+
+Next: [random walks, Brownian motion and arrivals](02-random-walks-and-brownian-motion.ipynb).
+
+%md
+## Exercises
+
+1. **Two states.** For $P = [1 - a, a; b, 1 - b]$ find the stationary distribution by hand, then check with
+   $a = 1/3$, $b = 1/6$.
+2. **Periodic.** What does `stationary([0 1; 1 0])` give? Compute $P^n$ for a few $n$. Does $P^n$ converge?
+3. **Mouse in a maze.** A mouse moves between rooms 1 to 4 arranged in a square (1-2-3-4-1), each time choosing a
+   neighbouring room at random. Room 3 has cheese. How many moves does it take on average from room 1?
+4. **Unfair coin.** Redo section 4 with a coin that shows heads with chance $1/3$: how long until HH?
+5. **Gambler's ruin, simulated.** Use `randchain(G, 3, 100)` many times (with a loop) and count how often the chain
+   ends in state 5. Compare with section 3.
+
+%md
+## Hints and answers
+
+* **Section 1, Try this.** Entry $(2, 3)$ of $P^2$: $3/10 \cdot 1/5 + \dots = 33/100$.
+* **Section 2, Try this.** $[3/17, 2/17, 12/17]$: rain now takes $12/17 \approx 71\%$ of days instead of $18/55 \approx 33\%$.
+* **Section 3, Try this.** $i/N$: from fortune 2 with goal 6, the chance is $1/3$.
+* **Section 4, Try this.** 14 tosses.
+* **Exercise 1.** $\pi = [b, a]/(a + b)$; here $[1/3, 2/3]$.
+* **Exercise 2.** $[1/2, 1/2]$, but $P^n$ alternates between $P$ and the identity: the chain has period 2, so it never
+  forgets whether $n$ is even or odd. Time averages still converge to $1/2$.
+* **Exercise 3.** 4 moves: `hitting([0 1/2 0 1/2; 1/2 0 1/2 0; 0 1/2 0 1/2; 1/2 0 1/2 0], 3)` gives $[4, 3, 0, 3]$.
+* **Exercise 4.** 12: $h_1 = 1 + \tfrac23 h_1 + \tfrac13 h_2$, $h_2 = 1 + \tfrac23 h_1$.
+* **Exercise 5.** About half of the runs; 100 steps is enough, since absorption takes 4 steps on average.
+
+%md
+## Sources
+
+1. A. A. Markov, "Extension of the law of large numbers to dependent quantities" (1906), translated in O. B. Sheynin
+   (ed.), *Probability and Statistics: Russian Papers*, NG Verlag (2004).
+2. J. R. Norris, *Markov Chains*, Cambridge University Press (1997), chapter 1.
+3. C. M. Grinstead and J. L. Snell, *Introduction to Probability*, 2nd ed., American Mathematical Society (1997),
+   chapter 11 (absorbing chains and the fundamental matrix).
+4. W. Feller, *An Introduction to Probability Theory and Its Applications*, vol. 1, 3rd ed., Wiley (1968), chapter
+   XIV (the gambler's ruin).
