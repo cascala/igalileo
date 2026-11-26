@@ -23,6 +23,9 @@ cascala/igalileo`, or open them on GitHub to read them with their results.
 * [Probability and statistics](statistics/README.md): eight lessons for a first course, from describing data and
   simulating dice through distributions and the central limit theorem to confidence intervals, hypothesis tests and
   regression.
+* [Complex analysis](complex-analysis/README.md): eight lessons for a first course, from domain coloring and the
+  Cauchy–Riemann equations through Cauchy's theorem, Laurent series and residues to real integrals and conformal maps,
+  ending with the flow around a wing.
 * [Number theory](number-theory/README.md): primes, prime factoring (trial division, Fermat, Pollard rho,
   Miller–Rabin), algebraic factoring (cyclotomic polynomials, Aurifeuillean factors, hunting for identities),
   modular arithmetic, cryptography (Diffie–Hellman, RSA), a factoring lab (scoreboard, algorithm search,

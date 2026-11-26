@@ -26,6 +26,8 @@ GROUPS = [
      "Eight lessons for a first course: describing data, probability by counting and simulation, discrete and continuous distributions, the central limit theorem, confidence intervals, hypothesis tests, and regression.", None),
     ("multivariable", "Multivariable calculus",
      "Seven lessons for Calculus III: contour maps, gradients, optimization and Lagrange multipliers, multiple integrals and the bell curve, vector fields, and the theorems of Green, Stokes and Gauss.", None),
+    ("complex-analysis", "Complex analysis",
+     "Eight lessons for a first course: pictures of complex functions, analytic functions, contour integrals, Cauchy's theorem, Taylor and Laurent series, residues, real integrals by residues, and conformal maps with the flow around a wing.", None),
     ("number-theory", "Number theory",
      "Primes, factoring large numbers, algebraic factoring and hunting for identities, modular arithmetic, the cryptography built on them, a lab that searches for new factoring algorithms, and the number field sieve.", None),
     ("group-theory", "Group theory",
