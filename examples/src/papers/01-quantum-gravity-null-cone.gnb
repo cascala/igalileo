@@ -15,10 +15,13 @@ light cone Einstein's equations become ordinary differential equations that can 
 what is left, and claims that a diamond of bounded size has finitely many quantum states, whose count reproduces
 $A/4G\hbar$ together with a known logarithmic correction.
 
-This lesson builds the ingredients of the paper one at a time, each with a computation you can check: the entropy
-numbers, causal diamonds, the paper's two-dimensional toy model and its "clock", the focusing equation that limits
-areas, the quantum states, and the formula that connects them to the entropy. It does not prove the paper's results.
-It prepares you to read the paper.
+This lesson follows the paper from beginning to end, each step with a computation you can check: the entropy numbers,
+causal diamonds, the two-dimensional toy model and its "clock", the focusing equation that limits areas, the quantum
+states and the trace (sections 1 to 7 of the lesson, the paper's sections 2 and 3); then the Gaussian states of
+gravitons, the sum over gravitons of every wavelength, the argument that areas come in discrete values, the entropy
+with its logarithmic correction, two-sided black holes, and the classical limit (sections 8 to 13, the paper's sections
+4 to 6). It does not prove the paper's results. It prepares you to read the paper, and shows which of its steps are
+calculations you can redo.
 
 **Who this is for.** Students who have done the [general relativity](../general-relativity/README.md) path through
 [black holes](../general-relativity/04-black-holes.ipynb), and who have seen the basics of quantum mechanics (states,
@@ -30,9 +33,13 @@ inner products, $[x, p] = i\hbar$).
 2. explain what a causal diamond is and why null cones simplify Einstein's equations;
 3. derive the clock formula of the paper's two-dimensional model and solve its constraint equation;
 4. use the focusing equation to bound the area of a diamond;
-5. check that the paper's quantum states are orthonormal, and see where $e^{-A/4G\hbar}$ enters.
+5. check that the paper's quantum states are orthonormal, and see where $e^{-A/4G\hbar}$ enters;
+6. compute with Gaussian states and Fock spaces, and sum a series of graviton pairs into a dilogarithm;
+7. follow the paper's argument that the area of a bounded diamond takes finitely many values;
+8. derive the entropy $S = \langle A\rangle/4G\hbar + \log Z$ and reproduce the arithmetic of its logarithmic
+   correction.
 
-Plan about two hours. This is a preprint (version 1, not yet peer reviewed): read it as a proposal to be tested.
+Plan about four hours, in two sittings: sections 1 to 7, then 8 to 13. This is a preprint (version 1, not yet peer reviewed): read it as a proposal to be tested.
 
 %md
 ## 1. The entropy of a black hole
@@ -219,8 +226,8 @@ eval(ratio)
 %md
 The ratio is $\sqrt{13/12} \approx 1.04 \ge 1$, as the inequality promises; it equals 1 only for a round corner.
 **A diamond whose clock is bounded, $\bar u_* \le \ell$, has bounded area**, $A \le 4\pi\ell^2/(1 - \epsilon)^2$. The
-paper uses this bound (its footnote 8 states the weaker form $(1 - \epsilon)\sqrt A/4\pi \le \bar u_*$) to count the
-states of a diamond of bounded size.
+paper derives the same bound in its equation 5.21 and uses it in section 10 below to count the states of a diamond of
+bounded size.
 
 **Try this.** Repeat with $\varrho_S = 1 + \cos\theta$. Is the ratio larger or smaller? Why?
 
@@ -285,19 +292,299 @@ In four dimensions the boost charge of a corner is $K = A/8\pi G$ (equation 3.43
 simplify(2*pi*(A/(8*pi*G))/hbar)
 
 %md
-$2\pi K/\hbar = A/4G\hbar$: **the Bekenstein–Hawking entropy appears in the exponent**. The paper's sections 5 and 6
-then argue that the area bound of section 5 makes the space of states of a bounded diamond **finite-dimensional**, so
-that the trace is finite. Counting those states gives, according to the paper, $S = A/4G\hbar$ for marginally trapped
-surfaces, plus a correction proportional to $\log A$ whose coefficient for a large Schwarzschild black hole matches the
-one Ashoke Sen computed from one-loop quantum fields around the black hole. The same construction is said to give
-Einstein's equations with quantum corrections in the semiclassical limit.
-
-To weigh these claims, a reader would check: whether the finite-dimensionality argument holds for all diamonds, how the
-caustics are glued, how the log coefficient is computed, and whether different choices (of $\epsilon$, of the clock
-wavefunction) change the answer. That is the work that peer review and follow-up papers do.
+$2\pi K/\hbar = A/4G\hbar$: **the Bekenstein–Hawking entropy appears in the exponent**. A state of corner area $A$
+enters the trace with weight $e^{-A/4G\hbar}$ (the paper's equation 5.23b). In four dimensions the trace is finite only
+if the diamond has finitely many states; sections 8 to 11 follow the paper's argument that it does, and what the count
+gives.
 
 **Try this.** For the solar-mass black hole of section 1, how large is $\log A$ compared to $A/4G\hbar$? Use
 `eval(log(S0))` with the value computed there.
+
+%md
+## 8. Gaussian states: gravitons on the null cone
+
+At a fixed corner area the free data on the incoming cone (the two polarizations of gravitational waves and the way the
+area is spread over the corner sphere) is a list of canonical pairs $(q_j, p_j)$ with $[q_j, p_j] = i\hbar$. The paper
+picks for each pair a **Gaussian wavefunction** with center $(q^0, p^0)$ and width $\Delta q$ (equation 4.7). With
+$\hbar = 1$ and $p^0 = 0$:
+
+$$\langle q|\Omega\rangle = \frac{1}{[2\pi(\Delta q)^2]^{1/4}}\exp\left(-\frac{(q - q^0)^2}{4(\Delta q)^2}\right).$$
+
+It is normalized, centered at $q^0$, with variance $(\Delta q)^2$:
+
+%code
+psi = exp(-(q - q0)^2/(4*dq^2))/(2*pi*dq^2)^(1/4);
+integrate(psi^2, q, -inf, inf)
+integrate(q*psi^2, q, -inf, inf)
+integrate((q - q0)^2*psi^2, q, -inf, inf)
+
+%md
+The annihilation operator of equation 4.9 is $a = (q - q^0)/(2\Delta q) + i\Delta q\,p$ with $p = -i\,d/dq$, so
+$a = (q - q^0)/(2\Delta q) + \Delta q\,d/dq$. It removes the Gaussian:
+
+%code
+simplify((q - q0)/(2*dq)*psi + dq*diff(psi, q))
+
+%md
+So $a|\Omega\rangle = 0$: the Gaussian is the vacuum of this mode, and $(a^\dagger)^n|\Omega\rangle/\sqrt{n!}$ are
+its excited states. In the variable $x = (q - q^0)/(\sqrt2\,\Delta q)$ these are the Hermite functions
+$H_n(x)e^{-x^2/2}$, orthogonal for different $n$ with $\int H_n^2 e^{-x^2}dx = 2^n n!\sqrt\pi$:
+
+%code
+integrate(hermite(2, x)*hermite(3, x)*exp(-x^2), x, -inf, inf)
+integrate(hermite(3, x)^2*exp(-x^2), x, -inf, inf)/(2^3*6*sqrt(pi))
+
+%md
+Taking one such factor per mode gives the **Fock space** $\mathcal K_A$ of gravitons and corner excitations at area
+$A$ (equation 4.10). A graviton insertion can change the area; the paper extends the Gaussian to all observables and
+gets one Hilbert space $\mathcal H_\omega$ containing all areas (equations 4.16 and 4.17).
+
+**Try this.** Compute $\langle (q - q^0)^4\rangle$ in the Gaussian. Check that it is $3(\Delta q)^4$, as for any normal
+distribution.
+
+%md
+## 9. Gravitons of every wavelength: a finite sum
+
+Quantum gravity is famous for infinities: in perturbation theory, loops of gravitons with short wavelengths give
+divergences that need ever new counterterms. The paper's section 4.4 shows on an example how the same sum can be finite
+when it is done exactly, and divergent when it is expanded in powers of $G$.
+
+Two insertions create and then annihilate a pair of gravitons in radial mode $k = 1, 2, 3, \ldots$ With
+$s = A/4G\hbar$, the variance of mode $k$ is $(\Delta q_k)^2 = 1/(2sk)$, and the second insertion gives each graviton
+the phase $e^{-ik/s}$ (equation 4.32). The connected amplitude is the sum over all modes of
+$2(\Delta q_k)^4 e^{-2ik/s} = e^{-2ik/s}/(2s^2k^2)$ (equation 4.33):
+
+%code
+amp = sum(exp(-2*i*k/s)/(2*s^2*k^2), k, 1, inf)
+
+%md
+The sum is the **dilogarithm** $\operatorname{Li}_2(z) = \sum_k z^k/k^2$ at $z = e^{-2i/s}$, a point on the unit
+circle, where the series still converges because of the $1/k^2$. So the amplitude is finite for every $s > 0$, that is
+for every value of Newton's constant. For a corner of $s = 100$:
+
+%code
+eval(subs(amp, s, 100))
+
+%md
+Now do what perturbation theory does: expand in $G$ first, mode by mode. Since $1/s \propto G$, each phase is
+$e^{-2ik/s} = 1 - 2ik/s + \ldots$, and the term of order $1/s^3$ in mode $k$ is $-i/(s^3k)$. Summed over modes it is
+$-(i/s^3)\sum_k 1/k$, the harmonic series, which grows like $\log N$ with the number of modes $N$:
+
+%code
+eval(sum(1/k, k, 1, 1000))
+eval(log(1000))
+
+%md
+A divergence. The exact sum has no such problem: near $\theta = 0$, $\operatorname{Im}\operatorname{Li}_2(e^{-i\theta})
+= -\theta(1 - \log\theta) + O(\theta^3)$, which with $\theta = 2/s$ makes the imaginary part of the amplitude
+$(\log 2 - 1 - \log s)/s^3$. The $\log N$ of the expansion has become $\log s$: the graviton modes with $k \sim s$, which
+the expansion treats as small, actually carry phases of order one and cut the sum off. Check it numerically:
+
+%code
+ss = 1:60;
+exact = imag(eval(polylog(2, exp(-2*i./ss))./(2*ss.^2))).*ss.^3;
+approx = eval(log(2) - 1 - log(ss));
+p = plot(ss, exact);
+p = show(p, plot(ss, approx));
+p = legend(p, "s^3 Im(amplitude), exact sum", "log 2 - 1 - log s");
+labels(title(p, "The graviton pair sum: finite, growing like log s"), "s = A/(4 G hbar)", "s^3 Im(amplitude)")
+
+%md
+The two curves agree to within the width of the line, even for corners only a few Planck areas across: the exact
+amplitude is finite and grows only like $\log s$. This is the pattern the paper proposes for gravity's ultraviolet problem: at fixed
+$G$ the sum over intermediate states converges (its equation 4.30, from the Cauchy–Schwarz inequality), and the
+divergences of perturbation theory come from expanding in $G$ before summing.
+
+**Try this.** Evaluate the amplitude at $s = 1000$ and compare its imaginary part with $(\log 2 - 1 - \log s)/s^3$. How
+does the relative error change from $s = 100$?
+
+%md
+## 10. Why the area spectrum is discrete
+
+Restrict the clock to readings at most $\ell$. Section 5 showed that this bounds the area, $A \le 4\pi\ell^2/(1 -
+\epsilon)^2$ (equation 5.21d), so the dimensionless area $s = A/4G\hbar$ lies in $[0, s_*]$:
+
+%code
+simplify((4*pi*l^2/(1 - ep)^2)/(4*G*hbar))
+
+%md
+That is $s_* = \pi\ell^2/G\hbar(1 - \epsilon)^2$ (equation 5.30a). Bounded is not yet finite: infinitely many states
+could crowd into a narrow interval of areas. The paper's section 5.2 rules this out by comparing two descriptions of
+the same experiment.
+
+* **Cut at the corner.** A boost of rapidity $\eta$ at the corner acts on a state of area $s$ by the phase
+  $e^{i\eta s/2\pi}$. If almost all states sat in a narrow interval of $s$, the boost would act nearly as one overall
+  phase, and nothing measurable would change (equation 5.32).
+* **No cut.** Put one graviton insertion just before the corner, at affine distance $-d$, and one just after, at $d$.
+  Their correlation in the freely falling vacuum is $-c/(u - u')^2$ (equation 5.28d). The boost moves the second insertion
+  to $e^\eta d$ and rescales it by $e^\eta$, so the correlation changes by the factor (equation 5.29)
+
+$$\frac{e^\eta\,G(-d, e^\eta d)}{G(-d, d)} = \frac{4e^\eta}{(1 + e^\eta)^2} = 1 - \tanh^2(\eta/2).$$
+
+%code
+gr = e1*(-c/(-d - e1*d)^2)/(-c/(-d - d)^2);
+simplify(gr - 4*e1/(1 + e1)^2)
+simplify(4*exp(eta)/(1 + exp(eta))^2 - (1 - ((exp(eta) - 1)/(exp(eta) + 1))^2))
+
+%md
+(Here `e1` stands for $e^\eta$, and $\tanh(\eta/2) = (e^\eta - 1)/(e^\eta + 1)$.) The boost changes something
+measurable, by the fraction $\tanh^2(\eta/2)$:
+
+%code
+eta = 0:0.1:4;
+p = plot(eta, ((exp(eta) - 1)./(exp(eta) + 1)).^2);
+labels(title(legend(p, "tanh(eta/2)^2"), "How much a corner boost changes the graviton correlation"), "rapidity eta", "fraction lost")
+
+%md
+Gluing must give the same answer with or without the cut, since summing over a complete set of states at the corner is
+the identity. If the diamond had infinitely many states, the paper constructs a sum over them that stays on one side of
+zero while the uncut amplitude is on the other (its equation 5.38). So the Hilbert space $\mathcal H_D$ of the diamond
+is **finite-dimensional**, and the area takes finitely many values $A_1, \ldots, A_m$ (equation 5.40). With the weight
+$e^{-s}$ of section 7, the diamond's state is the density matrix $\rho_D = e^{-\hat s}/Z$, with $Z = \operatorname{Tr}
+e^{-\hat s}$ (equation 5.39).
+
+**Try this.** For which rapidity $\eta$ does the boost remove half of the correlation?
+
+%md
+## 11. The entropy and its logarithmic correction
+
+For a density matrix $\rho = e^{-\hat s}/Z$ the von Neumann entropy $S = -\operatorname{Tr}\rho\log\rho$ is
+$\langle s\rangle + \log Z$ (equation 5.50), because $-\log\rho = \hat s + \log Z$. Check it on a toy spectrum with one
+state of area 1, two of area 2 and three of area 3:
+
+%code
+lev = [1 2 2 3 3 3];
+Z = sum(exp(-lev))
+pr = exp(-lev)/Z;
+eval(entropy(pr))
+eval(sum(lev.*pr) + log(Z))
+
+%md
+The first term, $\langle A\rangle/4G\hbar$, is the **Bekenstein–Hawking entropy**. When the corner is a marginally
+trapped surface (a horizon), the paper argues that $\log Z$ grows only like the logarithm of the area, and computes the
+coefficient. The steps, with the arithmetic you can redo:
+
+1. **A topological integral.** At one loop the logarithmic term of the graviton determinant on the horizon comes from the
+   integral of the curvature of the corner sphere, $\int_S R\,dA$ (equation 5.67). By the Gauss–Bonnet theorem it is
+   $8\pi$ for any sphere, whatever its radius:
+
+%code
+sph = metric([th ph], [r^2 0; 0 r^2*sin(th)^2]);
+ricciscalar(sph)
+integrate(integrate(ricciscalar(sph)*r^2*sin(th), th, 0, pi), ph, 0, 2*pi)
+
+%md
+2. **The power of the area.** With it, the trace at area $s_b$ grows like $s_b^{106/45}$ (equation 5.67c), and the measure
+   of equation 5.66 adds $\tfrac12$ to the power. The number $106/45$ is the one-loop coefficient of pure gravity, the
+   same one that enters Sen's Euclidean calculation.
+3. **From the power to the clock.** The paper relates $\log Z$ to the clock bound through a number $q$, the limiting
+   ratio of the average clock reading to its maximum (equation 5.54), with $\log Z = \frac{q}{1 - q}\log\ell + \ldots$
+   (5.58). Since $s_* \propto \ell^2$, a trace growing like $s^p$ means $q/(1 - q) = 2p$:
+
+%code
+p = 106/45 + 1/2
+q = 2*p/(1 + 2*p)
+q/(2*(1 - q))
+
+%md
+So $q = 257/302$ (equation 5.68), and the entropy of a large Schwarzschild black hole is (5.65)
+
+$$S = \frac{\langle A\rangle}{4G\hbar} + \frac{257}{90}\log\frac{\langle A\rangle}{4G\hbar} + \ldots$$
+
+4. **At fixed mass.** Areas $s_b \propto M^2$ of different masses are summed in the trace. Holding the mass fixed changes
+   the measure by $ds_b/s_b^{1/2} \propto dM$, which removes $\tfrac12$ from the coefficient (5.69):
+
+%code
+q/(2*(1 - q)) - 1/2
+
+%md
+The coefficient $106/45$ is what the paper reports as agreeing with Sen's one-loop result for this ensemble (fixed mass,
+angular momenta summed).
+
+Two more identities from the paper's footnotes. Footnote 23 writes $q$ in terms of $x = (1 - \epsilon)r_h/\ell$ as
+$q = 2x^2/(1 + x^2)$, and then the coefficient is $x^2/(1 - x^2)$; and the identity (5.60) it uses holds for every
+reading $u$:
+
+%code
+qx = 2*x^2/(1 + x^2);
+simplify(qx/(2*(1 - qx)))
+simplify(u^2/l + integrate((u/t)^2, t, u, l))
+
+%md
+Footnote 24 adds how the states are spread over areas: the probability of an area below a fraction $a$ of the maximum
+tends to $a^{q/2(1 - q)} = a^{257/90}$ (equation 5.63). Most of the weight sits near the top:
+
+%code
+p = plot(a^(257/90), a, 0, 1);
+p = show(p, plot(a, a, 0, 1));
+p = legend(p, "a^(257/90): states of area below a s*", "a (evenly spread, for comparison)");
+labels(title(p, "Where the states of a black hole diamond sit"), "fraction a of the maximum area", "probability")
+
+%md
+**Try this.** If the one-loop coefficient were $106/45 + 1$ instead of $106/45$, what would $q$ and the entropy
+coefficient be?
+
+%md
+## 12. Two-sided black holes and entangled gravitons
+
+The paper's section 5.4 asks whether the Hilbert space of a spacetime with two boundaries (like the two exteriors of an
+eternal black hole) factorizes into left and right. It shows that the part of a connected state orthogonal to all
+product states has zero norm (equation 5.73), so the connected geometry is a superposition of product states: an
+entangled one. For one graviton mode of frequency $\omega$ the thermal state pairs $n$ gravitons on the left with $n$ on
+the right (equation 5.75),
+
+$$|\Psi_\omega\rangle \propto \sum_{n=0}^\infty e^{-nb\omega}\,|n\rangle_L|n\rangle_R, \qquad \langle a_L a_R\rangle = \frac{1}{2\sinh b\omega}.$$
+
+With $x = e^{-b\omega}$, $a_La_R$ takes $|n\rangle|n\rangle$ to $n|n - 1\rangle|n - 1\rangle$, so
+$\langle a_La_R\rangle = \sum_n n\,x^{2n-1}\big/\sum_n x^{2n}$:
+
+%code
+pair = simplify(sum(n*x^(2*n-1), n, 1, inf)/sum(x^(2*n), n, 0, inf))
+simplify(subs(pair, x, exp(-y)) - 1/(exp(y) - exp(-y)))
+
+%md
+That is $x/(1 - x^2) = 1/(2\sinh b\omega)$. Summing such pairs over all frequencies $\nu$ gives the correlation of the
+shear on the two horizons (equation 5.76), which uses
+
+$$\int_0^\infty \frac{\nu\cos(\nu L)}{\sinh \pi\nu}\,d\nu = \frac{1}{4\cosh^2(L/2)}, \qquad L = \log\frac{u_L}{u_R},$$
+
+so that the correlation is $-c/(u_L + u_R)^2$: the same as along a single horizon generator from $-u_L$ to $u_R$. Check
+the integral at $L = 1$:
+
+%code
+integrate(nu*cos(nu)/sinh(pi*nu), nu, 0, inf)
+eval(1/(4*cosh(1/2)^2))
+
+%md
+**Try this.** Show by hand that $u_Lu_R/(u_L + u_R)^2 = 1/(4\cosh^2(L/2))$ when $L = \log(u_L/u_R)$.
+
+%md
+## 13. The classical limit
+
+Finally, the paper's section 6 checks that the theory has the right classical limit. In a coherent state each
+canonical variable fluctuates with variance of order $\hbar$, so averages follow the classical trajectory, and
+invariance of the amplitude under field redefinitions gives Einstein's equations $R_{ab} - \tfrac12 Rg_{ab} +
+\Lambda g_{ab} = 0$ (equation 6.4). At the next order the fluctuations themselves matter, because the field equations are
+nonlinear: a fluctuation with zero average still shifts the average of a quadratic expression. The paper's equation 6.9a
+says $\bar g = g + \tfrac12\Sigma^{IJ}\delta_I\delta_J g$. The same thing in one variable: average a nonlinear $f(q)$ over a
+Gaussian of center $q^0$ and variance $v$:
+
+%code
+integrate((q^3 - q)*exp(-(q - q0)^2/(2*v))/sqrt(2*pi*v), q, -inf, inf)
+integrate(exp(c*q)*exp(-(q - q0)^2/(2*v))/sqrt(2*pi*v), q, -inf, inf)
+
+%md
+For the cubic the average is $f(q^0) + \tfrac12 v f''(q^0)$ exactly ($f'' = 6q$); for the exponential the shift is
+$e^{c q^0}(e^{c^2v/2} - 1) \approx \tfrac12 v f''$ for small $v$. In gravity $v \sim \hbar$, and this shift is the
+**backreaction** of graviton fluctuations on the average metric, the semiclassical Einstein equation (6.13).
+
+How to read the paper's claims. The computations above are the checkable parts. The weight of the paper rests on three
+arguments that are not computations: that the uncut and cut amplitudes must agree (the finiteness of section 10), that
+the Gaussian state can be extended to all observables as claimed, and the one-loop evaluation of $q$. Those are what
+experts will test, and what follow-up papers will confirm or correct.
+
+**Try this.** Compute the average of $q^4$ over the Gaussian and compare with $f(q^0) + \tfrac12 vf''(q^0)$. Which term
+is missing, and what order in $v$ is it?
 
 %md
 ## Summary
@@ -312,6 +599,14 @@ wavefunction) change the answer. That is the work that peer review and follow-up
   bounds the corner area by the clock reading.
 * The states $\Psi_n = h\,e^{2\pi i nF}|\xi\rangle$ are orthonormal; the gluing weight $e^{-2\pi K/\hbar}$ with
   $K = A/8\pi G$ is $e^{-A/4G\hbar}$.
+* Gravitons on the cone live in a Fock space built on Gaussian states. A sum over graviton pairs of every wavelength is
+  the finite dilogarithm $\operatorname{Li}_2(e^{-2i/s})/2s^2$; expanding in $G$ first turns it into a divergent
+  harmonic series.
+* A corner boost changes a graviton correlation by $\tanh^2(\eta/2)$, which infinitely many states in a narrow area band
+  could not reproduce: the diamond has finitely many states and discrete areas.
+* $S = \langle A\rangle/4G\hbar + \log Z$; for a large Schwarzschild horizon the paper finds $\log Z =
+  \tfrac{257}{90}\log(A/4G\hbar)$, or $\tfrac{106}{45}$ at fixed mass, from $q = 257/302$.
+* Fluctuations of order $\hbar$ shift averages by $\tfrac12 v f''$: the backreaction in the semiclassical limit.
 
 %md
 ## Exercises
@@ -325,6 +620,12 @@ wavefunction) change the answer. That is the work that peer review and follow-up
    it is at least 1 for $|a| < 1$.
 5. **States.** Show that $\langle\Psi_m|\Psi_n\rangle = \delta_{mn}$ for any normalized $h$ on $[0, \ell]$, using the
    substitution $s = F(u_*)$.
+6. **A second Gaussian moment.** For the Gaussian of section 8, show that $\langle a^\dagger a\rangle = 0$ and
+   $\langle a a^\dagger\rangle = 1$ by computing $a\psi$ and $a^\dagger\psi$ with `diff`.
+7. **Dilogarithm values.** Check that `polylog(2, 1)` is $\pi^2/6$ and that `eval(polylog(2, -1))` is $-\pi^2/12$. What
+   does the sum of section 9 give at $s \to \infty$ with $s^2$ times the amplitude held fixed?
+8. **Entropy bounds.** For $n$ states of equal area, show that $S = \log n$ with `entropy`. Which spectrum of 6 states
+   maximizes $S$?
 
 %md
 ## Hints and answers
@@ -340,12 +641,25 @@ wavefunction) change the answer. That is the work that peer review and follow-up
 * **Section 6, Try this.** $\int_0^1 3u^2\,du = 1$; $F = u^3$; the charge is $2\pi\int_0^1 9u^5\,du = 3\pi$.
 * **Section 7, Try this.** $\log S \approx 177$, against $S \approx 10^{77}$: the correction is tiny for large black
   holes, which is why it tests a theory's details.
+* **Section 8, Try this.** `integrate((q - q0)^4*psi^2, q, -inf, inf)` gives $3\,dq^4$.
+* **Section 9, Try this.** At $s = 1000$ the imaginary part is about $-7.21 \times 10^{-9}$; the approximation is off by a
+  relative error of order $1/s^2$, a hundred times smaller than at $s = 100$.
+* **Section 10, Try this.** $\tanh^2(\eta/2) = \tfrac12$ at $\eta = 2\operatorname{atanh}(1/\sqrt2) \approx 1.76$.
+* **Section 11, Try this.** $p = 106/45 + 3/2 = 347/90$, so $q = 347/392$ and the coefficient is $347/90$ (or $302/90 =
+  151/45$ at fixed mass): the coefficient is the power, which is why the one-loop number matters.
+* **Section 12, Try this.** $(u_L + u_R)^2/(u_Lu_R) = u_L/u_R + 2 + u_R/u_L = e^L + 2 + e^{-L} = 4\cosh^2(L/2)$.
+* **Section 13, Try this.** The average of $q^4$ is $q_0^4 + 6q_0^2v + 3v^2$; $\tfrac12 v f''$ gives the $6q_0^2v$, and
+  the missing $3v^2$ is second order in $v$, so of order $\hbar^2$, beyond one loop.
 * **Exercise 1.** $r_s \approx 8.9$ mm, $S \approx 9.4 \times 10^{65}$, $T \approx 0.021$ K: colder than the
   background, so it would absorb more than it emits.
 * **Exercise 2.** `limit(subs(ustar, lc, ep*w/2), L, inf)` gives $(1 - \epsilon)w/2$.
 * **Exercise 3.** $\varrho = 1 - u/2$ meets zero at $u = 2$: without focusing, converging rays still meet, but later.
 * **Exercise 4.** The ratio is $\sqrt{1 + a^2/3}$, which is at least 1.
 * **Exercise 5.** $ds = |h|^2 du$ maps $[0, \ell]$ onto $[0, 1]$ because $F(\ell) = 1$.
+* **Exercise 6.** $a\psi = 0$, so $\langle a^\dagger a\rangle = \|a\psi\|^2 = 0$. With $a^\dagger = (q - q^0)/(2\Delta q) -
+  \Delta q\,d/dq$, $a^\dagger\psi = (q - q^0)\psi/\Delta q$, whose squared norm is 1.
+* **Exercise 7.** $s^2$ times the amplitude is $\operatorname{Li}_2(e^{-2i/s})/2 \to \pi^2/12$.
+* **Exercise 8.** `entropy([1/6 1/6 1/6 1/6 1/6 1/6])` is $\log 6$; equal areas (equal probabilities) maximize it.
 
 %md
 ## Sources
@@ -358,3 +672,7 @@ wavefunction) change the answer. That is the work that peer review and follow-up
 5. A. Sen, "Logarithmic corrections to Schwarzschild and other non-extremal black hole entropy in different
    dimensions", *Journal of High Energy Physics* 2013(04) 156.
 6. A. K. Raychaudhuri, "Relativistic cosmology I", *Physical Review* 98 (1955) 1123–1126.
+7. R. Haag, *Local Quantum Physics*, 2nd ed., Springer (1996), chapter III (the GNS construction of section 8).
+8. R. M. Wald, *Quantum Field Theory in Curved Spacetime and Black Hole Thermodynamics*, University of Chicago Press
+   (1994), chapter 5 (thermal pairs of section 12).
+9. L. Lewin, *Polylogarithms and Associated Functions*, North-Holland (1981), chapter 1 (the dilogarithm of section 9).
