@@ -36,6 +36,8 @@ cascala/igalileo`, or open them on GitHub to read them with their results.
 
 * [General relativity](general-relativity/README.md): spacetime, black holes, orbits, light bending, GPS,
   gravitational waves, cosmology.
+* [Reading research papers](papers/README.md): recent papers explained from the ground up, starting with a 2026
+  proposal for quantizing gravity on light cones.
 * [Discovering physical laws](discovery/README.md): find Kepler's and Newton's laws in planet data, then the term
   Einstein added for Mercury.
 

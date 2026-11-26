@@ -1,0 +1,360 @@
+%md
+# Reading a paper: quantum gravity from the null cone
+
+*Reading research papers, part 1.* [Index](README.md)
+
+A black hole of the mass of the Sun has an entropy of about $10^{77}$ in units of Boltzmann's constant: more than all
+the stars in the observable universe put together. Jacob Bekenstein and Stephen Hawking found in the 1970s that this
+entropy is a quarter of the horizon area in Planck units, $S = A/4G\hbar$ (with $c = k_B = 1$). Entropy counts states:
+$S = \log(\text{number of states})$. So what are the $e^{10^{77}}$ states of a black hole? Answering that needs a
+quantum theory of gravity, which we do not yet have.
+
+In November 2026 Venkatesa Chandrasekaran posted a proposal, "An algebraic quantization of gravity from the null cone"
+(arXiv:2611.34924). Its idea is to cut spacetime into **causal diamonds**, regions bounded by light cones, because on a
+light cone Einstein's equations become ordinary differential equations that can be solved exactly. The paper quantizes
+what is left, and claims that a diamond of bounded size has finitely many quantum states, whose count reproduces
+$A/4G\hbar$ together with a known logarithmic correction.
+
+This lesson builds the ingredients of the paper one at a time, each with a computation you can check: the entropy
+numbers, causal diamonds, the paper's two-dimensional toy model and its "clock", the focusing equation that limits
+areas, the quantum states, and the formula that connects them to the entropy. It does not prove the paper's results.
+It prepares you to read the paper.
+
+**Who this is for.** Students who have done the [general relativity](../general-relativity/README.md) path through
+[black holes](../general-relativity/04-black-holes.ipynb), and who have seen the basics of quantum mechanics (states,
+inner products, $[x, p] = i\hbar$).
+
+**What you will be able to do afterwards:**
+
+1. compute the Bekenstein–Hawking entropy and temperature of a black hole;
+2. explain what a causal diamond is and why null cones simplify Einstein's equations;
+3. derive the clock formula of the paper's two-dimensional model and solve its constraint equation;
+4. use the focusing equation to bound the area of a diamond;
+5. check that the paper's quantum states are orthonormal, and see where $e^{-A/4G\hbar}$ enters.
+
+Plan about two hours. This is a preprint (version 1, not yet peer reviewed): read it as a proposal to be tested.
+
+%md
+## 1. The entropy of a black hole
+
+A non-rotating black hole of mass $M$ has horizon radius $r_s = 2GM/c^2$ and area $A = 4\pi r_s^2$. The
+Bekenstein–Hawking entropy is $A$ divided by four times the Planck area $\ell_P^2 = \hbar G/c^3$, and Hawking's
+temperature is $T = \hbar c^3/(8\pi G M k_B)$. For the Sun's mass:
+
+%code
+G0 = 6.674e-11; c0 = 2.998e8; hbar0 = 1.0546e-34; kB = 1.380649e-23; Msun = 1.989e30;
+rs = 2*G0*Msun/c0^2
+area0 = eval(4*pi*rs^2)
+lp2 = hbar0*G0/c0^3
+S0 = area0/(4*lp2)
+T0 = eval(hbar0*c0^3/(8*pi*G0*Msun*kB))
+
+%md
+The horizon is 2.95 km in radius, the entropy is $1.05 \times 10^{77}$, and the temperature is 62 billionths of a
+kelvin. The entropy is proportional to the **area**, not the volume. For ordinary matter, entropy grows with volume.
+That a region's maximum entropy grows with its boundary area is the clue every approach to quantum gravity tries to
+explain, and the reason the paper works with surfaces and light cones.
+
+**Try this.** How does $S$ scale with $M$? Double the mass and compare. Is a black hole's heat capacity positive or
+negative? (Hint: how does $T$ change when $M$ grows?)
+
+%md
+## 2. Causal diamonds and null cones
+
+Take two events $p$ (earlier) and $q$ (later). Everything that can be influenced by $p$ and can influence $q$ forms a
+**causal diamond**: the region inside the future light cone of $p$ and the past light cone of $q$. In one space
+dimension with $c = 1$ it is a square standing on a corner. Its boundary consists of four **null** segments (light rays),
+and its left and right corners are where the two cones meet; in four dimensions that meeting place is a sphere, the
+**corner** $S$.
+
+%code
+p = parametric(x, abs(x) - 1, x, -1, 1);
+p = show(p, parametric(x, 1 - abs(x), x, -1, 1));
+p = show(p, parametric(x, 0, x, -1, 1));
+p = legend(p, "future light cone of p", "past light cone of q", "a slice through the corners");
+labels(title(p, "A causal diamond between p = (0, -1) and q = (0, 1)"), "x", "t")
+
+%md
+Why light cones? On a spacelike slice, Einstein's equations include **constraints**: elliptic equations that tie the
+data together across the whole slice, and that is what makes quantizing gravity hard. On a null cone the same
+constraints become ordinary differential equations along each light ray (the **Raychaudhuri** equation, section 4
+below), which can be solved ray by ray. The paper solves them on the two cones of a diamond, so that what is left, the
+**reduced phase space**, is free data: no constraints remain. Quantizing free data is much easier.
+
+**Try this.** In the picture, which events can send a light signal to $q$ but cannot receive one from $p$? Are they
+inside the diamond?
+
+%md
+## 3. The two-dimensional model and its clock
+
+The paper first works out a simpler theory, **Jackiw–Teitelboim gravity**: two spacetime dimensions, a curved spacetime
+called anti-de Sitter space $\text{AdS}_2$, a scalar field $\Phi$ called the dilaton (it plays the role of the area of
+the corner sphere), and a matter field $\phi$. In global coordinates the metric is
+
+$$ds^2 = \frac{L^2}{\cos^2\sigma}\left(-d\tau^2 + d\sigma^2\right), \qquad -\pi/2 < \sigma < \pi/2.$$
+
+%code
+ads = metric([tau sigma], [-L^2/cos(sigma)^2 0; 0 L^2/cos(sigma)^2]);
+christoffel(ads)
+ricciscalar(ads)
+
+%md
+The curvature is constant and negative, $R = -2/L^2$. Proper distance along the slice $\tau = 0$ is
+$\lambda = L\int_0^\sigma \sec s\,ds$. The paper uses the coordinate $u = L\tan\sigma$ and states that
+$u = L\sinh(\lambda/L)$. Check it by differentiating: if $\lambda = L\,\operatorname{asinh}(\tan\sigma)$, then
+$d\lambda/d\sigma$ must equal $L/\cos\sigma$:
+
+%code
+simplify(diff(L*asinh(tan(s)), s))
+
+%md
+That is $L/(\cos^2 s\,\sec s) = L/\cos s$ for $|s| < \pi/2$, since $\sqrt{\tan^2 s + 1} = \sec s$. The paper's **clock**
+is the reading $u_*$ of this coordinate at the corner, measured from a cut at distance $\lambda_c = \epsilon w/2$ from
+the middle of a slice of length $w$, where $0 < \epsilon < 1$ (equation 2.4c):
+
+$$u_*(w) = L\,\frac{\sinh\!\big(w/2L\big) - \sinh\!\big(\lambda_c/L\big)}{\cosh\!\big(\lambda_c/L\big)}.$$
+
+%code
+ustar = L*(sinh(w/(2*L)) - sinh(lc/L))/cosh(lc/L);
+taylor(subs(subs(ustar, lc, ep*w/2), L, 1), w, 0, 3)
+
+%md
+For small diamonds, $u_* \approx (1 - \epsilon)w/2$: the clock measures the distance from the cut to the corner, as it
+should in nearly flat space. For large ones the curvature makes it grow exponentially:
+
+%code
+u1 = subs(subs(ustar, lc, 0.3*w/2), L, 1);
+p = plot(u1, w, 0, 6);
+p = show(p, plot(0.7*w/2, w, 0, 6));
+p = legend(p, "clock reading u* (L = 1, epsilon = 0.3)", "flat-space value (1 - epsilon) w/2");
+labels(title(p, "The corner clock of a diamond in AdS2"), "length w of the slice", "u*")
+
+%md
+Why a clock? In gravity there is no external time; the paper uses the corner reading $u_*$ itself as the time variable,
+with a conjugate momentum $p_{u_*}$. This is how a background-independent theory can still have dynamics.
+
+**Try this.** Compute one more term of the series, `taylor(subs(subs(ustar, lc, ep*w/2), L, 1), w, 0, 5)`. At what
+length $w$ does the $w^3$ correction reach 10% of the leading term when $\epsilon = 0.3$?
+
+%md
+## 4. The null constraint: matter focuses light
+
+Along a light ray of the cone, with affine parameter $u$, the dilaton obeys the paper's equation 2.5:
+
+$$\frac{d^2\Phi}{du^2} = -\left(\frac{d\phi}{du}\right)^2.$$
+
+The right side is never positive: matter crossing the cone makes $\Phi$ bend down. This is the two-dimensional form of
+the **Raychaudhuri equation**, which says that energy focuses light rays. Its solution with $\Delta\Phi(0) = 0$ and
+$\Delta\Phi'(0) = 0$ is
+
+$$\Delta\Phi(u_*) = -\int_0^{u_*} (u_* - u)\left(\frac{d\phi}{du}\right)^2 du.$$
+
+Check this for a matter pulse $\phi = \sin(\pi u)$, so $(\phi')^2 = \pi^2\cos^2(\pi u)$, by solving the differential
+equation directly and evaluating the integral formula:
+
+%code
+dsolve(y'' == -pi^2*(1 + cos(2*pi*x))/2, y, x, 0, [0 0])
+integrate(-(x - u)*pi^2*cos(pi*u)^2, u, 0, x)
+
+%md
+The two agree: $\Delta\Phi = (\cos 2\pi x - 2\pi^2x^2 - 1)/8$. The constraint has been **solved**: the dilaton is no
+longer an independent variable but is fixed by the matter on the cone. What stays free is the matter data $\phi$ on the
+cones and the clock $u_*$. That is the reduced phase space of the two-dimensional model.
+
+%code
+p = plot((cos(2*pi*x) - 2*pi^2*x^2 - 1)/8, x, 0, 1);
+p = show(p, plot(0, x, 0, 1));
+p = legend(p, "change in the dilaton along the ray", "no matter");
+labels(title(p, "Matter focuses: the dilaton bends down"), "affine parameter u", "Delta Phi")
+
+%md
+**Try this.** Take a weaker pulse, $\phi = \tfrac12\sin(\pi u)$. How does $\Delta\Phi(1)$ change? (The equation is
+quadratic in $\phi$.)
+
+%md
+## 5. Four dimensions: shear, focusing and an area bound
+
+In four dimensions the corner is a sphere, labelled by angles $y$ on the unit sphere. Along each light ray $\gamma_y$ the
+**area radius** $\varrho$ (so that the corner area is $A = \int_S \varrho_S^2\,d\Omega$) obeys equation 3.25f:
+
+$$\frac{d^2\varrho}{du^2} + \frac{\varrho}{8}\,(\partial_u \bar q)^{AB}(\partial_u \bar q)_{AB} = 0.$$
+
+Here $\bar q$ is the shape of the sphere and $\partial_u\bar q$ its **shear**: gravitational waves crossing the cone.
+The shear term is never negative, so gravitational waves focus light just as matter does. For a steady shear with
+$(\partial_u\bar q)^2 = 8k^2$ the equation is $\varrho'' = -k^2\varrho$:
+
+%code
+dsolve(y'' + k^2*y == 0, y, x, 0, [1 0])
+p = plot(cos(x), x, 0, pi/2);
+p = show(p, plot(1, x, 0, pi/2));
+p = legend(p, "area radius with shear (k = 1)", "no shear");
+labels(title(p, "Shear focuses the light rays until they cross"), "affine parameter u", "area radius")
+
+%md
+The rays meet after $u = \pi/2k$: a **caustic**, where the cone stops being a smooth boundary. The paper handles
+caustics by gluing several diamonds together (its figures 7 to 10).
+
+Focusing gives the paper's clock in four dimensions (equation 3.27):
+
+$$u_*(y) = \varrho_S(y)\int_\epsilon^1 e^{\Xi_y(v)}\,dv, \qquad \Xi_y(v) = \frac18\int_\epsilon^v s\,(\partial_s\bar q)^{AB}(\partial_s\bar q)_{AB}\,ds \ \ge 0.$$
+
+Since $\Xi_y \ge 0$, every exponential is at least 1, so $u_*(y) \ge (1 - \epsilon)\varrho_S(y)$: **shear makes the
+clock run further**. Average the clock over the sphere with weight $\varrho_S$,
+$\bar u_* = \int_S \varrho_S u_*\,d\Omega \big/ \int_S \varrho_S\,d\Omega$. Then
+
+$$\bar u_* \ \ge\ (1 - \epsilon)\,\frac{\int \varrho_S^2\,d\Omega}{\int \varrho_S\,d\Omega} \ \ge\ (1 - \epsilon)\,\frac{A}{\sqrt{4\pi A}} = (1 - \epsilon)\sqrt{\frac{A}{4\pi}},$$
+
+where the second step is the **Cauchy–Schwarz inequality** $\left(\int \varrho_S\,d\Omega\right)^2 \le
+\int 1\,d\Omega \int \varrho_S^2\,d\Omega = 4\pi A$. Check it for a lopsided corner, $\varrho_S = 1 + \cos\theta/2$,
+with no shear ($u_* = (1 - \epsilon)\varrho_S$):
+
+%code
+rho = 1 + cos(th)/2;
+area = integrate(2*pi*rho^2*sin(th), th, 0, pi)
+I1 = integrate(2*pi*rho*sin(th), th, 0, pi)
+ubar = (1 - ep)*area/I1
+ratio = simplify(ubar/((1 - ep)*sqrt(area/(4*pi))))
+eval(ratio)
+
+%md
+The ratio is $\sqrt{13/12} \approx 1.04 \ge 1$, as the inequality promises; it equals 1 only for a round corner.
+**A diamond whose clock is bounded, $\bar u_* \le \ell$, has bounded area**, $A \le 4\pi\ell^2/(1 - \epsilon)^2$. The
+paper uses this bound (its footnote 8 states the weaker form $(1 - \epsilon)\sqrt A/4\pi \le \bar u_*$) to count the
+states of a diamond of bounded size.
+
+**Try this.** Repeat with $\varrho_S = 1 + \cos\theta$. Is the ratio larger or smaller? Why?
+
+%md
+## 6. Quantum states of the clock
+
+Quantizing turns the free data into operators. The clock becomes multiplication by $u_*$ on wavefunctions $\psi(u_*)$,
+the matter field becomes oscillators $\mathfrak a_j$ with $[\mathfrak a_j, \mathfrak a_k^\dagger] = \delta_{jk}$, and
+the Hilbert space of a diamond whose clock reads at most $\ell$ is $L^2([0, \ell], du_*)$ times the matter states
+(equation 2.13c). The paper builds the states (2.14)
+
+$$\Psi_n(u_*) = h(u_*)\,e^{2\pi i n F(u_*)}\,|\xi\rangle, \qquad F(u_*) = \int_0^{u_*} |h(v)|^2\,dv,$$
+
+from a normalized clock wavefunction $h$ and a fixed matter state $|\xi\rangle$. Take $\ell = 1$ and
+$h(u) = \sqrt2\sin(\pi u)$:
+
+%code
+integrate(2*sin(pi*u)^2, u, 0, 1)
+F = integrate(2*sin(pi*v)^2, v, 0, u)
+
+%md
+$F$ rises from 0 to 1, so the substitution $s = F(u)$, $ds = |h|^2\,du$, turns the inner product into a Fourier
+integral:
+
+$$\langle \Psi_m | \Psi_n\rangle = \int_0^1 |h|^2 e^{2\pi i (n - m)F}\,du = \int_0^1 e^{2\pi i (n - m)s}\,ds = \delta_{mn}.$$
+
+%code
+integrate(exp(2*pi*i*2*s), s, 0, 1)
+integrate(exp(2*pi*i*0*s), s, 0, 1)
+round(integrate(2*sin(pi*u)^2*cos(2*pi*3*F), u, 0, 1), 12)
+
+%md
+The last line checks one case without the substitution. So there are infinitely many orthonormal states, even though
+the clock is confined to $[0, 1]$: they differ in how fast their phase winds. They also carry different "dilation
+charge" (equation 2.15): the expectation of $\mathcal Q = -i\hbar(u_*\partial_{u_*} + \tfrac12)$ grows by
+$2\pi n\hbar\int u_*|h|^4\,du_*$:
+
+%code
+2*pi*integrate(u*(2*sin(pi*u)^2)^2, u, 0, 1)
+
+%md
+That is $3\pi/2$ per unit of $n\hbar$ for this $h$.
+
+**Try this.** Use the clock wavefunction $h = \sqrt 3\,u$ on $[0, 1]$. Check that it is normalized, compute $F$, and
+recompute the dilation charge per unit of $n\hbar$.
+
+%md
+## 7. The trace, and where the entropy comes from
+
+To compute an entropy one needs a **trace**: a sum of $\langle\Psi|W|\Psi\rangle$ over a basis. The paper glues a
+diamond to its time reflection; at each corner the gluing contributes a factor $e^{-\pi K/\hbar}$ from half a turn of
+the boost generated by $K$, and the result is (2.17a)
+
+$$\langle\Psi_m|W|\Psi_n\rangle = e^{-2\pi(K_L + K_R)/\hbar}\,\delta_{mn}.$$
+
+In the two-dimensional model each of the infinitely many states $\Psi_n$ of section 6 contributes the same amount, so
+$\operatorname{Tr} W \ge N e^{-2\pi(K_L + K_R)/\hbar}$ for every $N$: the trace is infinite.
+
+In four dimensions the boost charge of a corner is $K = A/8\pi G$ (equation 3.43), so the weight of one corner is
+
+%code
+simplify(2*pi*(A/(8*pi*G))/hbar)
+
+%md
+$2\pi K/\hbar = A/4G\hbar$: **the Bekenstein–Hawking entropy appears in the exponent**. The paper's sections 5 and 6
+then argue that the area bound of section 5 makes the space of states of a bounded diamond **finite-dimensional**, so
+that the trace is finite. Counting those states gives, according to the paper, $S = A/4G\hbar$ for marginally trapped
+surfaces, plus a correction proportional to $\log A$ whose coefficient for a large Schwarzschild black hole matches the
+one Ashoke Sen computed from one-loop quantum fields around the black hole. The same construction is said to give
+Einstein's equations with quantum corrections in the semiclassical limit.
+
+To weigh these claims, a reader would check: whether the finite-dimensionality argument holds for all diamonds, how the
+caustics are glued, how the log coefficient is computed, and whether different choices (of $\epsilon$, of the clock
+wavefunction) change the answer. That is the work that peer review and follow-up papers do.
+
+**Try this.** For the solar-mass black hole of section 1, how large is $\log A$ compared to $A/4G\hbar$? Use
+`eval(log(S0))` with the value computed there.
+
+%md
+## Summary
+
+* Black hole entropy is $S = A/4G\hbar$: proportional to area. A quantum theory of gravity must explain which states it
+  counts.
+* The paper cuts spacetime into causal diamonds bounded by light cones, where Einstein's constraints become ordinary
+  differential equations (Raychaudhuri) and can be solved, leaving free data to quantize.
+* In the two-dimensional model the corner clock is $u_* = L[\sinh(w/2L) - \sinh(\lambda_c/L)]/\cosh(\lambda_c/L)$,
+  and the null constraint $\Phi'' = -(\phi')^2$ makes matter focus.
+* In four dimensions shear focuses light rays, the clock satisfies $u_* \ge (1 - \epsilon)\varrho_S$, and Cauchy–Schwarz
+  bounds the corner area by the clock reading.
+* The states $\Psi_n = h\,e^{2\pi i nF}|\xi\rangle$ are orthonormal; the gluing weight $e^{-2\pi K/\hbar}$ with
+  $K = A/8\pi G$ is $e^{-A/4G\hbar}$.
+
+%md
+## Exercises
+
+1. **A small black hole.** Compute $r_s$, $S$ and $T$ for a black hole of the mass of the Earth ($5.97 \times 10^{24}$
+   kg). Would it be hotter or colder than the cosmic microwave background (2.7 K)?
+2. **Flat limit of the clock.** Show that $u_*(w) \to (1 - \epsilon)w/2$ as $L \to \infty$ with `limit`.
+3. **Focusing in flat space.** Solve $\varrho'' = 0$ with $\varrho(0) = 1$ and $\varrho'(0) = -1/2$. When do the rays
+   meet? Compare with section 5.
+4. **Cauchy–Schwarz.** For $\varrho_S = 1 + a\cos\theta$, compute the ratio of section 5 as a function of $a$ and show
+   it is at least 1 for $|a| < 1$.
+5. **States.** Show that $\langle\Psi_m|\Psi_n\rangle = \delta_{mn}$ for any normalized $h$ on $[0, \ell]$, using the
+   substitution $s = F(u_*)$.
+
+%md
+## Hints and answers
+
+* **Section 1, Try this.** $S \propto M^2$, so doubling the mass quadruples the entropy. $T \propto 1/M$: adding energy
+  cools the hole, a negative heat capacity.
+* **Section 2, Try this.** Events in the past cone of $q$ but outside the future cone of $p$; they are outside the
+  diamond.
+* **Section 3, Try this.** The $w^3$ term $(1 - 3\epsilon^2 + 2\epsilon^3)w^3/48$ reaches 10% of
+  $(1 - \epsilon)w/2$ near $w \approx 1.5$ when $\epsilon = 0.3$; the $w^5$ term is still small there.
+* **Section 4, Try this.** $\Delta\Phi(1)$ becomes a quarter as large: $-\pi^2/16$ instead of $-\pi^2/4$.
+* **Section 5, Try this.** Larger: $\sqrt{4/3} \approx 1.15$, because the corner is more lopsided.
+* **Section 6, Try this.** $\int_0^1 3u^2\,du = 1$; $F = u^3$; the charge is $2\pi\int_0^1 9u^5\,du = 3\pi$.
+* **Section 7, Try this.** $\log S \approx 177$, against $S \approx 10^{77}$: the correction is tiny for large black
+  holes, which is why it tests a theory's details.
+* **Exercise 1.** $r_s \approx 8.9$ mm, $S \approx 9.4 \times 10^{65}$, $T \approx 0.021$ K: colder than the
+  background, so it would absorb more than it emits.
+* **Exercise 2.** `limit(subs(ustar, lc, ep*w/2), L, inf)` gives $(1 - \epsilon)w/2$.
+* **Exercise 3.** $\varrho = 1 - u/2$ meets zero at $u = 2$: without focusing, converging rays still meet, but later.
+* **Exercise 4.** The ratio is $\sqrt{1 + a^2/3}$, which is at least 1.
+* **Exercise 5.** $ds = |h|^2 du$ maps $[0, \ell]$ onto $[0, 1]$ because $F(\ell) = 1$.
+
+%md
+## Sources
+
+1. V. Chandrasekaran, "An algebraic quantization of gravity from the null cone", arXiv:2611.34924 (2026), version 1.
+2. J. D. Bekenstein, "Black holes and entropy", *Physical Review D* 7 (1973) 2333–2346.
+3. S. W. Hawking, "Particle creation by black holes", *Communications in Mathematical Physics* 43 (1975) 199–220.
+4. R. Jackiw, "Lower dimensional gravity", *Nuclear Physics B* 252 (1985) 343–356; C. Teitelboim, "Gravitation and
+   Hamiltonian structure in two spacetime dimensions", *Physics Letters B* 126 (1983) 41–45.
+5. A. Sen, "Logarithmic corrections to Schwarzschild and other non-extremal black hole entropy in different
+   dimensions", *Journal of High Energy Physics* 2013(04) 156.
+6. A. K. Raychaudhuri, "Relativistic cosmology I", *Physical Review* 98 (1955) 1123–1126.

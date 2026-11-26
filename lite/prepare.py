@@ -32,6 +32,8 @@ GROUPS = [
      "Symmetry, cyclic groups, permutations, card shuffles and Lagrange's theorem.", None),
     ("chaos", "Chaos and fractals",
      "The logistic map, bifurcations, the Lorenz butterfly, the Mandelbrot set and Julia sets.", None),
+    ("papers", "Reading research papers",
+     "Recent papers built from the ground up: quantum gravity from the null cone (arXiv:2611.34924), from black hole entropy to causal diamonds, focusing and the clock states.", None),
     ("discovery", "Discovering physical laws",
      "Four lessons that find Kepler's and Newton's laws in planet data, then the term Einstein added for Mercury.", None),
     ("differential-geometry", "Differential geometry",
