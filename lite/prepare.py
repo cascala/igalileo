@@ -32,6 +32,8 @@ GROUPS = [
      "Primes, factoring large numbers, algebraic factoring and hunting for identities, modular arithmetic, the cryptography built on them, a lab that searches for new factoring algorithms, and the number field sieve.", None),
     ("graphs", "Graphs and networks",
      "Three lessons: Euler's bridges and tours, shortest routes, spanning trees, flows and matchings, then scheduling by coloring, PageRank, the rise of the Medici and random graphs.", None),
+    ("random-processes", "Random processes",
+     "Three lessons: Markov chains and the gambler's ruin, random walks and Brownian motion, then noisy differential equations, option prices and the phase transition of a magnet.", None),
     ("group-theory", "Group theory",
      "Symmetry, cyclic groups, permutations, card shuffles and Lagrange's theorem.", None),
     ("chaos", "Chaos and fractals",

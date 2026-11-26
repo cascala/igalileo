@@ -32,6 +32,9 @@ cascala/igalileo`, or open them on GitHub to read them with their results.
   leak hunt) and the number field sieve.
 * [Graphs and networks](graphs/README.md): three lessons, from Euler's bridges and the handshake lemma through
   shortest routes, spanning trees, flows and matchings to scheduling by coloring, PageRank and random graphs.
+* [Random processes](random-processes/README.md): three lessons, from Markov chains and the gambler's ruin
+  through random walks, Brownian motion and Poisson arrivals to stochastic differential equations, option pricing
+  and the Ising model.
 * [Group theory](group-theory/README.md): symmetry, cyclic groups, permutations, Lagrange's theorem, quotients, Sylow, solvable groups.
 * [Chaos and fractals](chaos/README.md): the logistic map, bifurcations, the Lorenz attractor, the Mandelbrot set.
 * [Differential geometry](differential-geometry/README.md): curves, surfaces, curvature, geodesics, the Riemann tensor.
