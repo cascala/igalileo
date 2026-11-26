@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "galileo-kernel"
-version = "0.3.0"
+version = "0.4.0"
 description = "Jupyter kernel for Galileo, the computer algebra system (Rust engine)"
 readme = "README.md"
 license = { text = "Apache-2.0" }
