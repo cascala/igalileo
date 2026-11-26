@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Build the static web site: landing page, playground and JupyterLite, into _site/.
+# Build the static web site: landing page, playground, JupyterLite and the language
+# reference (rendered from galileo-rs docs/), into _site/.
 #
 #   lite/build.sh [path/to/galileo-rs]
 #
@@ -44,5 +45,7 @@ cp -r "$ROOT/site" "$OUT"
 (cd "$ROOT/lite" && jupyter lite build --no-sourcemaps --lite-dir . --contents "$WORK/contents" \
   --output-dir "$OUT/lab" --FederatedExtensionAddon.extra_labextensions_path=kernel/build/labextensions)
 rm -f "$ROOT/lite/.jupyterlite.doit.db"
+echo "== language reference, from the engine's docs/"
+node "$ROOT/lite/reference.mjs" "$ENGINE" "$OUT"
 touch "$OUT/.nojekyll"
 du -sh "$OUT"
