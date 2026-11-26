@@ -42,6 +42,11 @@ cascala/igalileo`, or open them on GitHub to read them with their results.
 
 ## Physics
 
+* [Mechanics](mechanics/README.md): seven lessons for a first course, from projectiles with air drag, energy and
+  rockets through rotation, orbits and the three-body problem to Lagrangian and Hamiltonian mechanics, the double
+  pendulum, the heavy top and Foucault's pendulum.
+* [Oscillations and waves](waves/README.md): seven lessons, from the harmonic oscillator and resonance through normal
+  modes, strings, sound spectra and dispersion to interference, diffraction, lenses and the rainbow.
 * [General relativity](general-relativity/README.md): spacetime, black holes, orbits, light bending, GPS,
   gravitational waves, cosmology.
 * [Reading research papers](papers/README.md): recent papers explained from the ground up, starting with a 2026

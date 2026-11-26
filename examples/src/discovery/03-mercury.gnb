@@ -188,9 +188,11 @@ newton = odedata([v, 1 - u], [u v], phi, [1.4 0], 0, 30, 600);
 discover(newton, [phi u'' v], [1 u u^2 cos(phi)])
 
 %md
-The best formula is $u'' = -\tfrac25\cos\phi$, and it is true: this orbit is $u = 1 + 0.4\cos\phi$. But it describes
-one orbit, not the law; start the planet elsewhere and it fails. The law, $u'' = 1 - u$, is row 3 (its $u^2$
-coefficient, $7 \times 10^{-9}$, is zero up to rounding): just as exact, but more complex, so it lost. `discover` ranks by simplicity, and only you know which building blocks make sense.
+The best formula is $u'' = -\tfrac25\cos\phi$, and it is true: this orbit is $u = 1 + 0.4\cos\phi$, so on it
+$-\tfrac25\cos\phi$ and $1 - u$ are the same numbers. But it describes one orbit, not the law; start the planet
+elsewhere and it fails. The law, $u'' = 1 - u$, fits these data just as exactly, yet it never appears: with the cosine
+available it is not needed, and rows 2 to 4 only add terms whose coefficients are zero up to rounding. `discover` ranks
+by simplicity, and only you know which building blocks make sense.
 
 **Why real positions can't do it.** For Mercury, the $u^2$ term compared with the $u$ term is $\epsilon u = \epsilon/r \approx 4.4\text{ km}/58\text{ million km} \approx 8 \times 10^{-8}$. Positions accurate to better than one part in
 $10^8$, differentiated twice, are far beyond any telescope. The effect was found because it *accumulates*: $0.1″$ per
