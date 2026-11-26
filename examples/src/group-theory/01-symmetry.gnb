@@ -1,7 +1,7 @@
 %md
 # Group theory 1: Symmetry
 
-*Learning path: group theory, part 1 of 3.* [Index](README.md) · Next: [Cyclic groups](02-cyclic-groups.ipynb)
+*Learning path: group theory, part 1 of 6.* [Index](README.md) · Next: [Cyclic groups](02-cyclic-groups.ipynb)
 
 A group is the mathematics of symmetry. The idea came from Galois (around 1830), who used it to show that there is no
 formula like the quadratic formula for equations of degree 5. Today groups describe crystals, the particles of physics,

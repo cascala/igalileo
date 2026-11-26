@@ -1,7 +1,7 @@
 %md
 # Group theory 3: Permutations and Lagrange's theorem
 
-*Learning path: group theory, part 3 of 4.* [Index](README.md) · Previous: [Cyclic groups](02-cyclic-groups.ipynb) · Next: [Groups as objects](04-groups-as-objects.ipynb)
+*Learning path: group theory, part 3 of 6.* [Index](README.md) · Previous: [Cyclic groups](02-cyclic-groups.ipynb) · Next: [Groups as objects](04-groups-as-objects.ipynb)
 
 Every finite group can be found inside a group of permutations (Cayley's theorem), so permutations are the universal
 laboratory of group theory. This lesson works with them and proves the first real theorem of the subject. You will

@@ -1,7 +1,7 @@
 %md
 # Group theory 2: Cyclic groups
 
-*Learning path: group theory, part 2 of 3.* [Index](README.md) · Previous: [Symmetry](01-symmetry.ipynb) · Next: [Permutations and Lagrange's theorem](03-permutations-and-lagrange.ipynb)
+*Learning path: group theory, part 2 of 6.* [Index](README.md) · Previous: [Symmetry](01-symmetry.ipynb) · Next: [Permutations and Lagrange's theorem](03-permutations-and-lagrange.ipynb)
 
 The simplest groups are made from a single element, repeated: the turns of a clock hand, the rotations of a regular
 polygon, the remainders mod $n$. They are called **cyclic groups**, and they are where group theory meets the number

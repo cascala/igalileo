@@ -1,0 +1,345 @@
+%md
+# Group theory 5: Rings and fields
+
+*Learning path: group theory, part 5 of 6.* [Index](README.md) · Previous: [Groups as objects](04-groups-as-objects.ipynb) · Next: [Galois and symmetry](06-galois-and-symmetry.ipynb)
+
+**The question.** A group has one operation. The numbers we calculate with have two, addition and multiplication,
+and they interact through the distributive law. What happens to arithmetic when we change the numbers: when we count
+on a clock, add a square root of 2, or invent a number $a$ with $a^2 = a + 1$? Which of these worlds still let us
+divide, and why does the answer protect your bank connection?
+
+**Who this is for:** anyone who has done lessons 1 to 4. **You need:** groups, cyclic groups, the order of an
+element, and remainders on division.
+
+**You will learn**
+
+* what a **ring** and a **field** are, with the integers mod $n$, `zmod(n)`, as the first example,
+* **zero divisors** and **units**, and why $\mathbb{Z}/n$ is a field exactly when $n$ is prime,
+* that the nonzero elements of a finite field form a **cyclic group** (a `generator` exists),
+* **discrete logarithms** and the **Diffie–Hellman** key exchange, and what makes them hard or easy,
+* **finite fields** with $p^k$ elements, `gf(q)`, built from polynomials,
+* **quotient rings** and **number fields** such as $\mathbb{Q}(\sqrt 2)$, with norm, trace and minimal polynomial,
+* **ideals** and **Gröbner bases**, which turn systems of polynomial equations into triangular ones.
+
+%md
+## 1. Arithmetic on a clock
+
+A **ring** is a set with addition and multiplication that behave like those of the integers: both are associative,
+addition is commutative with a zero and negatives, there is a one, and $a(b + c) = ab + ac$. The rings here are also
+commutative ($ab = ba$).
+
+The smallest examples are the integers mod $n$: only the remainders $0, 1, \ldots, n - 1$, and after each
+operation we keep the remainder. On a 12-hour clock, 9 o'clock plus 5 hours is 2 o'clock. In Galileo `zmod(12)`
+is that ring as a value, and `Z(9)` is the element 9 in it. Ordinary numbers mix in, and every result is reduced.
+
+%code
+Z = zmod(12)
+Z(9) + 5
+Z(7) * 7
+Z(3) - 8
+
+%md
+Each element prints as `zmod(12, 2)`: the call that builds it, so a result can be pasted back in. Read it as
+"2 in the integers mod 12".
+
+Now something strange happens. Neither 3 nor 4 is zero, yet their product is.
+
+%code
+Z(3) * Z(4)
+
+%md
+Two nonzero elements whose product is zero are called **zero divisors**. They make division impossible: if
+$3^{-1}$ existed, then $4 = 3^{-1} \cdot 3 \cdot 4 = 3^{-1} \cdot 0 = 0$, which is false. Galileo refuses and tells
+you why: 3 and 12 share the factor 3.
+
+%code
+Z(3)^-1
+
+%md
+An element with an inverse is a **unit**. In $\mathbb{Z}/n$ the units are exactly the remainders $a$ with
+$\gcd(a, n) = 1$, because then Euclid's algorithm gives $ua + vn = 1$, so $u$ is the inverse. The units form a group
+under multiplication; you met it in lesson 4 as `units(12)`.
+
+%code
+Z(5)^-1
+Z(5) * Z(5)
+order(units(12))
+
+%md
+**Try this:** find the inverse of 7 in `zmod(26)`. Which remainders mod 26 have no inverse?
+
+%md
+## 2. When can we always divide?
+
+A **field** is a commutative ring in which every nonzero element is a unit: we can divide by anything except 0.
+$\mathbb{Q}$, $\mathbb{R}$ and $\mathbb{C}$ are fields; $\mathbb{Z}$ is not (1/2 is not an integer).
+
+If $n$ has a factor $d$ with $1 < d < n$, then $d \cdot (n/d) = 0$ in $\mathbb{Z}/n$, so there are zero divisors
+and no field. If $n = p$ is prime, every $a \ne 0$ has $\gcd(a, p) = 1$ and is a unit. So **$\mathbb{Z}/n$ is a field
+exactly when $n$ is prime**. For prime $p$ Galileo also calls it `gf(p)`, the Galois field.
+
+%code
+isfield(zmod(12))
+isfield(zmod(13))
+F = gf(13)
+F(1) / 4
+
+%md
+The last line says that $1/4 = 10$ in $\mathbb{Z}/13$: indeed $4 \cdot 10 = 40 = 3 \cdot 13 + 1$.
+
+The 12 nonzero elements of $\mathbb{F}_{13}$ form a group of order 12, so by Lagrange the **order** of every element
+(the smallest $n \ge 1$ with $x^n = 1$) divides 12. That is **Fermat's little theorem**, $x^{p-1} = 1$. More is true:
+there is always an element whose order is the full $p - 1$, a **generator** (Gauss called it a primitive root). Every
+nonzero element is a power of it, so the group is cyclic.
+
+%code
+order(F(3))
+order(F(5))
+g = generator(F)
+order(g)
+
+%md
+Listing the powers $g^0, g^1, \ldots, g^{11}$ shows every nonzero element exactly once.
+
+%code
+table(g^k, k, 0, 11)
+
+%md
+**Try this:** compute `order(F(k))` for every $k$ from 1 to 12. Which orders occur, and how many elements have each?
+(Compare with the divisors of 12 and with Euler's $\varphi$.)
+
+%md
+## 3. Discrete logarithms and a secret handshake
+
+In ordinary arithmetic, $2^x = 1024$ is easy to undo: $x = \log_2 1024 = 10$. In a finite field the powers of $g$
+jump around without any visible pattern, and undoing them, finding $x$ with $g^x = h$, is the **discrete
+logarithm** problem. `dlog(h, g)` solves it.
+
+%code
+dlog(F(10), g)
+g^dlog(F(10), g)
+
+%md
+For a big prime, computing $g^x$ stays fast (square and multiply: about $\log_2 x$ steps), while no fast method is
+known for the discrete logarithm in general. Diffie and Hellman (1976) turned that asymmetry into a way for two
+people to agree on a secret over a public line:
+
+1. Everyone knows a prime $p$ and a generator $g$.
+2. Alice picks a secret $a$ and publishes $A = g^a$. Bob picks a secret $b$ and publishes $B = g^b$.
+3. Alice computes $B^a = g^{ab}$, Bob computes $A^b = g^{ab}$. They now share $g^{ab}$.
+
+An eavesdropper sees $g$, $A$ and $B$, and to find $g^{ab}$ seems to need $a$ or $b$, a discrete logarithm.
+
+%code
+P = gf(2^61 - 1)
+g = generator(P)
+a = 123456789012
+b = 987654321098
+A = g^a
+B = g^b
+B^a == A^b
+
+%md
+Is this prime safe? Ask Galileo to play the eavesdropper:
+
+%code
+dlog(A, g)
+
+%md
+It found Alice's secret at once. The reason is in $p - 1$: $2^{61} - 2$ factors into small primes, and the
+**Pohlig–Hellman** method (the note above) solves one small discrete logarithm for each prime factor and glues the
+answers together with the Chinese remainder theorem. The group has order $p - 1$, and only its largest prime factor
+really costs time.
+
+%code
+ifactor(2^61 - 2)
+
+%md
+Real systems therefore use a **safe prime** $p = 2q + 1$ with $q$ also prime, so $p - 1 = 2q$ has a huge prime
+factor. Here $q \approx 10^{20}$, and the baby-step giant-step method that Pohlig–Hellman uses for each factor would
+need about $\sqrt{q} = 10^{10}$ steps: Galileo declines.
+
+%code
+S = gf(200000000000000002487)
+h = generator(S)
+dlog(h^31415926535, h)
+
+%md
+Real keys use primes of 2048 bits or elliptic curves; the idea is the same.
+
+**Try this:** run the handshake in `gf(101)` with your own secrets, then recover both secrets with `dlog`.
+
+%md
+## 4. Fields with $p^k$ elements
+
+Is there a field with 4 elements? `zmod(4)` is not one, since $2 \cdot 2 = 0$. The trick, due to Galois (1830), is
+to invent a new number. Over $\mathbb{F}_2 = \{0, 1\}$ the polynomial $x^2 + x + 1$ has no root ($0$ and $1$ both
+give 1), so we adjoin a symbol $a$ with $a^2 + a + 1 = 0$, that is $a^2 = a + 1$ (signs do not matter mod 2). The
+elements are $0, 1, a, a + 1$, and arithmetic is polynomial arithmetic with $a^2$ replaced by $a + 1$.
+
+%code
+K = gf(4)
+modulus(K)
+elements(K)
+K(a) * K(a)
+K(a) * K(a + 1)
+
+%md
+$a(a + 1) = a^2 + a = (a + 1) + a = 1$, so $a$ and $a + 1$ are inverses: every nonzero element has an inverse, and
+`gf(4)` is a field. The same construction works for every prime power $q = p^k$: take an irreducible polynomial of
+degree $k$ over $\mathbb{F}_p$ (Galileo chooses one whose root $a$ is a generator) and compute modulo it. Inside
+`K(...)` and `gf(q, ...)` the name `a` always means that root.
+
+%code
+E = gf(256)
+modulus(E)
+u = E(a^7 + a + 1)
+u * u^-1
+order(u)
+
+%md
+`gf(256)` is the field inside the AES cipher and the Reed–Solomon codes on CDs and QR codes: a byte is an element,
+and its bits are the coefficients of $1, a, \ldots, a^7$.
+
+There is no field with 6 elements. A finite field contains $\mathbb{F}_p$ for one prime $p$ (its **characteristic**,
+the order of 1 under addition) and is a vector space over it, so its size is $p^k$.
+
+%code
+characteristic(gf(81))
+gf(6)
+
+%md
+**Try this:** in `gf(8)` check that $x^8 = x$ for every element (use `elements`). Why must that hold?
+(Lagrange in the group of the 7 nonzero elements.)
+
+%md
+## 5. Quotient rings and number fields
+
+The construction of `gf(4)` has a general form. Take polynomials in $x$ with coefficients in a field $k$, and declare
+a polynomial $f$ to be zero. The result, "polynomials modulo $f$", is the **quotient ring** $k[x]/(f)$. Galileo
+writes it `quotient(f, x)` over $\mathbb{Q}$ and `quotient(f, x, p)` over $\mathbb{F}_p$.
+
+Whether we get a field depends on $f$, just as for $\mathbb{Z}/n$: **$k[x]/(f)$ is a field exactly when $f$ is
+irreducible**. Over $\mathbb{F}_3$, $x^2 + 1$ has no root, so it is irreducible and we get a field with 9 elements. Over
+$\mathbb{F}_5$, $x^2 + 1 = (x - 2)(x + 2)$, and the two factors become zero divisors.
+
+%code
+isfield(quotient(x^2 + 1, x, 3))
+R = quotient(x^2 + 1, x, 5)
+isfield(R)
+R(x - 2) * R(x + 2)
+R(x + 2)^-1
+
+%md
+Over $\mathbb{Q}$, $x^2 - 2$ is irreducible, and in $\mathbb{Q}[x]/(x^2 - 2)$ the class of $x$ squares to 2: it
+behaves exactly like $\sqrt 2$. This field is the **number field** $\mathbb{Q}(\sqrt 2)$, written
+`numfield(x^2 - 2)`; its elements are $u + v\sqrt 2$ with $u, v$ rational, written with $x$ for $\sqrt 2$.
+
+Dividing is "rationalizing the denominator", done by the extended Euclidean algorithm:
+
+%code
+Q2 = numfield(x^2 - 2)
+t = Q2(x + 1)
+t^2
+1 / t
+
+%md
+That says $(1 + \sqrt 2)^2 = 3 + 2\sqrt 2$ and $1/(1 + \sqrt 2) = \sqrt 2 - 1$. Three numbers describe an element
+without its coordinates. Multiplication by $t$ is a linear map on the 2-dimensional space with basis $1, \sqrt 2$;
+its determinant is the **norm** and its trace the **trace**. For $u + v\sqrt 2$ they are $u^2 - 2v^2$ and $2u$: the
+product and the sum of $t$ and its **conjugate** $u - v\sqrt 2$. The **minimal polynomial** is the monic rational
+polynomial of least degree that $t$ satisfies.
+
+%code
+norm(t)
+trace(t)
+minpoly(t)
+
+%md
+Norm $-1$ means that $1 + \sqrt 2$ is a unit even among the integers $u + v\sqrt 2$ ($u, v \in \mathbb{Z}$), and its
+powers give all solutions of Pell's equation $u^2 - 2v^2 = \pm 1$.
+
+The cube root of 2 needs a field of degree 3. In `numfield(x^3 - 2)` the class of $x$ is $\sqrt[3]{2}$, and
+$\sqrt[3]{4} + \sqrt[3]{2}$ turns out to satisfy a cubic with integer coefficients:
+
+%code
+C = numfield(x^3 - 2)
+minpoly(C(x^2 + x))
+norm(C(x^2 + x))
+
+%md
+**Try this:** in `numfield(x^2 + 1)` (the Gaussian numbers $u + vi$), compute `norm(K(2 + x))` and factor 5 as a
+product of two Gaussian integers.
+
+%md
+## 6. Ideals and Gröbner bases
+
+In a ring, the multiples of an element do not always tell the whole story; what matters are **ideals**: sets of
+elements closed under addition and under multiplication by anything in the ring. The ideal generated by
+polynomials $f_1, \ldots, f_m$ is everything of the form $g_1 f_1 + \cdots + g_m f_m$. Every common zero of the
+$f_i$ is a zero of every element of the ideal, so the ideal is the right object for a system of equations.
+
+A **Gröbner basis** (Buchberger, 1965) is a set of generators of the same ideal with a special property: the
+remainder of division by it is unique. In **lex order** it is also triangular, like Gaussian elimination for
+polynomials. Here is the circle $x^2 + y^2 = 1$ cut by the line $x = y$:
+
+%code
+groebner([x^2 + y^2 - 1, x - y], [x, y])
+
+%md
+The last polynomial involves only $y$: $y^2 = 1/2$. Then the first gives $x = y$. Three equations in three unknowns
+behave the same way: the last basis element is a polynomial in $z$ alone.
+
+%code
+groebner([x^2 + y + z - 1, x + y^2 + z - 1, x + y + z^2 - 1], [x, y, z])
+
+%md
+Membership is decided by the remainder: $f$ is in the ideal exactly when `polyrem` gives 0. A basis `[1]` means 1
+is in the ideal, so the equations have no common solution at all.
+
+%code
+inideal(2*y^2 - 1, [x^2 + y^2 - 1, x - y], [x, y])
+polyrem(x^3*y, [x^2 + y^2 - 1, x - y], [x, y])
+groebner([x*y - 1, x], [x, y])
+
+%md
+**Try this:** the ellipse $x^2 + 2y^2 = 3$ and the hyperbola $xy = 1$: compute a lex Gröbner basis and read off the
+equation for $y$. How many intersection points are there?
+
+%md
+## Exercises
+
+1. List the units of `zmod(15)` and check that their number is $\varphi(15) = 8$. Is the unit group cyclic? (Try `generator(zmod(15))`.)
+2. In `gf(17)`, find a generator and use `dlog` to solve $3^x = 10$.
+3. Run Diffie–Hellman in `gf(1009)`: pick secrets, check that both sides agree, then break it with `dlog`. Why is it easy here?
+4. Show that $x^3 + x + 1$ is irreducible over $\mathbb{F}_2$ and that `quotient(x^3 + x + 1, x, 2)` has 8 elements.
+5. In $\mathbb{Q}(\sqrt 2)$, compute the norm of $3 + 2\sqrt 2$ and of its square. What rule do you see?
+6. Use `groebner` to decide whether $x^2 + y^2 = 1$, $x + y = 2$ has a solution (over the complex numbers).
+
+**Hints and answers.** 1: 1, 2, 4, 7, 8, 11, 13, 14; not cyclic (every element has order 1, 2 or 4), and `generator`
+says so. 2: `F = gf(17); dlog(F(10), F(3))` gives 3, since $3^3 = 27 = 10$. 3: $1008 = 2^4 \cdot 3^2 \cdot 7$ has only
+small prime factors. 4: it has no root mod 2, and a cubic without roots is irreducible; `order` gives $2^3 = 8$.
+5: both norms are 1, and in general norm(st) = norm(s) norm(t). 6: the basis is not `[1]` ($y^2 - 2y + 3/2$, two
+complex points), so there are complex solutions but no real ones.
+
+## Summary
+
+* `zmod(n)`: a ring; zero divisors when $n$ is composite; units are the $a$ with $\gcd(a, n) = 1$.
+* $\mathbb{Z}/p$ is a field, `gf(p)`; its nonzero elements form a cyclic group: `order`, `generator`.
+* `dlog(h, g)`: discrete logarithms; Diffie–Hellman relies on them being hard, Pohlig–Hellman shows when they are not.
+* `gf(p^k)`: polynomials in `a` modulo an irreducible polynomial; no field of size 6.
+* `quotient(f, x, p)`, `numfield(f)`: $k[x]/(f)$ is a field exactly when $f$ is irreducible; `norm`, `trace`, `minpoly`.
+* `groebner`, `polyrem`, `inideal`: ideals of polynomials and triangular systems.
+
+Next: [Galois and symmetry](06-galois-and-symmetry.ipynb), where groups and fields meet.
+
+%md
+## Sources
+
+1. C. F. Gauss, *Disquisitiones Arithmeticae* (1801), sections 52–57 (primitive roots).
+2. É. Galois, "Sur la théorie des nombres", *Bulletin des Sciences Mathématiques* 13 (1830) 428–435 (finite fields).
+3. W. Diffie and M. E. Hellman, "New directions in cryptography", *IEEE Transactions on Information Theory* 22 (1976) 644–654.
+4. S. Pohlig and M. Hellman, "An improved algorithm for computing logarithms over GF(p) and its cryptographic significance", *IEEE Transactions on Information Theory* 24 (1978) 106–110.
+5. B. Buchberger, *Ein Algorithmus zum Auffinden der Basiselemente des Restklassenringes nach einem nulldimensionalen Polynomideal*, PhD thesis, Innsbruck (1965).
+6. D. Cox, J. Little and D. O'Shea, *Ideals, Varieties, and Algorithms*, 4th ed., Springer (2015). Chapters 1–3.
+7. J. A. Gallian, *Contemporary Abstract Algebra*, 9th ed., Cengage (2017). Chapters 12–22.

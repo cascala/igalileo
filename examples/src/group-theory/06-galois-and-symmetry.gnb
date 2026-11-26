@@ -1,0 +1,308 @@
+%md
+# Group theory 6: Galois and symmetry
+
+*Learning path: group theory, part 6 of 6.* [Index](README.md) · Previous: [Rings and fields](05-rings-and-fields.ipynb)
+
+**The question.** For equations of degree 2, 3 and 4 there are formulas for the roots built from $+$, $-$, $\times$,
+$\div$ and roots ($\sqrt{\ }$, $\sqrt[3]{\ }$, ...). For degree 5 nobody found one, and in 1824 Abel proved that
+none exists. Galois explained *why*: every polynomial has a group of symmetries of its roots, and a formula exists
+exactly when that group can be taken apart into abelian pieces. The same idea, symmetry as a group, then reaches
+far beyond equations: to rotations in space, and to the quantum spin of an electron. How do these fit together?
+
+**Who this is for:** anyone who has done lessons 1 to 5. **You need:** groups, quotients and solvable groups
+(lesson 4), fields and number fields (lesson 5), complex numbers, and matrices.
+
+**You will learn**
+
+* the root formulas of Cardano and Ferrari, and what goes wrong at degree 5,
+* the **Galois group** of a polynomial: the permutations of its roots that respect every rational relation,
+* how the **discriminant** and **factoring mod p** reveal that group, with `galois(f)`,
+* **Galois's theorem**: roots by radicals exactly when the group is **solvable**, and why $x^5 - x - 1$ fails,
+* **quaternions**, Hamilton's numbers $a + bi + cj + dk$, and how unit quaternions rotate space,
+* the **double cover** $SU(2) \to SO(3)$: a turn by $360°$ is $-1$, not $1$,
+* **Lie algebras**: the infinitesimal symmetries $\mathfrak{so}(3)$, $\mathfrak{su}(2)$ and $\mathfrak{sl}(2)$, their brackets and Killing forms.
+
+%md
+## 1. Formulas for roots
+
+The quadratic formula is four thousand years old in spirit. Around 1540 del Ferro, Tartaglia and Cardano found one
+for cubics, and Ferrari reduced quartics to cubics. Galileo's `solve` uses these formulas, so the roots come out
+exact. With `explain = "teach"` the note walks through each step.
+
+%code
+solve(x^3 - 3*x + 1, x)
+solve(x^4 - 2, x)
+
+%md
+The cubic $x^3 - 3x + 1$ has three real roots, yet Cardano's formula passes through the square root of a negative
+number (the *casus irreducibilis*); the cosines are the same numbers written without it. The quartic $x^4 - 2$ has the
+four roots $\pm\sqrt[4]{2}$ and $\pm i\sqrt[4]{2}$.
+
+For degree 5 Galileo finds no exact roots and gives decimals:
+
+%code
+solve(x^5 - x - 1, x)
+
+%md
+That is not a missing feature: there is no formula to find. The rest of the lesson explains why.
+
+**Try this:** set `explain = "teach"` and solve $x^3 - 6x - 6$; follow Cardano's substitution $x = u + v$.
+
+%md
+## 2. The symmetries of the roots
+
+Take the four roots of $x^4 - 2$: $r_1 = \sqrt[4]{2}$, $r_2 = i\sqrt[4]{2}$, $r_3 = -\sqrt[4]{2}$, $r_4 = -i\sqrt[4]{2}$. They
+satisfy relations with rational coefficients, for instance $r_1 + r_3 = 0$ and $r_1^4 = 2$. The **Galois group**
+consists of the permutations of the roots that keep *every* such relation true. Complex conjugation is one: it fixes
+$r_1, r_3$ and swaps $r_2, r_4$. Rotating the four roots by $90°$ is another, coming from $i\sqrt[4]{2} \mapsto$ "the
+next root". But not all 24 permutations work: swapping $r_1$ and $r_2$ alone would break $r_1 + r_3 = 0$.
+
+The roots sit at the corners of a square in the complex plane, and the symmetries that survive are exactly the 8
+symmetries of that square:
+
+%code
+G = galois(x^4 - 2)
+order(G)
+isomorphic(G, dihedral(4))
+
+%md
+The order 8 is also the degree of the smallest field containing all roots, $\mathbb{Q}(\sqrt[4]{2}, i)$, over
+$\mathbb{Q}$: Galois's correspondence matches subgroups with intermediate fields.
+
+How does Galileo find the group without knowing it in advance? For a cubic, the **discriminant**
+$\Delta = \prod_{i<j}(r_i - r_j)^2$ is a rational number. Its square root $\prod_{i<j}(r_i - r_j)$ changes sign under
+every odd permutation. So if $\sqrt\Delta$ is rational, only even permutations are symmetries and the group lies in
+$A_3$:
+
+%code
+galois(x^3 - 2)
+galois(x^3 - 3*x + 1)
+
+%md
+The note gives the discriminant: $-108$ for $x^3 - 2$ (not a square: the full $S_3$) and $81 = 9^2$ for
+$x^3 - 3x + 1$ (a square: the group is $A_3$, cyclic of order 3, and each root is a polynomial in any other).
+
+For quartics Galileo adds the **resolvent cubic**, whose roots are $r_1 r_2 + r_3 r_4$ and its two companions;
+which of them are rational decides between $S_4$, $A_4$, $D_4$, $C_4$ and $V_4$. For quintics it uses primes. Modulo
+a prime $p$ (not dividing $\Delta$) the polynomial factors into pieces of degrees $d_1, d_2, \ldots$, and Frobenius
+showed that the group contains a permutation with exactly those cycle lengths. Chebotarev proved that every cycle type
+of the group shows up this way, for a fixed share of the primes. Mod 7 and mod 11, $x^5 - x - 1$ has no roots at all:
+
+%code
+solve(x^5 - x - 1, x, 7)
+solve(x^5 - x - 1, x, 11)
+galois(x^5 - x - 1)
+
+%md
+The note lists the factorization patterns at 300 primes: all seven cycle types of $S_5$ appear, including the
+3-cycles that a smaller transitive group would lack. The group is $S_5$, with all 120 permutations.
+
+**Try this:** compute `galois(x^4 + 1)` and `galois(x^4 - 4*x^2 + 2)`. Both have order 4; are they isomorphic?
+
+%md
+## 3. Solvable groups and radicals
+
+Why should a group decide whether a formula exists? Adjoining one radical, say $\sqrt[n]{c}$ (with the $n$-th roots of
+unity already present), is a step whose symmetry group is cyclic, hence abelian. A formula is a tower of such steps.
+Galois showed that a tower exists exactly when the group has a chain of subgroups, each normal in the previous one,
+with abelian quotients: a **solvable** group. In lesson 4 you computed this with the **derived series**.
+
+%code
+derived(sym(4))
+issolvable(sym(4))
+issolvable(galois(x^5 - x - 1))
+
+%md
+$S_4$ is solvable ($S_4 \supset A_4 \supset V_4 \supset 1$, quotients $C_2$, $C_3$, $V_4$), and each step of that chain is a
+step of Ferrari's method. $S_5$ is not: its derived subgroup is $A_5$, which is simple and not abelian, and the
+chain gets stuck. So **no formula with radicals gives the roots of $x^5 - x - 1$**. Some quintics *are* solvable:
+
+%code
+H = galois(x^5 - 2)
+order(H)
+issolvable(H)
+
+%md
+$x^5 - 2$ has the obvious root $\sqrt[5]{2}$, and its group of order 20 (the affine maps $t \mapsto at + b$ mod 5) is
+solvable. Solvability is a property of the particular polynomial, not of the degree.
+
+**Try this:** compare `classes(galois(x^5 - x - 1))` with the cycle types listed in the note of `galois`. Each
+conjugacy class is one cycle type.
+
+%md
+## 4. Quaternions
+
+Now from equations to space. Complex numbers $a + bi$ describe rotations of the plane: multiplying by $\cos t + i\sin t$
+turns by the angle $t$. For years Hamilton tried to do the same for space with triples $a + bi + cj$ and failed.
+On 16 October 1843, walking along the Royal Canal in Dublin, he saw that four components were needed, and carved the
+rules into Broome Bridge:
+
+$$i^2 = j^2 = k^2 = ijk = -1.$$
+
+Galileo writes $a + bi + cj + dk$ as `quat(a, b, c, d)`. The price is commutativity: $ij = k$ but $ji = -k$.
+
+%code
+qi = quat(0, 1, 0, 0)
+qj = quat(0, 0, 1, 0)
+qi * qj
+qj * qi
+
+%md
+Every nonzero quaternion still has an inverse, $q^{-1} = \bar q / |q|^2$ with the conjugate
+$\bar q = a - bi - cj - dk$ and $|q|^2 = a^2 + b^2 + c^2 + d^2$. A ring in which every nonzero element is a unit but
+multiplication need not commute is a **division ring**; the quaternions $\mathbb{H}$ are the most famous one.
+The eight units $\pm 1, \pm i, \pm j, \pm k$ form the group `group("Q8")` from lesson 4.
+
+%code
+q = quat(1, 2, 3, 4)
+conj(q)
+q * q^-1
+norm(q)
+
+%md
+The norm is multiplicative, $|pq| = |p|\,|q|$. Written out, that is Euler's **four-square identity**: a product of two
+sums of four squares is again a sum of four squares. Lagrange used it to prove that every positive integer is a sum
+of four squares.
+
+%code
+p = quat(1, 1, 1, 1)
+norm(p * q) == norm(p) * norm(q)
+parts(p * q)
+
+%md
+**Try this:** compute `quat(a, b, c, d) * quat(e, f, g, h)` with symbols and find the four-square identity in the
+components.
+
+%md
+## 5. Rotating space
+
+A **unit** quaternion $q$ (with $|q| = 1$) rotates 3-space. Write a vector $v = (x, y, z)$ as the pure quaternion
+$xi + yj + zk$; then $q v q^{-1}$ is again pure, with the same length, and $v \mapsto q v q^{-1}$ is a rotation.
+For a rotation by the angle $t$ about the axis $u$, take $q = \cos(t/2) + \sin(t/2)\,u$. `quat(t, axis)` builds it.
+
+%code
+r = quat(pi/2, [0, 0, 1])
+rotate(r, [1, 0, 0])
+rotmatrix(r)
+
+%md
+A quarter turn about the $z$-axis sends the $x$-axis to the $y$-axis, and `rotmatrix` gives its matrix. Composing
+rotations is multiplying quaternions, which is why games, spacecraft and phones store orientations as quaternions:
+four numbers instead of nine, and no drift away from a true rotation.
+
+%code
+s = quat(pi/2, [1, 0, 0])
+rotmatrix(s * r) == rotmatrix(s) * rotmatrix(r)
+
+%md
+Now the surprise. Because of the half angle, a full turn by $2\pi$ gives $q = \cos\pi = -1$, not $1$:
+
+%code
+quat(2*pi, [0, 0, 1])
+rotmatrix(-r) == rotmatrix(r)
+
+%md
+$q$ and $-q$ give the same rotation. So the unit quaternions, a 3-dimensional sphere, cover the rotation group
+$SO(3)$ **twice**. As matrices, unit quaternions are the group $SU(2)$ of $2 \times 2$ unitary matrices of determinant
+1, and `su2` gives the matrix: quaternion products become matrix products.
+
+%code
+su2(quat(a, b, c, d))
+det(su2(quat(a, b, c, d)))
+su2(s * r) == su2(s) * su2(r)
+
+%md
+This double cover is physics, not just geometry: the state of an electron's spin is acted on by $SU(2)$, and turning
+an electron by $360°$ multiplies its state by $-1$. Neutron interferometers measured that sign in 1975.
+
+**Try this:** rotate $[1, 0, 0]$ by $2\pi/3$ about the axis $[1, 1, 1]$. Where does it go, and why? (Think of the
+cube's diagonal.)
+
+%md
+## 6. Infinitesimal symmetries: Lie algebras
+
+A rotation group is continuous, so it has rotations by tiny angles. Near the identity a rotation by $\epsilon$ about
+the $z$-axis is $I + \epsilon L_z$, and $L_z$, an antisymmetric matrix, is an **infinitesimal rotation**. The
+antisymmetric $3 \times 3$ matrices form the **Lie algebra** $\mathfrak{so}(3)$. It is not closed under the matrix
+product, but under the **bracket** $[A, B] = AB - BA$, which measures how much two small rotations fail to commute.
+
+%code
+L = so(3)
+bracket(L(1), L(2)) == L(3)
+bracket(L(2), L(3)) == L(1)
+
+%md
+$[L_x, L_y] = L_z$ and cyclically: turning a little about $x$, then $y$, then back, leaves a small turn about $z$.
+The same story for $SU(2)$ gives $\mathfrak{su}(2)$, the traceless anti-Hermitian matrices, with the basis
+$-\tfrac{i}{2}\sigma_k$ built from the Pauli matrices of quantum mechanics. Its brackets are the same:
+
+%code
+S = su(2)
+bracket(S(1), S(2)) == S(3)
+bracket(S(2), S(3)) == S(1)
+
+%md
+So $\mathfrak{su}(2) \cong \mathfrak{so}(3)$: the double cover is invisible at the infinitesimal level, which is why
+physicists can use the same angular momentum algebra for orbits and for spin.
+
+An invariant tells Lie algebras apart: the **Killing form** $B(x, y) = \mathrm{trace}(\mathrm{ad}\,x\ \mathrm{ad}\,y)$,
+where $\mathrm{ad}\,x$ is the matrix of $y \mapsto [x, y]$. Cartan showed that it is nondegenerate exactly for
+**semisimple** algebras, and negative definite for the compact ones like $\mathfrak{so}(3)$.
+
+%code
+killing(so(3))
+killing(su(2))
+T = sl(2)
+adjoint(T(1), T)
+killing(T)
+
+%md
+$\mathfrak{so}(3)$ and $\mathfrak{su}(2)$ both give $-2I$. The traceless real matrices $\mathfrak{sl}(2)$ with basis
+$h, e, f$ ($[h, e] = 2e$, $[h, f] = -2f$, $[e, f] = h$) give a form with positive and negative directions, so
+$\mathfrak{sl}(2, \mathbb{R})$ is a different real Lie algebra: it belongs to the non-compact group $SL(2, \mathbb{R})$,
+the symmetries of the hyperbolic plane. Over $\mathbb{C}$ the three become the same algebra, and its representation
+theory, worked out with $\mathrm{ad}\,h$ (diagonal with $0, 2, -2$ above), is the theory of spin.
+
+**Try this:** compute `killing(so(4))` and its determinant. Then check `bracket` on a few elements of `so(4)`:
+$\mathfrak{so}(4) \cong \mathfrak{so}(3) \oplus \mathfrak{so}(3)$, which you can find with left and right multiplication
+by quaternions.
+
+%md
+## Exercises
+
+1. Find the Galois groups of $x^3 - 7x + 7$ and $x^3 + x + 1$. Which one is $A_3$? Check with the discriminant.
+2. Show that `galois(x^4 + x + 1)` is $S_4$ and that it is solvable. Write down its derived series.
+3. Find a quintic of the form $x^5 + ax + b$ with small integers that is irreducible but whose group is not $S_5$. (Try $x^5 - 5x + 12$.)
+4. Rotate $[0, 0, 1]$ by $\pi/2$ about $x$ and then by $\pi/2$ about $y$. Compare with the opposite order. What does this say about $ij$ and $ji$?
+5. Show that `su2(quat(0, 1, 0, 0))` squares to $-I$, and find the three matrices for $i, j, k$.
+6. Compute `killing(sl(3))`. What is its dimension, and is the form nondegenerate?
+
+**Hints and answers.** 1: $x^3 - 7x + 7$ has discriminant $49 = 7^2$, so $A_3$; $x^3 + x + 1$ has $-31$, so $S_3$.
+2: $S_4 \supset A_4 \supset V_4 \supset 1$; `derived` three times. 3: $x^5 - 5x + 12$ has group $D_5$ of order 10, solvable.
+4: the results differ, as the quaternion products $qp$ and $pq$ do. 5: $i \mapsto \begin{pmatrix} i & 0 \\ 0 & -i\end{pmatrix}$, $j \mapsto \begin{pmatrix} 0 & 1 \\ -1 & 0\end{pmatrix}$,
+$k \mapsto \begin{pmatrix} 0 & i \\ i & 0\end{pmatrix}$, each squaring to $-I$. 6: dimension 8, determinant nonzero:
+$\mathfrak{sl}(3)$ is semisimple (it is simple).
+
+## Summary
+
+* `solve` uses Cardano and Ferrari up to degree 4; from degree 5 the roots can be beyond radicals.
+* `galois(f)`: the group of symmetries of the roots; found with the discriminant, the resolvent cubic, and factoring mod primes (Frobenius, Chebotarev).
+* Galois: roots by radicals exactly when the group is solvable (`issolvable`); $x^5 - x - 1$ has group $S_5$, not solvable.
+* `quat`: Hamilton's quaternions, a division ring; `conj`, `norm`, four squares.
+* `rotate`, `rotmatrix`, `su2`: unit quaternions are $SU(2)$, a double cover of $SO(3)$; a $360°$ turn is $-1$.
+* `so(n)`, `su(n)`, `sl(n)`, `bracket`, `adjoint`, `killing`: Lie algebras, $\mathfrak{su}(2) \cong \mathfrak{so}(3)$.
+
+This completes the group theory path.
+
+%md
+## Sources
+
+1. G. Cardano, *Ars Magna* (1545), chapters 11 and 39 (cubic and quartic).
+2. N. H. Abel, "Beweis der Unmöglichkeit, algebraische Gleichungen von höheren Graden als dem vierten allgemein aufzulösen", *Journal für die reine und angewandte Mathematik* 1 (1826) 65–84.
+3. É. Galois, "Mémoire sur les conditions de résolubilité des équations par radicaux" (1830), *Journal de Mathématiques Pures et Appliquées* 11 (1846) 417–433.
+4. W. R. Hamilton, "On quaternions, or on a new system of imaginaries in algebra", *Philosophical Magazine* 25 (1844) 10–13.
+5. N. Chebotarev, "Die Bestimmung der Dichtigkeit einer Menge von Primzahlen, welche zu einer gegebenen Substitutionsklasse gehören", *Mathematische Annalen* 95 (1926) 191–228.
+6. É. Cartan, *Sur la structure des groupes de transformations finis et continus*, thesis, Paris (1894).
+7. H. Rauch et al., "Verification of coherent spinor rotation of fermions", *Physics Letters A* 54 (1975) 425–427.
+8. I. Stewart, *Galois Theory*, 4th ed., CRC Press (2015).
+9. B. C. Hall, *Lie Groups, Lie Algebras, and Representations*, 2nd ed., Springer (2015). Chapters 1–3.

@@ -1,7 +1,7 @@
 %md
 # Group theory 4: Groups as objects
 
-*Learning path: group theory, part 4 of 4.* [Index](README.md) · Previous: [Permutations and Lagrange's theorem](03-permutations-and-lagrange.ipynb)
+*Learning path: group theory, part 4 of 6.* [Index](README.md) · Previous: [Permutations and Lagrange's theorem](03-permutations-and-lagrange.ipynb) · Next: [Rings and fields](05-rings-and-fields.ipynb)
 
 **The question.** In lesson 3 a group was a list of permutations. Mathematicians think of a group as one object that
 you can take apart: cut into cosets, divide by a normal subgroup, compare with another group. Can a computer do that
@@ -210,7 +210,7 @@ symmetries of a triangular tiling), so Galileo reports that the enumeration pass
 * `sylow`: subgroups of the largest prime-power orders always exist.
 * `derived`, `issolvable`, `issimple`: $S_5$ is not solvable, so the quintic has no formula.
 
-This is the end of the group theory path for now. The next steps are rings and fields, where Galois theory lives.
+Next: [Rings and fields](05-rings-and-fields.ipynb), where numbers get a second operation and Galois theory begins.
 
 %md
 ## Sources
