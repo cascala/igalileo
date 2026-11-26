@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Galileo</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="../logo.svg" type="image/svg+xml">
+<style>
+/* Layout: the live site's tokens and type, hero becomes three doors, then a sketch of what sits behind each door. */
+:root {
+  --bg: #fbfaf7; --panel: #fff; --ink: #17202f; --muted: #5d6675; --line: #e4e1da;
+  --accent: #d9820b; --accent-ink: #fff; --navy: #14213d; --code-bg: #f3f1ec; --note: #fff6e3;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f1522; --panel: #161e2e; --ink: #e8eaf0; --muted: #9aa3b5; --line: #273149;
+    --accent: #fca311; --accent-ink: #14213d; --code-bg: #1d2638; --note: #2a2410; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f1522; --panel: #161e2e; --ink: #e8eaf0; --muted: #9aa3b5; --line: #273149;
+  --accent: #fca311; --accent-ink: #14213d; --code-bg: #1d2638; --note: #2a2410; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font: 17px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+a { color: var(--accent); }
+code, pre { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; }
+code { background: var(--code-bg); padding: .1em .35em; border-radius: 4px; font-size: .9em; }
+.wrap { max-width: 1040px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.mock-banner { background: var(--note); border-bottom: 1px solid var(--line); font-size: 14px; color: var(--muted); }
+.mock-banner .wrap { padding-block: 8px; }
+header.top { display: flex; align-items: center; gap: 10px; padding: 14px 0; }
+header.top .brand { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 19px; color: var(--ink); text-decoration: none; flex: 1; }
+header.top nav a { color: var(--muted); text-decoration: none; margin-left: 14px; font-size: 15px; }
+.hero { padding: 36px 0 20px; text-align: left; }
+.hero h1 { font-size: clamp(32px, 5.5vw, 52px); line-height: 1.05; margin: 0 0 14px; letter-spacing: -.02em; text-wrap: balance; max-width: 18ch; }
+.hero h1 em { font-style: normal; color: var(--accent); }
+.hero p { font-size: 19px; color: var(--muted); margin: 0; max-width: 60ch; }
+.doors { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; padding: 26px 0 8px; }
+.door { display: flex; flex-direction: column; gap: 10px; background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 22px; text-decoration: none; color: var(--ink); min-width: 0; }
+.door:hover, .door:focus-visible { border-color: var(--accent); outline: none; }
+.door .who { font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.door h2 { margin: 0; font-size: 24px; }
+.door p { margin: 0; color: var(--muted); font-size: 15px; }
+.door pre { margin: 4px 0 0; background: var(--code-bg); border-radius: 8px; padding: 8px 10px; font-size: 13px; overflow-x: auto; }
+.door .go { margin-top: auto; font-weight: 600; color: var(--accent); }
+.door.try { background: var(--navy); border-color: var(--navy); color: #fff; }
+.door.try .who, .door.try p { color: #c7cfdf; }
+.door.try pre { background: rgba(255,255,255,.08); color: #fff; }
+.door.try .go { color: #fca311; }
+.below { color: var(--muted); font-size: 15px; margin: 6px 0 0; }
+section { padding: 34px 0 10px; border-top: 1px dashed var(--line); margin-top: 28px; }
+section > h2 { font-size: clamp(22px, 3.6vw, 28px); margin: 0 0 4px; }
+.sub { color: var(--muted); margin: 0 0 18px; max-width: 65ch; }
+.label { display: inline-block; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); font-weight: 700; margin-bottom: 6px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+a.card { text-decoration: none; color: var(--ink); display: block; }
+a.card:hover { border-color: var(--accent); }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; min-width: 0; }
+.card h3 { margin: 0 0 4px; font-size: 17px; }
+.card p { margin: 0; color: var(--muted); font-size: 14.5px; }
+.card pre { margin: 10px 0 0; background: var(--code-bg); border-radius: 8px; padding: 8px 10px; font-size: 12.5px; overflow-x: auto; }
+.card .meta { margin-top: 8px; font-size: 13px; color: var(--muted); }
+.tag { display: inline-block; font-size: 12px; padding: 1px 8px; border-radius: 99px; border: 1px solid var(--line); color: var(--muted); margin-right: 4px; }
+.tag.new { border-color: var(--accent); color: var(--accent); }
+a.card.track, .track { display: flex; flex-direction: column; gap: 4px; }
+.track .n { font-variant-numeric: tabular-nums; font-size: 13px; color: var(--muted); }
+footer { border-top: 1px solid var(--line); color: var(--muted); font-size: 14px; padding: 24px 0 40px; margin-top: 34px; }
+@media (max-width: 760px) {
+  .doors { grid-template-columns: 1fr; }
+  header.top nav .hide-sm { display: none; }
+}
+</style>
+</head>
+<body>
+
+
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="./"><img src="../logo.svg" alt="" width="30" height="30">Galileo</a>
+    <nav>
+      <a href="#teachers">Teachers</a>
+      <a href="#students">Students</a>
+      <a href="https://github.com/cascala/galileo-rs" class="hide-sm">GitHub</a>
+    </nav>
+  </header>
+
+  <div class="hero">
+    <h1>Math you can <em>play with</em>, right in your browser.</h1>
+    <p>A small, free computer algebra system with lessons. Nothing to install: everything runs on your own device.</p>
+  </div>
+
+  <div class="doors">
+    <a class="door" href="#teachers">
+      <span class="who">For teachers</span>
+      <h2>Teach with it</h2>
+      <p>Ready lesson packets your class opens with one link, practice sets with a different version per student, and a template to write your own.</p>
+      <span class="go">Teacher toolkit →</span>
+    </a>
+    <a class="door" href="#students">
+      <span class="who">For students</span>
+      <h2>Learn a subject</h2>
+      <p>Pick a course, from precalculus to complex analysis. Every lesson explains each step and lets you change the code and run it.</p>
+      <span class="go">Choose a course →</span>
+    </a>
+    <a class="door try" href="../playground/">
+      <span class="who">Just try it out</span>
+      <h2>Type some math</h2>
+      <pre>solve(x^2 - x - 1, x)
+plot3d(sin(x)*cos(y), x,-pi,pi, y,-pi,pi)</pre>
+      <span class="go">Open the playground →</span>
+    </a>
+  </div>
+
+  <section id="teachers">
+    <span class="label">For teachers</span>
+    <h2>Teacher toolkit</h2>
+    <p class="sub">Everything works from a link. Students need a browser and nothing else; their work is saved in their own browser.</p>
+    <div class="grid">
+      <div class="card">
+        <h3>Lesson packets</h3>
+        <p>One packet per course: the lesson notebooks plus practice sets. Share one link and the whole class opens it in JupyterLite.</p>
+        <div class="meta"><span class="tag">Open in browser</span><span class="tag">Download .zip</span></div>
+      </div>
+      <div class="card">
+        <h3>Practice with a version per student</h3>
+        <p>Each student types their name once and gets their own numbers. They check themselves as they go.</p>
+<pre>seed("Ana Lopez")
+p = randprime(50, 100); q = randprime(50, 100)
+% factor p*q, then:
+check(answer, p*q)</pre>
+      </div>
+      <div class="card">
+        <h3>Answer key</h3>
+        <p>Paste your class list and get each student's numbers and answers on one page.</p>
+      </div>
+      <div class="card">
+        <h3>Make your own lesson</h3>
+        <p>A template in the same style as our lessons (idea, worked example, try it, exercises) and a short guide to filling it in.</p>
+        <div class="meta"><span class="tag">template</span><span class="tag">guide</span></div>
+      </div>
+      <div class="card">
+        <h3>Grading when AI is everywhere</h3>
+        <p>A short, frank page: take-home work is practice. Grade in class, out loud, or by asking students to explain each step. Galileo's step-by-step notes help with that.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="students">
+    <span class="label">For students</span>
+    <h2>Choose a course</h2>
+    <p class="sub">Eleven courses for undergraduates. Each lesson explains every step, and you can change the code and run it.</p>
+    <div class="grid">
+      <a class="card track" href="../playground/#lesson/galileo-tour"><span class="n">Course 1</span><h3>Start here</h3><p>How Galileo works, in fifteen minutes.</p></a>
+      <a class="card track" href="../playground/#lesson/foundations/01-numbers"><span class="n">Course 2</span><h3>Precalculus</h3><p>Functions, graphs, trigonometry, complex numbers.</p></a>
+      <a class="card track" href="../playground/#lesson/foundations/07-calculus"><span class="n">Courses 3–5</span><h3>Calculus I, II, multivariable</h3><p>Limits to surfaces and multiple integrals.</p></a>
+      <a class="card track" href="../playground/#lesson/linear-algebra/01-vectors-and-matrices"><span class="n">Course 6</span><h3>Linear algebra</h3><p>Matrices as maps, eigenvalues, decompositions.</p></a>
+      <div class="card track"><span class="n">Courses 7–8</span><h3>Differential equations, probability</h3><p>ODEs, Laplace, Fourier; distributions and data.</p></div>
+      <a class="card track" href="../playground/#lesson/number-theory/01-divisibility-and-primes"><span class="n">Courses 9–11</span><h3>Number theory, algebra, complex analysis</h3><p>Primes and codes, groups and fields, residues. Plus electives such as chaos and relativity.</p></a>
+    </div>
+  </section>
+
+  <section id="try">
+    <span class="label">Just try it out</span>
+    <h2>Just try it out</h2>
+    <p class="sub">Type math and see the answer. Start from an example: <a href="../playground/?code=WyJzb2x2ZSh4XjIgLSB4IC0gMSwgeCkiXQ"><code>solve(x^2 - x - 1, x)</code></a>, <a href="../playground/?code=WyJmYWN0b3IoMl42NyAtIDEpIl0"><code>factor(2^67 - 1)</code></a>, <a href="../playground/?code=WyJwbG90M2Qoc2luKHgpKmNvcyh5KSwgeCwgLXBpLCBwaSwgeSwgLXBpLCBwaSkiXQ"><code>plot3d(sin(x)*cos(y), …)</code></a>.</p>
+  </section>
+
+  <footer>Galileo is made by Joris Esch. Free and open source.</footer>
+</div>
+
+</body>
+</html>
