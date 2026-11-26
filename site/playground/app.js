@@ -110,8 +110,10 @@
       const layout = Object.assign({}, fig.layout, { autosize: true, margin: Object.assign({ l: 50, r: 20, t: 30, b: 45 }, (fig.layout || {}).margin) });
       delete layout.width;
       layout.height = is3d ? Math.min(520, Math.max(340, wrap.clientWidth * 0.8)) : Math.min(420, Math.max(260, wrap.clientWidth * 0.62));
+      // an animation: room for the play button and the slider
+      if (fig.frames) layout.height += 100;
       wrap.replaceChildren(div);
-      Plotly.newPlot(div, fig.data, layout, { responsive: true, displaylogo: false, displayModeBar: innerWidth < 600 ? false : 'hover' });
+      Plotly.newPlot(div, { data: fig.data, layout, frames: fig.frames, config: { responsive: true, displaylogo: false, displayModeBar: innerWidth < 600 ? false : 'hover' } });
     }).catch(() => { /* offline: keep the SVG */ });
   }
   function renderOutputs(res, box) {
