@@ -30,6 +30,8 @@ GROUPS = [
      "Eight lessons for a first course: pictures of complex functions, analytic functions, contour integrals, Cauchy's theorem, Taylor and Laurent series, residues, real integrals by residues, and conformal maps with the flow around a wing.", None),
     ("number-theory", "Number theory",
      "Primes, factoring large numbers, algebraic factoring and hunting for identities, modular arithmetic, the cryptography built on them, a lab that searches for new factoring algorithms, and the number field sieve.", None),
+    ("graphs", "Graphs and networks",
+     "Three lessons: Euler's bridges and tours, shortest routes, spanning trees, flows and matchings, then scheduling by coloring, PageRank, the rise of the Medici and random graphs.", None),
     ("group-theory", "Group theory",
      "Symmetry, cyclic groups, permutations, card shuffles and Lagrange's theorem.", None),
     ("chaos", "Chaos and fractals",
