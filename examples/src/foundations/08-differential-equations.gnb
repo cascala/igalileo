@@ -166,8 +166,8 @@ Resonance is why soldiers break step on bridges, and how a radio picks one stati
 
 ## 4. When there is no formula: numeric solutions
 
-Most differential equations, especially **nonlinear** ones, have no solution formula. `dsolve` then says so, and we
-solve them numerically: start at the initial value and take many small steps, each following the slope the equation
+Most differential equations, especially **nonlinear** ones, have no solution formula. Then we solve them
+numerically: start at the initial value and take many small steps, each following the slope the equation
 prescribes (Galileo uses the Runge–Kutta method, 20000 steps by default).
 
 ### Logistic growth
@@ -176,7 +176,9 @@ A population $P$ grows like $P' = rP$ while it is small, but food runs out near 
 
 $$P' = r P \left(1 - \frac{P}{K}\right).$$
 
-`dsolve` only solves *linear* equations (no $P^2$), so we go numeric. There are two commands:
+This one happens to have a formula (it is *separable*: see
+[differential equations 1](../differential-equations/01-first-order-equations.ipynb)), but most nonlinear equations
+do not, so here we practise the numeric way. There are two commands:
 
 * `odesolve(rhs, unknowns, t, start, t0, t1)` returns the value of the unknowns at the end time $t_1$;
 * `odeplot(rhs, unknowns, t, start, t0, t1, [X Y])` draws the solution.
@@ -298,7 +300,8 @@ labels(title(legend(p, "start at the bottom with 7 rad/s"), "Spinning over the t
 **Try it:** change the damping constant in the spring to 3.9 and 4.1. Add friction to the pendulum,
 $\omega' = -\frac gL\sin\theta - 0.3\,\omega$, and draw its phase portrait: what happens to the loops?
 
-Next: [Geometry and conic sections](09-geometry-and-conics.ipynb).
+Next: [Geometry and conic sections](09-geometry-and-conics.ipynb). For much more on this topic, the
+[differential equations](../differential-equations/README.md) path is a full first course.
 
 %md
 ## Sources
