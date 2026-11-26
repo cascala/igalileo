@@ -35,6 +35,8 @@ Options:
 ## Using Galileo in a notebook
 
 * Each line of a cell is one Galileo statement, and each result is shown. End a line with `;` to hide its result.
+* A statement can span lines: inside `( )` a new line is just space, inside `[ ]` it starts a new matrix row, and a line ending in `\` continues on the next one.
+* `load(file.gg)` runs a script of Galileo statements and shows its results in the cell (`.gg` may be left off). Files are found next to the notebook, so in Docker put scripts in the mounted `work/` folder and load them from a notebook saved there. An error names the file and line, like `file.gg:12: ...`.
 * Symbolic results, metrics and curvature tensors are typeset with LaTeX.
 * Plots are interactive: you can zoom, pan, and rotate 3D plots.
   * `plot(f, g, ..., x, a, b)` draws curves, and `parametric(fx, fy, t, a, b)` draws a parametric curve
