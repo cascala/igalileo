@@ -22,6 +22,8 @@ GROUPS = [
      "Nine lessons for a first course: vectors and matrices, elimination and LU, vector spaces, determinants, least squares and QR, eigenvalues, symmetric matrices and Cholesky, the SVD, and the matrix exponential with the Jordan form.", None),
     ("differential-equations", "Differential equations",
      "Eight lessons for a first course: slope fields and separable equations, linear equations, oscillations and resonance, Laplace transforms with switches and hammer blows, the phase plane, series solutions, Fourier series, and the heat and wave equations.", None),
+    ("statistics", "Probability and statistics",
+     "Eight lessons for a first course: describing data, probability by counting and simulation, discrete and continuous distributions, the central limit theorem, confidence intervals, hypothesis tests, and regression.", None),
     ("multivariable", "Multivariable calculus",
      "Seven lessons for Calculus III: contour maps, gradients, optimization and Lagrange multipliers, multiple integrals and the bell curve, vector fields, and the theorems of Green, Stokes and Gauss.", None),
     ("number-theory", "Number theory",

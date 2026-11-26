@@ -20,6 +20,9 @@ cascala/igalileo`, or open them on GitHub to read them with their results.
 * [Differential equations](differential-equations/README.md): eight lessons for a first course, from slope fields
   and the logistic equation through oscillations, Laplace transforms and the phase plane to Fourier series and the
   heat and wave equations.
+* [Probability and statistics](statistics/README.md): eight lessons for a first course, from describing data and
+  simulating dice through distributions and the central limit theorem to confidence intervals, hypothesis tests and
+  regression.
 * [Number theory](number-theory/README.md): primes, prime factoring (trial division, Fermat, Pollard rho,
   Miller–Rabin), algebraic factoring (cyclotomic polynomials, Aurifeuillean factors, hunting for identities),
   modular arithmetic, cryptography (Diffie–Hellman, RSA), a factoring lab (scoreboard, algorithm search,
