@@ -1,12 +1,15 @@
-# Builds the web site (landing page, playground, JupyterLite) and publishes it to GitHub Pages.
-# Runs only when the site, the notebooks or this workflow change, or by hand (Actions >
-# "Web site" > Run workflow) after an engine release in cascala/galileo-rs.
+# Builds the web site (landing page, playground, JupyterLite, language reference) and publishes
+# it to GitHub Pages. Runs when the site, the notebooks or this workflow change, every night
+# (so the engine and the reference from cascala/galileo-rs docs/ follow its main branch),
+# and by hand (Actions > "Web site" > Run workflow).
 name: Web site
 
 on:
   push:
     branches: [master]
     paths: [site/**, lite/**, examples/**, .github/workflows/pages.yml]
+  schedule:
+    - cron: "17 6 * * *"
   workflow_dispatch:
 
 permissions:

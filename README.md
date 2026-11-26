@@ -34,20 +34,15 @@ Options:
 
 ## Using Galileo in a notebook
 
+How Galileo is written (statements, numbers, operators, functions, matrices, strings, lists, records and blocks) is described in the [Galileo language reference](https://github.com/cascala/galileo-rs/blob/main/docs/language.md), and every command is listed in the [command reference](https://github.com/cascala/galileo-rs/blob/main/docs/builtins.md). Both are also on the web site: [cascala.github.io/igalileo/reference](https://cascala.github.io/igalileo/reference/). In a notebook:
+
 * Each line of a cell is one Galileo statement, and each result is shown. End a line with `;` to hide its result.
-* A statement can span lines: inside `( )` a new line is just space, inside `[ ]` it starts a new matrix row, and a line ending in `\` continues on the next one.
-* `load(file.gg)` runs a script of Galileo statements and shows its results in the cell (`.gg` may be left off). Files are found next to the notebook, so in Docker put scripts in the mounted `work/` folder and load them from a notebook saved there. An error names the file and line, like `file.gg:12: ...`.
+* `load(file.gg)` runs a script and shows its results in the cell. Files are found next to the notebook, so in Docker put scripts in the mounted `work/` folder and load them from a notebook saved there.
 * Symbolic results, metrics and curvature tensors are typeset with LaTeX.
-* Plots are interactive: you can zoom, pan, and rotate 3D plots.
-  * `plot(f, g, ..., x, a, b)` draws curves, and `parametric(fx, fy, t, a, b)` draws a parametric curve
-  * `plot3d(f, x, a, b, y, c, d)` draws a surface z = f(x, y)
-  * `surface(fx, fy, fz, u, a, b, v, c, d)` draws a parametric surface, and `parametric3d(fx, fy, fz, t, a, b)` draws a space curve
-  * plots are values (`p = plot(...)`), and `show(p, q, ...)` overlays them
+* Plots (`plot`, `plot3d`, `surface` and the others in the [command reference](https://github.com/cascala/galileo-rs/blob/main/docs/builtins.md#plotting)) are interactive: you can zoom, pan, and rotate 3D plots.
 * Notebooks also store an SVG copy of each plot, so they display on GitHub and in other viewers.
 * `help` lists all commands, and `help(name)` explains one. Shift+Tab on a name shows the same text.
 * Tab completes Galileo's functions and the variables you defined.
-
-The language is described in the [Galileo language reference](https://github.com/cascala/galileo/blob/master/docs/language.md), written for the Scala version. The [galileo-rs README](https://github.com/cascala/galileo-rs#readme) lists what changed and the new differential geometry commands.
 
 ### Example notebooks
 
@@ -100,7 +95,7 @@ To build and push for Intel and Apple Silicon at once, see [NOTES](NOTES). The i
 
 ## The web site
 
-The site lives in `site/` (landing page and playground) and `lite/` (the JupyterLite kernel extension and build). `lite/build.sh` builds the engine for WebAssembly from [galileo-rs](https://github.com/cascala/galileo-rs), runs every example notebook through it, builds the kernel extension and JupyterLite, and writes the static site to `_site/`:
+The site lives in `site/` (landing page and playground) and `lite/` (the JupyterLite kernel extension and build). `lite/build.sh` builds the engine for WebAssembly from [galileo-rs](https://github.com/cascala/galileo-rs), runs every example notebook through it, builds the kernel extension and JupyterLite, renders the language reference from galileo-rs `docs/` into `reference/` (with `lite/reference.mjs`), and writes the static site to `_site/`:
 
 ```
 pip install -r lite/requirements.txt          # needs Rust with wasm32-unknown-unknown and Node 20+
@@ -108,7 +103,7 @@ lite/build.sh ../galileo-rs                   # or no argument to clone galileo-
 python3 -m http.server -d _site 8000
 ```
 
-The `Web site` GitHub Actions workflow runs the same script and publishes to GitHub Pages when `site/`, `lite/` or `examples/` change on master. After a galileo-rs change, run it by hand from the Actions tab.
+The `Web site` GitHub Actions workflow runs the same script and publishes to GitHub Pages when `site/`, `lite/` or `examples/` change on master, and every night, so the engine and its reference on the site follow galileo-rs. To publish a galileo-rs change sooner, run it by hand from the Actions tab.
 
 ## How it works
 
