@@ -23,8 +23,24 @@
     <a href="../lab/lab/index.html" class="hide-sm">Notebooks</a>
     <a href="https://github.com/cascala/galileo-rs" class="hide-sm">GitHub</a>
   </nav>
+  <button type="button" id="files-toggle" class="files-toggle" aria-controls="files" aria-expanded="false" title="Your files: add data, download results">Files <span id="files-count" class="count"></span></button>
   <span id="status" class="status" title="Engine status">loading engine…</span>
 </header>
+
+<aside id="files" class="files" hidden aria-label="Your files">
+  <div class="files-head">
+    <strong>Your files</strong>
+    <button type="button" id="files-add" class="primary add" title="Add files from your computer" aria-label="Add files">+</button>
+    <button type="button" id="files-close" class="icon" title="Close" aria-label="Close files">✕</button>
+  </div>
+  <input type="file" id="file-input" multiple hidden>
+  <p id="files-empty" class="muted small">No files yet. Press + (or drop files here) to add data such as a .csv table, then read it with <code>d = read("data.csv")</code>. <code>save(x, "out.csv")</code> writes a file you can download.</p>
+  <ul id="file-list" class="file-list"></ul>
+  <div class="files-foot">
+    <p id="files-note" class="muted small"></p>
+    <button type="button" id="files-clear" class="ghost small" hidden>Clear all</button>
+  </div>
+</aside>
 
 <main id="repl" class="view">
   <div id="transcript" class="transcript" aria-live="polite">

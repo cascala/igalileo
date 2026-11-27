@@ -29,12 +29,12 @@
     };
   }
   startWorker();
-  function request(op, code = '', cursor = 0) {
+  function request(op, code = '', cursor = 0, extra = {}) {
     const id = nextId++;
     setBusy(+1);
     return new Promise(resolve => {
       pending.set(id, r => { setBusy(-1); resolve(r); });
-      worker.postMessage({ id, op, code, cursor });
+      worker.postMessage({ id, op, code, cursor, ...extra });
     });
   }
   function setBusy(d) {
@@ -48,7 +48,10 @@
     if (r.crash !== undefined) {
       return { outputs: [], error: { ename: 'InternalError', evalue: 'the engine crashed on this input; variables were reset' } };
     }
-    return JSON.parse(r.reply);
+    const res = JSON.parse(r.reply);
+    res.changes = r.changes || [];
+    await Files.applyChanges(res.changes);
+    return res;
   }
   request('reset'); // warms up the engine and shows "ready"
 
@@ -105,6 +108,7 @@
     const wrap = el('div', 'plot' + (is3d ? ' plot-3d' : ''));
     if (data['image/svg+xml']) wrap.innerHTML = data['image/svg+xml'];
     box.appendChild(wrap);
+    if (data['image/svg+xml']) box.appendChild(plotDownloads(data['image/svg+xml']));
     loadPlotly().then(Plotly => {
       const div = el('div');
       const layout = Object.assign({}, fig.layout, { autosize: true, margin: Object.assign({ l: 50, r: 20, t: 30, b: 45 }, (fig.layout || {}).margin) });
@@ -131,12 +135,282 @@
         continue;
       }
       if (d['application/vnd.plotly.v1+json']) renderPlot(d, box);
-      else if (d['image/svg+xml']) { const w = el('div', 'plot'); w.innerHTML = d['image/svg+xml']; box.appendChild(w); }
+      else if (d['image/svg+xml']) { const w = el('div', 'plot'); w.innerHTML = d['image/svg+xml']; box.appendChild(w); box.appendChild(plotDownloads(d['image/svg+xml'])); }
       else if (d['text/markdown'] || d['text/latex']) { const m = el('div', 'math'); m.innerHTML = markdown(d['text/markdown'] || d['text/latex']); box.appendChild(m); }
       else box.appendChild(el('pre', '', d['text/plain'] || ''));
     }
+    for (const c of res.changes || []) {
+      if (c.op === 'write' && Files.get(c.path)) box.appendChild(Files.chip(c.path));
+    }
     if (res.error) box.appendChild(el('div', 'error', (res.error.ename === 'SyntaxError' ? 'Syntax error: ' : '') + res.error.evalue));
   }
+
+  // ---------- downloads ----------
+  const MIME = { csv: 'text/csv', tsv: 'text/tab-separated-values', png: 'image/png', svg: 'image/svg+xml',
+    eps: 'application/postscript', tex: 'application/x-tex', gg: 'text/plain', txt: 'text/plain', md: 'text/markdown', json: 'application/json' };
+  const extOf = name => (name.match(/\.([^./]+)$/) || [, ''])[1].toLowerCase();
+  function download(name, bytes) {
+    const blob = new Blob([bytes], { type: MIME[extOf(name)] || 'application/octet-stream' });
+    const a = el('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = name;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 10000);
+  }
+  const fromB64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+  // "Download PNG · SVG · EPS" under a plot
+  let plotCount = 0;
+  function plotDownloads(svg) {
+    const bar = el('div', 'plot-downloads');
+    const n = ++plotCount;
+    bar.appendChild(el('span', 'muted', 'Download'));
+    for (const kind of ['PNG', 'SVG', 'EPS']) {
+      const b = el('button', 'link', kind);
+      b.type = 'button';
+      b.title = `Save this plot as plot-${n}.${kind.toLowerCase()}`;
+      b.onclick = async () => {
+        const name = `plot-${n}.${kind.toLowerCase()}`;
+        if (kind === 'SVG') { download(name, new TextEncoder().encode(svg)); return; }
+        const r = await request('export', svg, 0, { kind: kind === 'PNG' ? 0 : 1 });
+        if (!r.reply) { toast('This plot could not be converted.'); return; }
+        download(name, fromB64(r.reply));
+      };
+      bar.appendChild(b);
+    }
+    return bar;
+  }
+
+
+  // ---------- files ----------
+  // The user's files: uploaded with +, or written by save(...). They live in this
+  // browser (IndexedDB), in one folder, and the engine sees them as /name.
+  const Files = (() => {
+    const files = new Map(); // name -> { name, data: Uint8Array, modified }
+    let kept = true; // false when the browser does not keep data (private window, blocked storage)
+    let dbp = null;
+    const db = () => dbp || (dbp = new Promise((resolve, reject) => {
+      const q = indexedDB.open('galileo-playground', 1);
+      q.onupgradeneeded = () => q.result.createObjectStore('files', { keyPath: 'name' });
+      q.onsuccess = () => resolve(q.result);
+      q.onerror = () => reject(q.error);
+    }));
+    async function tx(mode, fn) {
+      try {
+        const d = await db();
+        return await new Promise((resolve, reject) => {
+          const t = d.transaction('files', mode);
+          const r = fn(t.objectStore('files'));
+          t.oncomplete = () => resolve(r && r.result);
+          t.onerror = () => reject(t.error);
+        });
+      } catch (e) {
+        kept = false;
+        render();
+        return undefined;
+      }
+    }
+    const nameOf = path => path.replace(/^\/+/, '');
+    const size = n => n < 1024 ? `${n} B` : n < 1048576 ? `${(n / 1024).toFixed(n < 10240 ? 1 : 0)} KB` : `${(n / 1048576).toFixed(1)} MB`;
+
+    async function store(name, data) {
+      const rec = { name, data, modified: Date.now() };
+      files.set(name, rec);
+      await tx('readwrite', s => s.put(rec));
+    }
+    async function drop(name) {
+      files.delete(name);
+      await tx('readwrite', s => s.delete(name));
+    }
+    // a file added by the user: stored and given to the engine
+    async function add(name, data) {
+      await store(name, data);
+      await request('put', '', 0, { path: '/' + name, data });
+      render();
+    }
+    async function remove(name) {
+      await drop(name);
+      await request('unput', '', 0, { path: '/' + name });
+      render();
+    }
+    // what a run wrote or removed
+    async function applyChanges(changes) {
+      if (!changes.length) return;
+      for (const c of changes) {
+        const name = nameOf(c.path);
+        if (c.op === 'write') await store(name, fromB64(c.data));
+        else await drop(name);
+      }
+      render();
+    }
+    // "data (1).csv", "data (2).csv", ... the first name not taken
+    function freeName(name) {
+      const m = name.match(/^(.*?)(\.[^.]*)?$/);
+      for (let k = 1; ; k++) {
+        const n = `${m[1]} (${k})${m[2] || ''}`;
+        if (!files.has(n)) return n;
+      }
+    }
+    async function upload(list) {
+      for (const f of list) {
+        let name = f.name.replace(/[\/\\]/g, '_');
+        if (files.has(name)) {
+          const choice = await ask(`A file named ${name} is already here.`, [
+            ['replace', 'Replace'], ['both', 'Keep both'], ['cancel', 'Cancel']]);
+          if (choice === 'cancel' || !choice) continue;
+          if (choice === 'both') name = freeName(name);
+        }
+        await add(name, new Uint8Array(await f.arrayBuffer()));
+        toast(`Added ${name}. Read it with read("${name}").`);
+      }
+    }
+    async function rename(from, to) {
+      to = to.trim().replace(/[\/\\]/g, '_');
+      if (!to || to === from) return true;
+      if (files.has(to)) { toast(`A file named ${to} is already here.`); return false; }
+      const data = files.get(from).data;
+      await remove(from);
+      await add(to, data);
+      return true;
+    }
+
+    // ---- the panel ----
+    function row(f) {
+      const li = el('li');
+      const name = el('button', 'file-name', f.name);
+      name.type = 'button';
+      name.title = 'Put its name in the input';
+      name.onclick = () => {
+        const call = /\.(csv|tsv|txt|md|json)$/i.test(f.name) ? `d = read("${f.name}")` : /\.gg$/i.test(f.name) ? `load("${f.name}")` : `"${f.name}"`;
+        input.value = call;
+        autosize(input);
+        location.hash = '';
+        input.focus();
+      };
+      const meta = el('span', 'file-meta', size(f.data.length));
+      const actions = el('span', 'file-actions');
+      const btn = (label, title, fn) => {
+        const b = el('button', 'icon', label);
+        b.type = 'button';
+        b.title = title;
+        b.setAttribute('aria-label', title + ' ' + f.name);
+        b.onclick = fn;
+        actions.appendChild(b);
+      };
+      btn('⬇', 'Download', () => download(f.name, f.data));
+      btn('✎', 'Rename', () => {
+        const edit = el('input', 'file-rename');
+        edit.value = f.name;
+        name.replaceWith(edit);
+        edit.focus();
+        const dot = f.name.lastIndexOf('.');
+        edit.setSelectionRange(0, dot > 0 ? dot : f.name.length);
+        let done = false;
+        const finish = async keep => {
+          if (done) return;
+          done = true;
+          if (keep && !(await rename(f.name, edit.value))) { done = false; edit.focus(); return; }
+          render();
+        };
+        edit.onkeydown = ev => {
+          if (ev.key === 'Enter') { ev.preventDefault(); finish(true); }
+          else if (ev.key === 'Escape') finish(false);
+        };
+        edit.onblur = () => finish(true);
+      });
+      btn('🗑', 'Delete', async () => {
+        if ((await ask(`Delete ${f.name}? This cannot be undone.`, [['delete', 'Delete'], ['cancel', 'Cancel']])) === 'delete') {
+          await remove(f.name);
+        }
+      });
+      li.append(name, meta, actions);
+      return li;
+    }
+    function render() {
+      const list = $('file-list');
+      if (!list) return;
+      const all = [...files.values()].sort((a, b) => a.name.localeCompare(b.name));
+      list.replaceChildren(...all.map(row));
+      $('files-empty').hidden = all.length > 0;
+      $('files-clear').hidden = all.length === 0;
+      $('files-count').textContent = all.length ? String(all.length) : '';
+      $('files-note').textContent = kept
+        ? 'Files stay in this browser only: they don’t follow you to another device, and a private window forgets them when it closes.'
+        : 'This browser is not keeping files (private window or blocked storage): they last until you close this page.';
+    }
+    // a line under a result that wrote a file
+    function chip(path) {
+      const name = nameOf(path);
+      const f = files.get(name);
+      const c = el('div', 'file-chip');
+      c.append(el('span', '', `📄 ${name}`), el('span', 'muted', size(f.data.length)));
+      const b = el('button', 'link', 'Download');
+      b.type = 'button';
+      b.onclick = () => { const g = files.get(name); if (g) download(name, g.data); else toast(`${name} was removed.`); };
+      c.appendChild(b);
+      return c;
+    }
+    async function start() {
+      let all = [];
+      try { all = (await tx('readonly', s => s.getAll())) || []; } catch { all = []; }
+      for (const f of all) {
+        files.set(f.name, f);
+        await request('put', '', 0, { path: '/' + f.name, data: f.data });
+      }
+      render();
+    }
+    return { start, upload, applyChanges, chip, render, get: path => files.get(nameOf(path)),
+      clear: async () => {
+        if ((await ask('Delete all your files? This cannot be undone.', [['delete', 'Delete all'], ['cancel', 'Cancel']])) !== 'delete') return;
+        for (const n of [...files.keys()]) await remove(n);
+      } };
+  })();
+
+  // a small dialog with a choice of buttons; resolves to the chosen key (null for Escape)
+  function ask(question, choices) {
+    return new Promise(resolve => {
+      const back = el('div', 'modal');
+      const box = el('div', 'modal-box');
+      box.setAttribute('role', 'dialog');
+      box.setAttribute('aria-modal', 'true');
+      box.appendChild(el('p', '', question));
+      const bar = el('div', 'modal-actions');
+      const close = key => { back.remove(); document.removeEventListener('keydown', esc); resolve(key); };
+      const esc = ev => { if (ev.key === 'Escape') close(null); };
+      choices.forEach(([key, label], i) => {
+        const b = el('button', i === 0 ? 'primary' : 'ghost', label);
+        b.type = 'button';
+        b.onclick = () => close(key);
+        bar.appendChild(b);
+      });
+      box.appendChild(bar);
+      back.appendChild(box);
+      back.onclick = ev => { if (ev.target === back) close(null); };
+      document.addEventListener('keydown', esc);
+      document.body.appendChild(back);
+      bar.firstChild.focus();
+    });
+  }
+
+  $('files-toggle').onclick = () => {
+    const p = $('files');
+    p.hidden = !p.hidden;
+    $('files-toggle').setAttribute('aria-expanded', String(!p.hidden));
+  };
+  $('files-close').onclick = () => { $('files').hidden = true; $('files-toggle').setAttribute('aria-expanded', 'false'); };
+  $('files-add').onclick = () => $('file-input').click();
+  $('file-input').onchange = async ev => { await Files.upload([...ev.target.files]); ev.target.value = ''; };
+  $('files-clear').onclick = () => Files.clear();
+  // dropping files anywhere on the page adds them
+  document.addEventListener('dragover', ev => { if ([...(ev.dataTransfer?.types || [])].includes('Files')) ev.preventDefault(); });
+  document.addEventListener('drop', ev => {
+    if (!ev.dataTransfer?.files?.length) return;
+    ev.preventDefault();
+    $('files').hidden = false;
+    Files.upload([...ev.dataTransfer.files]);
+  });
+  const filesReady = Files.start();
 
   // ---------- results hidden by ";" ----------
   // Statements whose result a trailing ";" hides: [{ name (if an assignment), text }]
@@ -457,7 +731,7 @@
     try {
       const entries = JSON.parse(unb64(shared));
       history.replaceState(null, '', location.pathname + location.hash);
-      (async () => { for (const e of entries) await runRepl(String(e)); })();
+      (async () => { await filesReady; for (const e of entries) await runRepl(String(e)); })();
     } catch { /* ignore a broken link */ }
   }
 })();

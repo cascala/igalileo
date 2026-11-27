@@ -164,3 +164,33 @@ article .md .katex-display { overflow-x: auto; overflow-y: hidden; padding: 2px 
   .prompt-actions { width: 100%; justify-content: flex-end; }
   .out { margin-left: 0; }
 }
+
+/* ---------- files ---------- */
+.files-toggle { font: inherit; font-size: 14px; color: var(--muted); background: none; border: 1px solid var(--line); border-radius: 8px; padding: 4px 10px; cursor: pointer; white-space: nowrap; }
+.files-toggle:hover, .files-toggle[aria-expanded="true"] { color: var(--ink); border-color: var(--accent); }
+.files-toggle .count:not(:empty) { display: inline-block; min-width: 18px; margin-left: 4px; padding: 0 5px; border-radius: 9px; background: var(--accent); color: var(--accent-ink); font-size: 12px; text-align: center; }
+.files { position: fixed; z-index: 20; top: 64px; right: 16px; width: min(360px, calc(100vw - 32px)); max-height: calc(100vh - 96px); overflow: auto; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; box-shadow: 0 8px 30px rgba(20, 33, 61, .18); padding: 12px 14px; }
+.files-head { display: flex; align-items: center; gap: 8px; }
+.files-head strong { flex: 1; }
+.files .add { font-size: 20px; line-height: 1; width: 32px; height: 32px; padding: 0; border-radius: 8px; }
+.icon { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 15px; padding: 4px 6px; border-radius: 6px; }
+.icon:hover { color: var(--ink); background: var(--code-bg); }
+.small { font-size: 13px; }
+.file-list { list-style: none; margin: 8px 0; padding: 0; }
+.file-list li { display: flex; align-items: center; gap: 8px; padding: 4px 0; border-bottom: 1px solid var(--line); }
+.file-name { flex: 1; min-width: 0; text-align: left; background: none; border: none; color: var(--ink); font: 14px ui-monospace, "SF Mono", Menlo, Consolas, monospace; padding: 4px 0; cursor: pointer; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.file-name:hover { color: var(--accent); }
+.file-rename { flex: 1; min-width: 0; font: 14px ui-monospace, "SF Mono", Menlo, Consolas, monospace; padding: 3px 6px; border: 1px solid var(--accent); border-radius: 6px; background: var(--bg); color: var(--ink); }
+.file-meta { font-size: 12px; color: var(--muted); white-space: nowrap; }
+.file-actions { display: flex; }
+.files-foot { display: flex; align-items: flex-end; gap: 8px; }
+.files-foot p { flex: 1; margin: 4px 0 0; }
+.file-chip { display: flex; align-items: center; gap: 10px; margin: 6px 0; font-size: 14px; }
+.plot-downloads { display: flex; align-items: center; gap: 4px; margin: 4px 0 8px; font-size: 13px; }
+button.link { background: none; border: none; color: var(--accent); cursor: pointer; font: inherit; padding: 2px 6px; border-radius: 6px; }
+button.link:hover { background: var(--code-bg); text-decoration: underline; }
+.modal { position: fixed; inset: 0; z-index: 40; background: rgba(15, 21, 34, .45); display: flex; align-items: center; justify-content: center; padding: 16px; }
+.modal-box { background: var(--panel); color: var(--ink); border-radius: 12px; padding: 18px 20px; max-width: 420px; width: 100%; box-shadow: 0 8px 30px rgba(0, 0, 0, .25); }
+.modal-box p { margin: 0 0 14px; }
+.modal-actions { display: flex; gap: 8px; justify-content: flex-end; flex-wrap: wrap; }
+@media (max-width: 600px) { .files { top: 56px; right: 8px; width: calc(100vw - 16px); } }
