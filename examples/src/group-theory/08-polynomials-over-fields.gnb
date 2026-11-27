@@ -1,0 +1,236 @@
+%md
+# Group theory 8: Polynomials over fields
+
+*Learning path: group theory, part 8 of 10.* [Index](README.md) · Previous: [Group actions and counting](07-group-actions-and-counting.ipynb) · Next: [Ruler and compass](09-ruler-and-compass.ipynb)
+
+**The question.** Polynomials behave remarkably like whole numbers. You can divide one by another with a remainder,
+find greatest common divisors with Euclid's algorithm, and break any polynomial into "prime" pieces that can't be
+split further. But which pieces are prime depends on the numbers you allow: $x^2 + 1$ is prime over the reals, splits
+as $(x + i)(x - i)$ over the complex numbers, and splits as $(x + 2)(x + 3)$ modulo 5. This lesson works out the
+arithmetic of polynomials over a field, and ends with the checksum that guards every Ethernet packet.
+
+**Who this is for:** anyone who has done [lesson 5](05-rings-and-fields.ipynb). **You need:** fields, integers mod
+$p$, and long division of polynomials.
+
+**You will learn**
+
+* division with remainder and **Euclid's algorithm** for polynomials, with `polydiv` and `gcd`,
+* how the gcd of $f$ and $f'$ finds **repeated roots**,
+* tests for **irreducibility** over $\mathbb Q$: rational roots and **Eisenstein's criterion**,
+* the surprising polynomial $x^4 + 1$, irreducible over $\mathbb Q$ but reducible modulo every prime,
+* how many **irreducible polynomials** there are over $\mathbb F_p$, and why $x^{p^n} - x$ is their product,
+* **cyclic redundancy checks**: error detection by polynomial division mod 2.
+
+%md
+## 1. Division and Euclid
+
+For polynomials $f$ and $g \ne 0$ with coefficients in a field, there are unique $q$ and $r$ with $f = qg + r$ and
+$\deg r < \deg g$. Dividing needs only the leading coefficient of $g$ to be invertible, which is why we work over a
+field. `polydiv` returns $[q, r]$:
+
+%code
+polydiv(x^5 - 3*x^3 + x^2 + 6*x - 4, x^2 - 2, x)
+
+%md
+Since any common divisor of $f$ and $g$ also divides $r = f - qg$, $\gcd(f, g) = \gcd(g, r)$, and repeating gives
+**Euclid's algorithm**, exactly as for whole numbers. Galileo's `gcd` does this for polynomials and makes the answer
+monic (leading coefficient 1):
+
+%code
+gcd(x^4 - 1, x^6 - 1)
+
+%md
+In general $\gcd(x^m - 1, x^n - 1) = x^{\gcd(m, n)} - 1$, a polynomial echo of a fact about numbers.
+
+**Try this.** Compute `gcd(x^12 - 1, x^18 - 1)` and predict it first.
+
+%md
+## 2. Repeated roots
+
+A root $a$ of $f$ is repeated exactly when it is also a root of the derivative $f'$, because
+$f = (x - a)^2g$ gives $f' = (x - a)(2g + (x - a)g')$. So $\gcd(f, f')$ collects the repeated factors, without finding
+a single root:
+
+%code
+f = expand((x - 1)^2*(x + 2)*(x^2 + 1))
+gcd(f, diff(f, x))
+
+%md
+Dividing $f$ by that gcd leaves each factor exactly once (the **square-free part**):
+
+%code
+polydiv(f, gcd(f, diff(f, x)), x)
+
+%md
+Computer algebra systems do this first when they factor or integrate: it is cheap, and afterwards every root is
+simple.
+
+%md
+## 3. Irreducible over the rationals
+
+A polynomial is **irreducible** over a field when it is not the product of two polynomials of lower degree. Degree 1
+is always irreducible; a polynomial of degree 2 or 3 is irreducible exactly when it has no root in the field. Over
+$\mathbb Q$ the **rational root test** finds all candidates: a root $p/q$ in lowest terms has $p$ dividing the
+constant term and $q$ the leading coefficient.
+
+Higher degrees need more. **Eisenstein's criterion**: if a prime $p$ divides every coefficient except the leading one,
+and $p^2$ does not divide the constant term, the polynomial is irreducible over $\mathbb Q$. So $x^5 - 2$ (with
+$p = 2$) and $x^4 + 10x + 5$ (with $p = 5$) are irreducible, and `factor` agrees:
+
+%code
+factor(x^5 - 2)
+factor(x^4 + 10*x + 5)
+
+%md
+A good test is often to reduce modulo a prime: if $f$ is monic and irreducible mod $p$, it is irreducible over
+$\mathbb Q$, since a factorization over $\mathbb Q$ would survive reduction. Most of the time this works. But not
+always. The 8th **cyclotomic polynomial** $x^4 + 1$ is irreducible over $\mathbb Q$ (substitute $x + 1$ and use
+Eisenstein with $p = 2$), yet it splits modulo every prime:
+
+%code
+factor(x^4 + 1)
+factor(x^4 + 1, 2)
+factor(x^4 + 1, 3)
+factor(x^4 + 1, 5)
+factor(x^4 + 1, 17)
+
+%md
+The reason is group theory: the roots of $x^4 + 1$ are the primitive 8th roots of unity, and modulo $p$ they live in
+the field with $p^2$ elements, whose multiplicative group of order $p^2 - 1$ always contains elements of order 8
+(because $p^2 - 1$ is divisible by 8 for every odd prime). So every irreducible factor mod $p$ has degree at most 2.
+
+**Try this.** Factor $x^4 + 1$ modulo 7, 11 and 13. Which primes give four linear factors? (Hint: those with
+$p \equiv 1 \pmod 8$.)
+
+%md
+## 4. Irreducible polynomials over a finite field
+
+Over $\mathbb F_p$ there are only finitely many polynomials of each degree, so we can count the irreducible ones. The
+key fact: $x^{p^n} - x$ is the product of **all** monic irreducible polynomials over $\mathbb F_p$ whose degree divides
+$n$, each once. For $p = 2$:
+
+%code
+factor(x^8 - x, 2)
+factor(x^16 - x, 2)
+
+%md
+For $n = 3$: the irreducibles of degree 1 ($x$, $x + 1$) and of degree 3 (two of them). Comparing degrees gives
+$p^n = \sum_{d \mid n} d\,N(d)$, where $N(d)$ counts the monic irreducibles of degree $d$, and solving for $N(n)$
+one degree at a time:
+
+%code
+function nirred(p, n)
+  N = zeros(1, n);
+  for k in 1:n
+    s = p^k;
+    for d in divisors(k)
+      if d < k
+        s = s - d*N(d);
+      end
+    end
+    N(k) = s/k;
+  end
+  return N
+end
+nirred(2, 10)
+nirred(3, 6)
+
+%md
+About $p^n/n$ of the $p^n$ monic polynomials of degree $n$ are irreducible: one in $n$, much like the primes near $N$
+are about one in $\log N$. In particular there is an irreducible polynomial of every degree, which is why the finite
+field with $p^n$ elements of [lesson 5](05-rings-and-fields.ipynb) exists for every $n$.
+
+The same fact gives a quick test for roots: $\gcd(f, x^p - x)$ mod $p$ is the product of the linear factors of $f$.
+Does $x^3 + x + 1$ have a root mod 5?
+
+%code
+gcd(x^3 + x + 1, x^5 - x, 5)
+
+%md
+The gcd is 1, so it has no root, and being cubic it is irreducible mod 5 (and so over $\mathbb Q$ too).
+
+**Try this.** How many monic irreducible polynomials of degree 8 are there over $\mathbb F_2$? Over $\mathbb F_3$ of
+degree 4?
+
+%md
+## 5. Checksums: cyclic redundancy checks
+
+Every Ethernet frame, ZIP file and PNG image carries a **CRC**, computed by polynomial division over $\mathbb F_2$.
+Write the message bits as the coefficients of a polynomial $m(x)$. Sender and receiver agree on a generator $g(x)$ of
+degree $r$. The sender appends the remainder of $x^r m(x)$ on division by $g$; that makes the whole transmitted
+polynomial divisible by $g$. The receiver divides again: a nonzero remainder means the data was damaged.
+
+With $g = x^3 + x + 1$ (a toy; Ethernet uses a $g$ of degree 32) and the message 10010110, that is
+$x^7 + x^4 + x^2 + x$:
+
+%code
+c = polyrem(x^3*(x^7 + x^4 + x^2 + x), [x^3 + x + 1], [x], 2)
+
+%md
+The check bits are 011 ($x + 1$). The receiver gets $x^3m(x) + c$ and finds remainder 0. If a bit flips in transit,
+say the one for $x^5$, the remainder is not 0:
+
+%code
+polyrem(x^3*(x^7 + x^4 + x^2 + x) + c, [x^3 + x + 1], [x], 2)
+polyrem(x^3*(x^7 + x^4 + x^2 + x) + c + x^5, [x^3 + x + 1], [x], 2)
+
+%md
+An error $e(x)$ goes unnoticed only when $g$ divides $e$. A single flipped bit is $e = x^k$, which no $g$ with two or
+more terms divides, so every single error is caught. Choosing $g$ irreducible (or with chosen factors) also catches all
+double errors up to a length, all bursts shorter than $r$, and all odd numbers of errors when $x + 1$ divides $g$.
+[Lesson 10](10-error-correcting-codes.ipynb) goes further: it not only detects errors but corrects them.
+
+%md
+## Exercises
+
+1. **Euclid by hand.** Run Euclid's algorithm on $x^3 - 1$ and $x^2 - 1$ with `polydiv`, step by step, and check with
+   `gcd`.
+2. **Double roots.** For which $c$ does $x^3 - 3x + c$ have a repeated root? (The gcd with the derivative is not 1;
+   use the discriminant or try $c = \pm2$.)
+3. **Eisenstein after a shift.** Show that $x^4 + 1$ is irreducible over $\mathbb Q$: expand $(x + 1)^4 + 1$ and apply
+   Eisenstein with $p = 2$.
+4. **Degree 2 irreducibles.** List all monic irreducible polynomials of degree 2 over $\mathbb F_3$ (there are
+   `nirred(3, 2)` of them) by checking which have no root.
+5. **Primitive polynomials.** A degree-$n$ irreducible $f$ over $\mathbb F_2$ is primitive when $x$ has order
+   $2^n - 1$ modulo $f$. Is $x^4 + x^3 + x^2 + x + 1$ primitive? (It divides $x^5 - 1$.)
+6. **CRC burst.** Show that the toy CRC with $g = x^3 + x + 1$ misses the error $e = x^3 + x + 1$ (three flipped
+   bits). Why can no CRC catch every error?
+
+%md
+## Summary
+
+* Over a field, polynomials have division with remainder and Euclid's algorithm: `polydiv`, `gcd(f, g)`, and
+  `gcd(f, g, p)` modulo a prime.
+* $\gcd(f, f')$ finds repeated factors without finding roots.
+* Irreducibility over $\mathbb Q$: rational roots, Eisenstein, reduction mod $p$; $x^4 + 1$ is irreducible but splits
+  modulo every prime.
+* Over $\mathbb F_p$, $x^{p^n} - x$ is the product of the monic irreducibles of degree dividing $n$; about one in $n$
+  monic polynomials of degree $n$ is irreducible.
+* CRCs append the remainder of a polynomial division mod 2 and catch every single-bit error.
+
+%md
+## Hints and answers
+
+* **Section 1, Try this.** $x^6 - 1$, since $\gcd(12, 18) = 6$.
+* **Section 3, Try this.** Mod 7: $(x^2 + 3x + 1)(x^2 + 4x + 1)$; mod 11: two quadratics; mod 13: two quadratics. Four
+  linear factors need $p \equiv 1 \pmod 8$, like 17 and 41.
+* **Section 4, Try this.** `nirred(2, 8)` ends in 30; `nirred(3, 4)` ends in 18.
+* **Exercise 1.** $x^3 - 1 = x(x^2 - 1) + (x - 1)$, then $x^2 - 1 = (x + 1)(x - 1)$: the gcd is $x - 1$.
+* **Exercise 2.** $c = \pm 2$: $x^3 - 3x + 2 = (x - 1)^2(x + 2)$.
+* **Exercise 3.** $x^4 + 4x^3 + 6x^2 + 4x + 2$: 2 divides all but the leading coefficient, 4 does not divide 2.
+* **Exercise 4.** $x^2 + 1$, $x^2 + x + 2$, $x^2 + 2x + 2$.
+* **Exercise 5.** No: $x^5 \equiv 1$, so $x$ has order 5, not 15.
+* **Exercise 6.** $g$ divides $e$, so the remainder is 0. Any CRC with $r$ check bits lets through the errors that are
+  multiples of $g$, one in $2^r$ of random corruptions.
+
+%md
+## Sources
+
+1. G. Eisenstein, "Über die Irreductibilität und einige andere Eigenschaften der Gleichung, von welcher die Theilung
+   der ganzen Lemniscate abhängt", *Journal für die reine und angewandte Mathematik* 39, 160–179 (1850).
+2. C. F. Gauss, "Disquisitiones generales de congruentiis" (around 1797, published 1863): counting irreducible
+   polynomials mod $p$.
+3. W. W. Peterson and D. T. Brown, "Cyclic codes for error detection", *Proceedings of the IRE* 49, 228–235 (1961).
+4. R. Lidl and H. Niederreiter, *Introduction to Finite Fields and their Applications*, Cambridge University Press
+   (1994), chapters 1 to 3.
+5. D. S. Dummit and R. M. Foote, *Abstract Algebra*, 3rd ed., Wiley (2004), chapter 9.

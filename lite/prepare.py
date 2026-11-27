@@ -35,7 +35,7 @@ GROUPS = [
     ("random-processes", "Random processes",
      "Three lessons: Markov chains and the gambler's ruin, random walks and Brownian motion, then noisy differential equations, option prices and the phase transition of a magnet.", None),
     ("group-theory", "Group theory",
-     "Symmetry, cyclic groups, permutations, card shuffles and Lagrange's theorem.", None),
+     "Ten lessons: symmetry, cyclic groups, permutations and Lagrange's theorem, groups as objects, rings and finite fields, Galois theory and quaternions, counting with symmetry, polynomials over finite fields, ruler and compass, and error-correcting codes.", None),
     ("chaos", "Chaos and fractals",
      "The logistic map, bifurcations, the Lorenz butterfly, the Mandelbrot set and Julia sets.", None),
     ("mechanics", "Mechanics",
