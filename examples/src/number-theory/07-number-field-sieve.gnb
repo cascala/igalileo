@@ -197,8 +197,8 @@ which is why we need a sieve.
 
 ## 5. The whole method on $2^{128} + 1$
 
-`gnfs(N)` runs the number field sieve. Its result is two numbers whose product is $N$, smaller first (when $N$ has
-more than two prime factors, they need not be prime). Its cost is counted in **work units**, basic operations, as in
+`gnfs(N)` runs the number field sieve. Its result has the same shape as `factor`'s: rows [p, 1; q, 1] for
+two numbers whose product is $N$, smaller first (when $N$ has more than two prime factors, they need not be prime). Its cost is counted in **work units**, basic operations, as in
 lesson 6: they compare runs fairly on any computer. With `explain = "teach"` its
 explanation walks through every step with this run's own numbers: the polynomial, the factor bases, real relations
 you can check, the matrix, the two square roots and the gcd. (`explain = true` gives the short log instead, and

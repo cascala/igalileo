@@ -111,8 +111,9 @@ factor(x^20 + 1)
 ## 3. Back to numbers: the algebraic pieces
 
 Putting $x = 10$ into $x^{300} + 1 = \Phi_8\,\Phi_{24}\,\Phi_{40}\,\Phi_{120}\,\Phi_{200}\,\Phi_{600}$ cuts the 301-digit
-number into six pieces $\Phi_d(10)$. `algfactor(n)` shows these pieces, one row each, with their size and how far each
-one factors:
+number into six pieces $\Phi_d(10)$. `algfactor(n)`'s explanation shows these pieces, one row each, with their size and how far each
+one factors; its result is the factorization in `factor`'s shape, one row per prime with its exponent (a part that did
+not split gets a row of its own):
 
 %code
 algfactor(10^300 + 1)

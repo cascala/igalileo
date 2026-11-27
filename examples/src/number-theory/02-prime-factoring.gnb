@@ -381,7 +381,8 @@ multorder(3, n)
 %md
 A factoring method of this kind looks for an exponent $E$ that kills the group on the $p$ side but not on the $q$
 side. Then $3^E \equiv 1 \pmod p$ but not mod $q$, and $\gcd(3^E - 1, n) = p$. Pollard's $p - 1$ takes $E$ = all small
-prime powers. `pm1(n, B)` runs it with an explicit bound $B$ and says what happened. For Cole's number $2^{67} - 1$
+prime powers. `pm1(n, B)` runs it with an explicit bound $B$ and says what happened. Like every factoring command, it answers
+with rows [prime, exponent] as `factor` does: here the split $n = p \cdot q$ it found, or [] when it found none. For Cole's number $2^{67} - 1$
 from section 4, one prime has $p - 1 = 2^3 \cdot 3^3 \cdot 5 \cdot 67 \cdot 2677$, so a bound of 3000 is enough:
 
 %code

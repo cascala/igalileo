@@ -22,7 +22,8 @@ was not tuned on, and a claim of a leak must survive a correction for how many t
 
 `semiprime(d, seed)` is a number with exactly $d$ digits that is the product of two random primes of about $d/2$
 digits each. The same seed always gives the same number, so experiments can be repeated. `semifactors` gives the two
-primes, smaller first (you would not have them in real life; the lab uses them to check answers).
+primes as a factorization, the same shape `factor` gives: one row per prime with its exponent, smaller first (you
+would not have them in real life; the lab uses them to check answers).
 
 %code
 N = semiprime(30, 1)
@@ -32,7 +33,8 @@ isprime(N)
 %md
 ## 2. One method on one number
 
-`labrun(method, N)` runs a method with a time limit and reports the factor and the **work**: the number of
+`labrun(method, N)` runs a method with a time limit. Its result is the split it found, again as rows [prime, exponent]
+like `factor` ([] if it found nothing), and its explanation gives the **work**: the number of
 multiplications modulo $N$ (roughly). Work is the same on every computer and in the browser, so it is a fair
 measure; on a normal computer the time is shown too. The built-in methods are
 
