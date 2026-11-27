@@ -1,4 +1,6 @@
 // Runs every example notebook through the WebAssembly engine and fails on any error.
+// A cell whose saved outputs show an error is a deliberate example of one: it passes when
+// the engine gives that same error, and fails if it now succeeds or errs differently.
 //   node lite/test-notebooks.mjs path/to/galileo_rs.wasm examples/*.ipynb examples/*/*.ipynb
 import fs from 'fs';
 const {instance: {exports: g}} = await WebAssembly.instantiate(fs.readFileSync(process.argv[2]), {});
@@ -14,7 +16,12 @@ for (const f of process.argv.slice(3)) {
   g.galileo_reset(); const nb = JSON.parse(fs.readFileSync(f)); const t0 = Date.now(); let errs = [];
   for (const c of nb.cells) if (c.cell_type === 'code') {
     const src = [].concat(c.source).join(''); const t = Date.now();
-    try { const r = call('galileo_execute', src); if (r.error) errs.push(src.slice(0,60) + ' :: ' + r.error.evalue); }
+    const want = (c.outputs || []).find(o => o.output_type === 'error');
+    try {
+      const r = call('galileo_execute', src);
+      if (want && !r.error) errs.push(src.slice(0,60) + ' :: expected error "' + want.evalue + '" but the cell succeeded');
+      else if (r.error && !(want && want.evalue === r.error.evalue)) errs.push(src.slice(0,60) + ' :: ' + r.error.evalue);
+    }
     catch (e) { errs.push(src.slice(0,60) + ' :: TRAP ' + e.message); }
     if (Date.now() - t > 2000) console.log('  slow', Date.now()-t, 'ms', src.slice(0,60));
   }
