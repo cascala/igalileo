@@ -18,21 +18,27 @@ ARG TARGETARCH
 ARG TINI_VERSION=v0.19.0
 ADD --chmod=755 https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini-${TARGETARCH} /usr/bin/tini
 
-RUN python3 -m venv /opt/jupyter && \
-    /opt/jupyter/bin/pip install --no-cache-dir jupyterlab notebook plotly && \
-    /opt/jupyter/bin/jupyter labextension disable --level=system "@jupyterlab/apputils-extension:announcements"
-
+# The kernel sends plots as Plotly JSON, so JupyterLab only needs plotly's renderer extension,
+# not the plotly Python package. Keep the extension, then drop what the image never uses
+# (plotly, jedi completion, the debugger, pip, locale data for languages other than English)
+# to keep the image small.
 COPY kernel /tmp/kernel
-RUN /opt/jupyter/bin/pip install --no-cache-dir /tmp/kernel && rm -rf /tmp/kernel
+RUN python3 -m venv /opt/jupyter && \
+    /opt/jupyter/bin/pip install --no-cache-dir jupyterlab notebook plotly /tmp/kernel && \
+    /opt/jupyter/bin/jupyter labextension disable --level=system "@jupyterlab/apputils-extension:announcements" && \
+    ext=/opt/jupyter/share/jupyter/labextensions/jupyterlab-plotly && cp -r $ext /tmp/jupyterlab-plotly && \
+    /opt/jupyter/bin/pip uninstall -y -q plotly narwhals jedi parso debugpy && \
+    mv /tmp/jupyterlab-plotly $ext && \
+    /opt/jupyter/bin/pip uninstall -y -q pip && \
+    find /opt/jupyter/lib/python3*/site-packages/babel/locale-data -type f ! -name 'en*' ! -name root.dat -delete && \
+    rm -rf /tmp/kernel /root/.cache
 
 COPY --from=build /usr/local/bin/galileo /usr/local/bin/galileo
 COPY docker/kernel.json /usr/local/share/jupyter/kernels/galileo/kernel.json
-COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
-COPY examples /opt/igalileo/examples
+COPY --chmod=755 docker/entrypoint.sh /usr/local/bin/entrypoint.sh
 
-RUN useradd -m -u 1000 -s /bin/bash galileo && \
-    mkdir -p /home/galileo/notebooks && cp -r /opt/igalileo/examples/. /home/galileo/notebooks/ && rm -rf /home/galileo/notebooks/src && \
-    chown -R galileo:galileo /home/galileo && chmod 755 /usr/local/bin/entrypoint.sh
+RUN useradd -m -u 1000 -s /bin/bash galileo
+COPY --chown=galileo:galileo examples /home/galileo/notebooks
 
 USER galileo
 WORKDIR /home/galileo/notebooks

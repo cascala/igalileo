@@ -2,3 +2,4 @@
 kernel/build/
 kernel/*.egg-info/
 **/__pycache__/
+examples/src/
