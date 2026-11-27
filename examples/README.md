@@ -35,6 +35,8 @@ cascala/igalileo`, or open them on GitHub to read them with their results.
 * [Random processes](random-processes/README.md): three lessons, from Markov chains and the gambler's ruin
   through random walks, Brownian motion and Poisson arrivals to stochastic differential equations, option pricing
   and the Ising model.
+* [Partial differential equations](pde/README.md): three lessons, from the heat equation and numerical stability
+  through waves on a string, pitch and overtones to Laplace's and Poisson's equations for plates and membranes.
 * [Group theory](group-theory/README.md): symmetry, cyclic groups, permutations, Lagrange's theorem, quotients, Sylow, solvable groups, rings and finite fields, Galois theory, quaternions and Lie algebras, Burnside counting, ruler and compass, and error-correcting codes.
 * [Chaos and fractals](chaos/README.md): the logistic map, bifurcations, the Lorenz attractor, the Mandelbrot set.
 * [Differential geometry](differential-geometry/README.md): curves, surfaces, curvature, geodesics, the Riemann tensor.
