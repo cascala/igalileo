@@ -19,6 +19,11 @@ iGalileo is a Jupyter kernel for [Galileo](https://github.com/cascala/galileo), 
 * [Playground](https://cascala.github.io/igalileo/playground/): a light REPL with the learning paths as interactive lessons. Works on a phone, and the Share button makes a link that replays your session.
 * [Notebooks](https://cascala.github.io/igalileo/lab/lab/index.html): JupyterLite (JupyterLab in the browser) with the Galileo kernel and all the example notebooks. Notebooks you create are saved in your browser's storage.
 
+<p>
+  <img src="doc/playground.png" width="49%" alt="The playground: a derivative, an integral, an exact quadratic solution, a symbolic matrix inverse and a plot">
+  <img src="doc/lesson.png" width="49%" alt="A lesson in the playground: Complex analysis 1, complex functions and how to picture them">
+</p>
+
 ## Quick start: JupyterLab in Docker
 
 The `cascala/igalileo` image bundles JupyterLab and the Galileo kernel. It runs natively on Intel (amd64) and Apple Silicon (arm64), and Docker is all you need:
