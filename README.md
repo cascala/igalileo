@@ -6,6 +6,8 @@ iGalileo is a Jupyter kernel for [Galileo](https://github.com/cascala/galileo), 
 
 **▶ [Try Galileo in your browser](https://cascala.github.io/igalileo/)**: nothing to install. Open the [playground](https://cascala.github.io/igalileo/playground/), start the [first lesson](https://cascala.github.io/igalileo/playground/#lesson/foundations/01-numbers), or use [notebooks in JupyterLite](https://cascala.github.io/igalileo/lab/lab/index.html).
 
+**Questions, ideas or something you made with Galileo?** Join the [Discussions](https://github.com/cascala/galileo/discussions).
+
 ![JupyterLab running Galileo, with plots](doc/jupyterlab_plot.png)
 
 ![An interactive 3D surface](doc/plot3d.png)
