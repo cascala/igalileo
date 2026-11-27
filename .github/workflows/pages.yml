@@ -1,6 +1,6 @@
 # Builds the web site (landing page, playground, JupyterLite, language reference) and publishes
 # it to GitHub Pages. Runs when the site, the notebooks or this workflow change, every night
-# (so the engine and the reference from cascala/galileo-rs docs/ follow its main branch),
+# (so the engine and the reference from cascala/galileo docs/ follow its master branch),
 # and by hand (Actions > "Web site" > Run workflow).
 name: Web site
 
@@ -29,8 +29,8 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/checkout@v4
         with:
-          repository: cascala/galileo-rs
-          path: lite/.work/galileo-rs
+          repository: cascala/galileo
+          path: lite/.work/galileo
       - run: rustup target add wasm32-unknown-unknown
       - uses: actions/setup-node@v4
         with:
@@ -43,7 +43,7 @@ jobs:
           cache: pip
           cache-dependency-path: lite/requirements.txt
       - run: pip install -r lite/requirements.txt
-      - run: lite/build.sh lite/.work/galileo-rs
+      - run: lite/build.sh lite/.work/galileo
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site

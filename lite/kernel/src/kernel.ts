@@ -59,7 +59,7 @@ export class GalileoKernel extends BaseKernel {
       },
       banner: 'Galileo: computer algebra in your browser (Rust, WebAssembly)',
       help_links: [
-        { text: 'Galileo', url: 'https://github.com/cascala/galileo-rs' },
+        { text: 'Galileo', url: 'https://github.com/cascala/galileo' },
         { text: 'iGalileo', url: 'https://github.com/cascala/igalileo' }
       ]
     };

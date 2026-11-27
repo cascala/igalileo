@@ -2,7 +2,7 @@
 
 # iGalileo
 
-iGalileo is a Jupyter kernel for [Galileo](https://github.com/cascala/galileo-rs), a computer algebra system written in Rust. In a notebook you can do symbolic algebra, calculus, matrices, number theory and differential geometry, with interactive 2D and 3D plots.
+iGalileo is a Jupyter kernel for [Galileo](https://github.com/cascala/galileo), a computer algebra system written in Rust. In a notebook you can do symbolic algebra, calculus, matrices, number theory and differential geometry, with interactive 2D and 3D plots.
 
 **▶ [Try Galileo in your browser](https://cascala.github.io/igalileo/)**: nothing to install. Open the [playground](https://cascala.github.io/igalileo/playground/), start the [first lesson](https://cascala.github.io/igalileo/playground/#lesson/foundations/01-numbers), or use [notebooks in JupyterLite](https://cascala.github.io/igalileo/lab/lab/index.html).
 
@@ -34,12 +34,12 @@ Options:
 
 ## Using Galileo in a notebook
 
-How Galileo is written (statements, numbers, operators, functions, matrices, strings, lists, records and blocks) is described in the [Galileo language reference](https://github.com/cascala/galileo-rs/blob/main/docs/language.md), and every command is listed in the [command reference](https://github.com/cascala/galileo-rs/blob/main/docs/builtins.md). Both are also on the web site: [cascala.github.io/igalileo/reference](https://cascala.github.io/igalileo/reference/). In a notebook:
+How Galileo is written (statements, numbers, operators, functions, matrices, strings, lists, records and blocks) is described in the [Galileo language reference](https://github.com/cascala/galileo/blob/master/docs/language.md), and every command is listed in the [command reference](https://github.com/cascala/galileo/blob/master/docs/builtins.md). Both are also on the web site: [cascala.github.io/igalileo/reference](https://cascala.github.io/igalileo/reference/). In a notebook:
 
 * Each line of a cell is one Galileo statement, and each result is shown. End a line with `;` to hide its result.
 * `load(file.gg)` runs a script and shows its results in the cell. Files are found next to the notebook, so in Docker put scripts in the mounted `work/` folder and load them from a notebook saved there.
 * Symbolic results, metrics and curvature tensors are typeset with LaTeX.
-* Plots (`plot`, `plot3d`, `surface` and the others in the [command reference](https://github.com/cascala/galileo-rs/blob/main/docs/builtins.md#plotting)) are interactive: you can zoom, pan, and rotate 3D plots.
+* Plots (`plot`, `plot3d`, `surface` and the others in the [command reference](https://github.com/cascala/galileo/blob/master/docs/builtins.md#plotting)) are interactive: you can zoom, pan, and rotate 3D plots.
 * Notebooks also store an SVG copy of each plot, so they display on GitHub and in other viewers.
 * `help` lists all commands, and `help(name)` explains one. Shift+Tab on a name shows the same text.
 * Tab completes Galileo's functions and the variables you defined.
@@ -74,7 +74,7 @@ If Jupyter already runs on your machine, you can install just the kernel. It sta
 Install the engine with Rust's `cargo`, then the kernel with `pip`:
 
 ```
-cargo install --git https://github.com/cascala/galileo-rs   # puts `galileo` on your PATH
+cargo install --git https://github.com/cascala/galileo   # puts `galileo` on your PATH
 pip install "git+https://github.com/cascala/igalileo#subdirectory=kernel"
 python -m galileo_kernel.install --user
 ```
@@ -86,28 +86,28 @@ Start Jupyter and pick "Galileo". Set `GALILEO_BIN` if `galileo` is not on your 
 The image builds the engine from source, which it receives as a named build context:
 
 ```
-docker build --build-context galileo=../galileo-rs -t cascala/igalileo .
+docker build --build-context galileo=../galileo -t cascala/igalileo .
 # or straight from GitHub:
-docker build --build-context galileo=https://github.com/cascala/galileo-rs.git -t cascala/igalileo .
+docker build --build-context galileo=https://github.com/cascala/galileo.git -t cascala/igalileo .
 ```
 
 To build and push for Intel and Apple Silicon at once, see [NOTES](NOTES). The image's entry point takes `lab` (the default), `notebook`, or `kernel CONNECTION_FILE`, which `run_docker.sh` uses.
 
 ## The web site
 
-The site lives in `site/` (landing page and playground) and `lite/` (the JupyterLite kernel extension and build). `lite/build.sh` builds the engine for WebAssembly from [galileo-rs](https://github.com/cascala/galileo-rs), runs every example notebook through it, builds the kernel extension and JupyterLite, renders the language reference from galileo-rs `docs/` into `reference/` (with `lite/reference.mjs`), and writes the static site to `_site/`:
+The site lives in `site/` (landing page and playground) and `lite/` (the JupyterLite kernel extension and build). `lite/build.sh` builds the engine for WebAssembly from [galileo](https://github.com/cascala/galileo), runs every example notebook through it, builds the kernel extension and JupyterLite, renders the language reference from galileo `docs/` into `reference/` (with `lite/reference.mjs`), and writes the static site to `_site/`:
 
 ```
 pip install -r lite/requirements.txt          # needs Rust with wasm32-unknown-unknown and Node 20+
-lite/build.sh ../galileo-rs                   # or no argument to clone galileo-rs
+lite/build.sh ../galileo                   # or no argument to clone galileo
 python3 -m http.server -d _site 8000
 ```
 
-The `Web site` GitHub Actions workflow runs the same script and publishes to GitHub Pages when `site/`, `lite/` or `examples/` change on master, and every night, so the engine and its reference on the site follow galileo-rs. To publish a galileo-rs change sooner, run it by hand from the Actions tab.
+The `Web site` GitHub Actions workflow runs the same script and publishes to GitHub Pages when `site/`, `lite/` or `examples/` change on master, and every night, so the engine and its reference on the site follow galileo. To publish a galileo change sooner, run it by hand from the Actions tab.
 
 ## How it works
 
-The mathematics happens in the `galileo` executable from [galileo-rs](https://github.com/cascala/galileo-rs). Started as `galileo --kernel`, it reads cells on stdin and answers each with one line of JSON holding MIME bundles. The kernel in [kernel/](kernel/) is a small [ipykernel](https://github.com/ipython/ipykernel) wrapper that passes cells, completion and help requests to it. Plots go out as `display_data` with three representations: a Plotly figure (`application/vnd.plotly.v1+json`), an SVG image, and a text fallback. Interrupting a cell restarts the engine, and the variables you defined are lost.
+The mathematics happens in the `galileo` executable from [galileo](https://github.com/cascala/galileo). Started as `galileo --kernel`, it reads cells on stdin and answers each with one line of JSON holding MIME bundles. The kernel in [kernel/](kernel/) is a small [ipykernel](https://github.com/ipython/ipykernel) wrapper that passes cells, completion and help requests to it. Plots go out as `display_data` with three representations: a Plotly figure (`application/vnd.plotly.v1+json`), an SVG image, and a text fallback. Interrupting a cell restarts the engine, and the variables you defined are lost.
 
 Version 0.2.1 and earlier used a JVM kernel built on the Scala version of Galileo. Those images are still on Docker Hub under their version tags.
 

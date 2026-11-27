@@ -28,7 +28,7 @@ class GalileoKernel(Kernel):
     }
     banner = f"iGalileo {__version__}: Galileo, a computer algebra system (Rust engine)"
     help_links = [
-        {"text": "Galileo", "url": "https://github.com/cascala/galileo-rs"},
+        {"text": "Galileo", "url": "https://github.com/cascala/galileo"},
         {"text": "iGalileo", "url": "https://github.com/cascala/igalileo"},
     ]
 

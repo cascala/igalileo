@@ -13,7 +13,7 @@ dependencies = ["ipykernel>=6"]
 
 [project.urls]
 Homepage = "https://github.com/cascala/igalileo"
-Engine = "https://github.com/cascala/galileo-rs"
+Engine = "https://github.com/cascala/galileo"
 
 [tool.setuptools]
 packages = ["galileo_kernel"]

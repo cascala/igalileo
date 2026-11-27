@@ -2,9 +2,9 @@
 """Execute notebooks in place with a local Galileo engine (no Docker, no Jupyter).
 
 Stores the same outputs the iGalileo kernel would. Needs the `galileo` binary
-from galileo-rs on PATH, or GALILEO_BIN pointing at it:
+from galileo on PATH, or GALILEO_BIN pointing at it:
 
-    GALILEO_BIN=../galileo-rs/target/release/galileo python3 examples/src/run.py examples/*/*.ipynb
+    GALILEO_BIN=../galileo/target/release/galileo python3 examples/src/run.py examples/*/*.ipynb
 
 Exits with status 1 if any cell fails.
 """

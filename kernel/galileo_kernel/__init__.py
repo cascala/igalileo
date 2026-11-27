@@ -1,3 +1,3 @@
-"""Jupyter kernel for Galileo; the engine is the `galileo` executable (galileo-rs)."""
+"""Jupyter kernel for Galileo; the engine is the `galileo` executable (galileo)."""
 
 __version__ = "0.5.0"

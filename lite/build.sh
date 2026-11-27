@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 # Build the static web site: landing page, playground, JupyterLite and the language
-# reference (rendered from galileo-rs docs/), into _site/.
+# reference (rendered from galileo docs/), into _site/.
 #
-#   lite/build.sh [path/to/galileo-rs]
+#   lite/build.sh [path/to/galileo]
 #
 # Needs Rust (with the wasm32-unknown-unknown target), Node 20+ and Python 3.10+
-# with lite/requirements.txt installed. Without a path, galileo-rs is cloned.
+# with lite/requirements.txt installed. Without a path, galileo is cloned.
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 OUT="$ROOT/_site"
@@ -14,8 +14,8 @@ mkdir -p "$WORK"
 
 ENGINE="${1:-}"
 if [ -z "$ENGINE" ]; then
-  ENGINE="$WORK/galileo-rs"
-  if [ -d "$ENGINE/.git" ]; then git -C "$ENGINE" pull -q; else git clone -q --depth 1 https://github.com/cascala/galileo-rs "$ENGINE"; fi
+  ENGINE="$WORK/galileo"
+  if [ -d "$ENGINE/.git" ]; then git -C "$ENGINE" pull -q; else git clone -q --depth 1 https://github.com/cascala/galileo "$ENGINE"; fi
 fi
 
 echo "== engine: WebAssembly"

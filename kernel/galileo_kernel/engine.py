@@ -18,7 +18,7 @@ class EngineError(Exception):
 def find_binary():
     path = os.environ.get("GALILEO_BIN") or shutil.which("galileo")
     if not path:
-        raise EngineError("the galileo executable was not found; install galileo-rs or set GALILEO_BIN")
+        raise EngineError("the galileo executable was not found; install galileo or set GALILEO_BIN")
     return path
 
 

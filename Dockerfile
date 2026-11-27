@@ -1,13 +1,13 @@
 # iGalileo: JupyterLab with the Galileo kernel, in one image.
 #
-# The engine, galileo-rs, is built from source, passed in as a named build context:
-#   docker build --build-context galileo=../galileo-rs -t cascala/igalileo .
-#   docker build --build-context galileo=https://github.com/cascala/galileo-rs.git -t cascala/igalileo .
+# The engine, galileo, is built from source, passed in as a named build context:
+#   docker build --build-context galileo=../galileo -t cascala/igalileo .
+#   docker build --build-context galileo=https://github.com/cascala/galileo.git -t cascala/igalileo .
 
 # ---- Build stage: the galileo executable (Rust, no dependencies) ----
 FROM rust:1-slim AS build
-COPY --from=galileo . /src/galileo-rs
-RUN cd /src/galileo-rs && cargo build --release --locked --bin galileo && \
+COPY --from=galileo . /src/galileo
+RUN cd /src/galileo && cargo build --release --locked --bin galileo && \
     cp target/release/galileo /usr/local/bin/galileo
 
 # ---- Run stage: Python + JupyterLab + the kernel wrapper ----

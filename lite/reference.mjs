@@ -1,7 +1,7 @@
-// Renders the language reference from galileo-rs (docs/language.md and docs/builtins.md)
+// Renders the language reference from galileo (docs/language.md and docs/builtins.md)
 // into pages of the web site: reference/index.html and reference/commands.html.
 //
-//   node lite/reference.mjs path/to/galileo-rs path/to/_site
+//   node lite/reference.mjs path/to/galileo path/to/_site
 //
 // marked comes from the kernel extension's node_modules (lite/kernel: npm ci).
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
@@ -15,7 +15,7 @@ const { marked } = require("marked");
 
 const [engine, site] = process.argv.slice(2);
 if (!engine || !site) {
-  console.error("usage: node lite/reference.mjs path/to/galileo-rs path/to/_site");
+  console.error("usage: node lite/reference.mjs path/to/galileo path/to/_site");
   process.exit(2);
 }
 
@@ -117,7 +117,7 @@ for (const p of pages) {
 ${body}
   </main>
   <footer>
-    The reference is part of the <a href="https://github.com/cascala/galileo-rs/tree/main/docs">Galileo engine</a>. Apache 2.0.
+    The reference is part of the <a href="https://github.com/cascala/galileo/tree/master/docs">Galileo engine</a>. Apache 2.0.
   </footer>
 </div>
 </body>
