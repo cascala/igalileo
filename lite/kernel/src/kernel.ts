@@ -1,7 +1,17 @@
 import { BaseKernel, IKernel } from '@jupyterlite/kernel';
-import { KernelMessage } from '@jupyterlab/services';
+import { Contents, KernelMessage } from '@jupyterlab/services';
 
-type Reply = { id: number; reply?: string; crash?: string };
+type Change = { op: 'write'; path: string; data: string } | { op: 'remove'; path: string };
+type Reply = { id: number; reply?: string; crash?: string; changes?: Change[] };
+
+// files written as text in the file browser (others as binary, base64)
+const TEXT = /\.(csv|tsv|txt|md|gg|tex|svg|eps|json|py|m|r)$/i;
+const fromB64 = (s: string) => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+const toB64 = (b: Uint8Array) => {
+  let s = '';
+  for (let i = 0; i < b.length; i += 0x8000) s += String.fromCharCode(...b.subarray(i, i + 0x8000));
+  return btoa(s);
+};
 
 /**
  * The Galileo kernel: the Rust engine compiled to WebAssembly, in a web worker.
@@ -10,10 +20,115 @@ export class GalileoKernel extends BaseKernel {
   private _worker: Worker;
   private _next = 0;
   private _pending = new Map<number, (r: Reply) => void>();
+  private _contents: Contents.IManager | null;
+  // what the engine has of the file browser's files: path -> last modified ('dir', 'stub' otherwise)
+  private _known = new Map<string, string>();
+  private _dirty = true;
+  private _started = false;
 
-  constructor(options: IKernel.IOptions) {
+  constructor(options: IKernel.IOptions, contents?: Contents.IManager) {
     super(options);
+    this._contents = contents ?? null;
+    this._contents?.fileChanged.connect(this._onFileChanged, this);
     this._worker = this._startWorker();
+  }
+
+  private _onFileChanged(): void {
+    this._dirty = true;
+  }
+
+  /**
+   * Give the engine the file browser's files, so read, load and ls see them. Only files
+   * that changed are fetched again; notebooks are listed but not handed over.
+   */
+  private async _sync(): Promise<void> {
+    const contents = this._contents;
+    if (!contents || !this._dirty) return;
+    this._dirty = false;
+    const seen = new Set<string>();
+    const walk = async (dir: string): Promise<void> => {
+      const model = await contents.get(dir, { content: true });
+      for (const item of (model.content ?? []) as Contents.IModel[]) {
+        const p = item.path;
+        seen.add(p);
+        const had = this._known.get(p);
+        if (item.type === 'directory') {
+          if (had !== 'dir') {
+            await this._file('mkdir', p);
+            this._known.set(p, 'dir');
+          }
+          await walk(p);
+        } else if (item.type === 'notebook') {
+          if (had !== 'stub') {
+            await this._file('stub', p, undefined, 'a notebook cannot be read from Galileo');
+            this._known.set(p, 'stub');
+          }
+        } else if (had !== item.last_modified) {
+          try {
+            const f = await contents.get(p, { content: true, type: 'file' });
+            const data = f.format === 'base64'
+              ? fromB64(String(f.content ?? ''))
+              : new TextEncoder().encode(typeof f.content === 'string' ? f.content : JSON.stringify(f.content));
+            await this._file('put', p, data);
+          } catch {
+            await this._file('stub', p, undefined, 'this file could not be read from the file browser');
+          }
+          this._known.set(p, item.last_modified);
+        }
+      }
+    };
+    try {
+      await walk('');
+    } catch {
+      return;
+    }
+    for (const p of [...this._known.keys()]) {
+      if (!seen.has(p)) {
+        await this._file('unput', p);
+        this._known.delete(p);
+      }
+    }
+    if (!this._started) {
+      this._started = true;
+      // start in the notebook's folder
+      if (this.location) await this._file('cd', this.location);
+    }
+  }
+
+  /** Store what the engine wrote or removed in the file browser */
+  private async _store(changes: Change[]): Promise<void> {
+    const contents = this._contents;
+    if (!contents) return;
+    for (const c of changes) {
+      const path = c.path.replace(/^\/+/, '');
+      try {
+        if (c.op === 'remove') {
+          await contents.delete(path);
+          this._known.delete(path);
+          continue;
+        }
+        const bytes = fromB64(c.data);
+        let model: Partial<Contents.IModel>;
+        const text = TEXT.test(path) ? new TextDecoder('utf-8', { fatal: true }) : null;
+        try {
+          model = text ? { type: 'file', format: 'text', content: text.decode(bytes) } : { type: 'file', format: 'base64', content: toB64(bytes) };
+        } catch {
+          model = { type: 'file', format: 'base64', content: toB64(bytes) };
+        }
+        const saved = await contents.save(path, model);
+        this._known.set(path, saved.last_modified);
+      } catch (err) {
+        console.warn('Galileo: could not store', path, err);
+      }
+    }
+  }
+
+  private async _file(op: string, path: string, data?: Uint8Array, why?: string): Promise<Reply> {
+    const id = this._next++;
+    return new Promise(resolve => {
+      this._pending.set(id, resolve);
+      this._worker.postMessage({ id, op, path: '/' + path.replace(/^\/+/, ''), data, code: why });
+    });
   }
 
   dispose(): void {
@@ -68,8 +183,14 @@ export class GalileoKernel extends BaseKernel {
   async executeRequest(
     content: KernelMessage.IExecuteRequestMsg['content']
   ): Promise<KernelMessage.IExecuteReplyMsg['content']> {
+    await this._sync();
     const r = await this._request('execute', content.code);
+    await this._store(r.changes ?? []);
     if (r.crash !== undefined) {
+      // the engine starts over without files: hand them over again next time
+      this._known.clear();
+      this._dirty = true;
+      this._started = false;
       const evalue = 'the engine crashed on this input; variables were reset';
       this.publishExecuteError({ ename: 'InternalError', evalue, traceback: [evalue] });
       return { status: 'error', execution_count: this.executionCount, ename: 'InternalError', evalue, traceback: [] };

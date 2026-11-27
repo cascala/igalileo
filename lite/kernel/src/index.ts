@@ -19,7 +19,7 @@ const plugin: JupyterFrontEndPlugin<void> = {
         argv: [],
         resources: { 'logo-32x32': logo, 'logo-64x64': logo }
       },
-      create: async (options: IKernel.IOptions) => new GalileoKernel(options)
+      create: async (options: IKernel.IOptions) => new GalileoKernel(options, app.serviceManager.contents)
     });
   }
 };

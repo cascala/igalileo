@@ -18,6 +18,41 @@ iGalileo is a Jupyter kernel for [Galileo](https://github.com/cascala/galileo), 
 
 * [Playground](https://cascala.github.io/igalileo/playground/): a light REPL with the learning paths as interactive lessons. Works on a phone, and the Share button makes a link that replays your session.
 * [Notebooks](https://cascala.github.io/igalileo/lab/lab/index.html): JupyterLite (JupyterLab in the browser) with the Galileo kernel and all the example notebooks. Notebooks you create are saved in your browser's storage.
+* [Galileo in your own page](https://cascala.github.io/igalileo/embed/): one script line turns the examples in any web page into blocks readers can edit and run (see below).
+
+<p>
+  <img src="doc/playground.png" width="49%" alt="The playground: a derivative, an integral, an exact quadratic solution, a symbolic matrix inverse and a plot">
+  <img src="doc/lesson.png" width="49%" alt="A lesson in the playground: Complex analysis 1, complex functions and how to picture them">
+</p>
+
+## Galileo in your own web page
+
+For teachers, lesson notes, blog posts and anyone exploring math on a web page: add one line to the page's `<head>`, and every `<pre class="galileo">` block becomes math readers can edit and run, with typeset results, interactive plots and short explanations. Galileo runs in the reader's browser; nothing is sent anywhere.
+
+```html
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Falling objects</title>
+  <script src="https://cascala.github.io/igalileo/embed/galileo.js" defer></script>
+</head>
+<body>
+  <pre class="galileo" data-hidden>g = 9.81;</pre>
+  <p>How far does a ball fall in 3 seconds?</p>
+  <pre class="galileo" data-autorun>h(t) := g*t^2/2
+h(3)</pre>
+  <pre class="galileo">plot(h(t), t, 0, 4)</pre>
+</body>
+</html>
+```
+
+* All blocks on a page share one session, so a block can use what an earlier one defined.
+* `data-autorun` runs a block when the page opens; `data-hidden` hides a setup block, which runs before any other; `data-readonly` lets readers run a block but not edit it.
+* Shift+Enter runs the block being edited; Reset puts the original code back; Stop ends a long computation.
+* For use without internet, [galileo-embed.zip](https://cascala.github.io/igalileo/embed/galileo-embed.zip) holds `galileo.js`, the engine and its libraries; keep them next to your pages and use `<script src="galileo.js" defer>`. Pages opened straight from disk work too.
+
+The [how-to page](https://cascala.github.io/igalileo/embed/) has a live demo, and [example.html](https://cascala.github.io/igalileo/embed/example.html) is a template to start from. The script is [`site/embed/galileo.js`](site/embed/galileo.js).
 
 ## Quick start: JupyterLab in Docker
 

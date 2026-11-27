@@ -140,11 +140,47 @@ $d\lambda/d\sigma$ must equal $L/\cos\sigma$:
 simplify(diff(L*asinh(tan(s)), s))
 
 %md
-That is $L/(\cos^2 s\,\sec s) = L/\cos s$ for $|s| < \pi/2$, since $\sqrt{\tan^2 s + 1} = \sec s$. The paper's **clock**
-is the reading $u_*$ of this coordinate at the corner, measured from a cut at distance $\lambda_c = \epsilon w/2$ from
-the middle of a slice of length $w$, where $0 < \epsilon < 1$ (equation 2.4c):
+That is $L/(\cos^2 s\,\sec s) = L/\cos s$ for $|s| < \pi/2$, since $\sqrt{\tan^2 s + 1} = \sec s$. So the coordinate
+$u = L\tan\sigma$ and the proper distance $\lambda$ name the same points of the slice: $u = L\sinh(\lambda/L)$.
+
+**Where the clock sits.** In the coordinates $(\sigma, \tau)$ light rays are lines at 45°, so a causal diamond is a
+square standing on one of its corners. Its widest slice, $\tau = 0$, has proper length $w$: it runs from
+$\lambda = -w/2$ to $\lambda = w/2$, and its end points are the **corners** of the diamond. On this slice the paper marks
+a reference point, the **cut**, at proper distance $\lambda_c = \epsilon w/2$ from the middle, with $0 < \epsilon < 1$,
+so the cut lies between the middle and the corner. The picture shows a diamond with $w = 4$, $L = 1$ and
+$\epsilon = 0.3$; each point is placed at $\sigma = \operatorname{atan}(\sinh \lambda)$, the conversion above. The
+frame runs from $\sigma = -\pi/2$ to $\pi/2$, the boundary of $\text{AdS}_2$:
+
+%code
+sw = eval(atan(sinh(2))); sc = eval(atan(sinh(0.6)));
+p = parametric(sw*cos(t)/(abs(cos(t)) + abs(sin(t))), sw*sin(t)/(abs(cos(t)) + abs(sin(t))), t, 0, 2*pi);
+p = show(p, parametric(s, 0, s, -sw, sw));
+p = show(p, scatter([0 0], [x y]), scatter([sc 0], [x y]), scatter([sw 0], [x y]));
+p = legend(p, "edges of the diamond (light rays)", "slice tau = 0, length w", "middle, lambda = 0", "cut, lambda_c = epsilon w/2", "corner, lambda = w/2");
+p = window(p, -pi/2, pi/2, -1.4, 2.4);
+labels(title(p, "The diamond in global coordinates (w = 4, L = 1, epsilon = 0.3)"), "sigma", "tau")
+
+%md
+**What the clock reads.** The clock is the coordinate $u$ moved so that it starts at the cut: shifted to be $0$ at
+$\lambda_c$, and divided by $\cosh(\lambda_c/L)$ so that near the cut it grows exactly as fast as proper distance (its
+slope there is $1$). The paper's clock $u_*$ is its reading at the corner, $\lambda = w/2$ (equation 2.4c):
 
 $$u_*(w) = L\,\frac{\sinh\!\big(w/2L\big) - \sinh\!\big(\lambda_c/L\big)}{\cosh\!\big(\lambda_c/L\big)}.$$
+
+The picture compares this clock with the plain proper distance from the cut, for the same diamond. The two curves touch
+at the cut; further out the clock runs ahead, because the slice is curved. At the corner it reads $u_* \approx 2.52$,
+where the proper distance from the cut is only $1.4$:
+
+%code
+U = (sinh(x) - sinh(0.6))/cosh(0.6);
+p = plot(U, x, 0, 2);
+p = show(p, plot(x - 0.6, x, 0, 2));
+p = show(p, scatter([0.6 0], [x y]), scatter([2 eval(subs(U, x, 2))], [x y]));
+p = legend(p, "clock: L sinh(lambda/L), 0 at the cut, slope 1 there", "proper distance from the cut, lambda - lambda_c", "cut, lambda_c = epsilon w/2 = 0.6", "corner, lambda = w/2 = 2: the reading u*");
+labels(title(p, "What the clock reads (w = 4, L = 1, epsilon = 0.3)"), "proper distance lambda from the middle of the slice", "u")
+
+%md
+Now as a formula in $w$, for diamonds of every size:
 
 %code
 ustar = L*(sinh(w/(2*L)) - sinh(lc/L))/cosh(lc/L);

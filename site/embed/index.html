@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Galileo in your own page</title>
+<meta name="description" content="Add live Galileo math to your own web page with one line: readers edit and run the examples right in the page.">
+<link rel="canonical" href="https://cascala.github.io/igalileo/embed/">
+<link rel="icon" href="../logo.svg" type="image/svg+xml">
+<script src="galileo.js" defer></script>
+<style>
+:root {
+  --bg: #fbfaf7; --panel: #fff; --ink: #17202f; --muted: #5d6675; --line: #e4e1da;
+  --accent: #d9820b; --accent-ink: #fff; --code-bg: #f3f1ec; color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f1522; --panel: #161e2e; --ink: #e8eaf0; --muted: #9aa3b5; --line: #273149;
+    --accent: #fca311; --accent-ink: #14213d; --code-bg: #1d2638; color-scheme: dark;
+  }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 17px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+a { color: var(--accent); }
+code, pre { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; }
+code { background: var(--code-bg); padding: .1em .35em; border-radius: 4px; font-size: .9em; }
+.wrap { max-width: 780px; margin: 0 auto; padding: 0 16px; }
+header.top { display: flex; align-items: center; gap: 10px; padding: 14px 0; }
+header.top .brand { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 19px; color: var(--ink); text-decoration: none; flex: 1; }
+header.top nav a { color: var(--muted); text-decoration: none; margin-left: 14px; }
+h1 { font-size: clamp(30px, 5vw, 44px); line-height: 1.1; margin: 24px 0 12px; letter-spacing: -.02em; }
+.lead { font-size: 19px; color: var(--muted); margin: 0 0 28px; }
+h2 { font-size: 26px; margin: 40px 0 8px; }
+pre.snippet { background: var(--code-bg); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; overflow-x: auto; font-size: 14px; line-height: 1.5; }
+.demo { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 4px 18px; }
+table { border-collapse: collapse; width: 100%; font-size: 16px; }
+th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { color: var(--muted); font-weight: 600; font-size: 14px; }
+td:first-child { white-space: nowrap; }
+.btn { display: inline-block; padding: 10px 18px; border-radius: 12px; text-decoration: none; font-weight: 600; border: 1px solid var(--line); color: var(--ink); background: var(--panel); margin: 4px 8px 4px 0; }
+.btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+footer { border-top: 1px solid var(--line); color: var(--muted); font-size: 14px; padding: 24px 0 40px; margin-top: 48px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="../"><img src="../logo.svg" alt="" width="30" height="30">Galileo</a>
+    <nav>
+      <a href="../playground/#lessons">Lessons</a>
+      <a href="../reference/">Reference</a>
+    </nav>
+  </header>
+
+  <h1>Galileo in your own page</h1>
+  <p class="lead">Lesson notes, worksheets, a blog post: add one line, and every example in the
+  page becomes math your readers can edit and run. It all runs in their browser, with nothing
+  to install and no account.</p>
+
+  <div class="demo">
+    <p>Try it: change a number and press <b>Run</b> (or Shift+Enter).</p>
+<pre class="galileo" data-autorun>f(x) := x^3 - 6*x^2 + 9*x
+deriv(f(x), x)
+solve(deriv(f(x), x) == 0, x)</pre>
+<pre class="galileo">plot(f(x), x, -1, 5)</pre>
+  </div>
+
+  <h2>How</h2>
+  <p>Put this line in the <code>&lt;head&gt;</code> of your page:</p>
+<pre class="snippet">&lt;script src="https://cascala.github.io/igalileo/embed/galileo.js" defer&gt;&lt;/script&gt;</pre>
+  <p>Then write each example as a <code>&lt;pre class="galileo"&gt;</code> block:</p>
+<pre class="snippet">&lt;pre class="galileo"&gt;integrate(x*sin(x), x)&lt;/pre&gt;</pre>
+  <p>That's all. Results show under each block: typeset formulas, interactive plots, and a short
+  explanation of what was computed. All blocks on a page share one session, so a block can use
+  what an earlier one defined. Your page's own text and layout stay exactly as they are.</p>
+  <p><a class="btn primary" href="example.html">See an example page</a>
+     <a class="btn" href="example.html" download>Download it as a template</a></p>
+
+  <h2>Options</h2>
+  <p>Add these to a <code>&lt;pre class="galileo"&gt;</code> tag:</p>
+  <table>
+    <tr><th>Option</th><th>What it does</th></tr>
+    <tr><td><code>data-autorun</code></td><td>Runs the block when the page opens, so readers see the result straight away.</td></tr>
+    <tr><td><code>data-hidden</code></td><td>Hides the block. It runs before any other block, which makes it the place for setup such as <code>g = 9.81;</code> or <code>explain = false;</code></td></tr>
+    <tr><td><code>data-readonly</code></td><td>Readers can run the block but not edit it.</td></tr>
+  </table>
+  <p>Readers can edit any other block; <b>Reset</b> puts your original code back, and <b>Stop</b>
+  ends a computation that runs too long. Statements ending in <code>;</code> run without
+  showing a result, as everywhere in Galileo; the <a href="../reference/">language reference</a>
+  lists every command.</p>
+
+  <h2>Where it works</h2>
+  <p>Anywhere you can add a <code>&lt;script&gt;</code> tag: your own site, GitHub Pages, most
+  blogs, Google Sites (with <i>Embed → Embed code</i>). Some course platforms remove scripts from
+  pages; there, put your page somewhere that keeps them and link to it.</p>
+
+  <h2>Without internet</h2>
+  <p>For a classroom without a connection, or to keep your own copy, download the files and keep
+  them next to your pages. Open <code>example.html</code> from the folder to check it works,
+  even straight from a USB stick. In your own pages, point the script at the copy:
+  <code>&lt;script src="galileo.js" defer&gt;&lt;/script&gt;</code>.</p>
+  <p><a class="btn" href="galileo-embed.zip" download>Download galileo-embed.zip</a></p>
+
+  <footer>
+    Galileo is made by Joris Esch and is open source (Apache 2.0):
+    <a href="https://github.com/cascala/galileo">engine</a> ·
+    <a href="https://github.com/cascala/igalileo/tree/master/site/embed">this page and galileo.js</a>
+  </footer>
+</div>
+</body>
+</html>
