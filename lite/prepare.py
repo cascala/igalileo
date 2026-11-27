@@ -36,6 +36,8 @@ GROUPS = [
      "Three lessons: Markov chains and the gambler's ruin, random walks and Brownian motion, then noisy differential equations, option prices and the phase transition of a magnet.", None),
     ("pde", "Partial differential equations",
      "Three lessons: how a rod cools and why simulations can explode, waves on a guitar string and its overtones, then steady temperatures, soap films and membranes.", None),
+    ("variations", "Calculus of variations",
+     "Three lessons: the fastest slide and the cycloid, hanging chains and soap films, and the principle of least action from Newton's law to the chaotic double pendulum.", None),
     ("group-theory", "Group theory",
      "Ten lessons: symmetry, cyclic groups, permutations and Lagrange's theorem, groups as objects, rings and finite fields, Galois theory and quaternions, counting with symmetry, polynomials over finite fields, ruler and compass, and error-correcting codes.", None),
     ("chaos", "Chaos and fractals",

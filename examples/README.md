@@ -37,6 +37,8 @@ cascala/igalileo`, or open them on GitHub to read them with their results.
   and the Ising model.
 * [Partial differential equations](pde/README.md): three lessons, from the heat equation and numerical stability
   through waves on a string, pitch and overtones to Laplace's and Poisson's equations for plates and membranes.
+* [Calculus of variations](variations/README.md): three lessons, from the shortest path and the fastest slide
+  through hanging chains, soap films and Dido's problem to the principle of least action and the double pendulum.
 * [Group theory](group-theory/README.md): symmetry, cyclic groups, permutations, Lagrange's theorem, quotients, Sylow, solvable groups, rings and finite fields, Galois theory, quaternions and Lie algebras, Burnside counting, ruler and compass, and error-correcting codes.
 * [Chaos and fractals](chaos/README.md): the logistic map, bifurcations, the Lorenz attractor, the Mandelbrot set.
 * [Differential geometry](differential-geometry/README.md): curves, surfaces, curvature, geodesics, the Riemann tensor.
