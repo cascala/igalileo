@@ -1,5 +1,5 @@
 %md
-# Discovering laws 4: Proving the precession
+# Discovering laws 4: Deriving the precession
 
 *Learning path: discovering physical laws, part 4 of 4.* [Index](README.md) · Previous: [Mercury doesn't fit](03-mercury.ipynb)
 
@@ -9,40 +9,14 @@ follow the calculation from Einstein's orbit equation to the famous formula for 
 
 $$\Delta\phi = \frac{6\pi GM}{c^2 p} \text{ per orbit},$$
 
-checking every algebraic step with `prove`, and then test the result against the observations with no free constant at
+letting Galileo do every algebraic step, and then test the result against the observations with no free constant at
 all. You will learn
 
-* what `prove` does, what it assumes, and what "proved" does and doesn't mean,
 * how a physical prediction is built from a chain of small, checkable steps,
 * why a theory with no adjustable constants is a much stronger claim than a fit.
 
 %md
-## 1. What `prove` does
-
-`prove(lhs, rhs)` tries to show that two expressions are equal. It subtracts them, brings the difference over a common
-denominator, expands and simplifies, and if the result is 0 says **Proved**, listing what it had to assume along the
-way, such as denominators not being zero. A small example:
-
-%code
-prove(x^2/x, x)
-
-%md
-Galileo simplified $x^2/x$ to $x$ as soon as it read it, but `prove` looked at the formula as you typed it and noticed
-the division by $x$: the identity only holds for $x \neq 0$.
-
-If the two sides differ, `prove` looks for a counterexample by trying random numbers:
-
-%code
-prove((a + b)^2, a^2 + b^2)
-
-%md
-And a third case: if it can't simplify the difference to 0 but finds no counterexample, it says "Not proved" and
-explains that agreement at random points is evidence, not proof. `prove` is honest about which of the three happened.
-
-`prove(lhs, rhs, [name value; name value])` first substitutes values for names, one per row. We'll use that below.
-
-%md
-## 2. Einstein's orbit equation
+## 1. Einstein's orbit equation
 
 For a planet moving in the curved spacetime around the Sun (the Schwarzschild solution), the same two tricks as in
 Newton's case (angle as the clock, $u = 1/r$) turn the geodesic equation into [1]
@@ -61,7 +35,7 @@ $\epsilon = 4.43$ km. The data in part 3 gave $4.44$ km. Before going further, t
 But to compare properly we should predict the observed quantity, the perihelion advance, from the equation.
 
 %md
-## 3. Step by step
+## 2. Step by step
 
 Write $A = GM/h^2$. The steps:
 
@@ -96,7 +70,7 @@ angle $2\pi/\omega$.
 $\epsilon$:
 
 %code
-prove(taylor(2*pi/sqrt(1 - 2*epsilon*u0), epsilon, 0, 1) - 2*pi, 2*pi*epsilon*u0)
+taylor(2*pi/sqrt(1 - 2*epsilon*u0), epsilon, 0, 1) - 2*pi
 
 %md
 $\Delta\phi = 2\pi\epsilon u_0 \approx 2\pi\epsilon A$, since $u_0 = A$ to first order (the difference is of order
@@ -104,21 +78,20 @@ $\epsilon^2$, a hundred million times smaller for Mercury).
 
 **Step 4: physical constants.** Substitute $\epsilon = 3GM/c^2$, $A = GM/h^2$, and $h^2 = GMp$, the relation between
 angular momentum and the orbit's semi-latus rectum from Newton's theory (in [part 2](02-newton.ipynb) we saw
-$A = GM/h^2 = 1/p$). The third argument of `prove` holds these substitutions, one per row, `[name value]`:
+$A = GM/h^2 = 1/p$). `subs(f, x, value)` replaces $x$ by a value; three of them in a row:
 
 %code
-prove(2*pi*epsilon*A, 6*pi*G*M/(c^2*p), [epsilon 3*G*M/c^2; A G*M/h^2; h sqrt(G*M*p)])
+subs(subs(subs(2*pi*epsilon*A, epsilon, 3*G*M/c^2), A, G*M/h^2), h, sqrt(G*M*p))
 
 %md
-**Proved**: $\Delta\phi = 6\pi GM/(c^2 p)$ per orbit, assuming $c$, $p$ and $h$ are nonzero and $GMp \ge 0$, which
-they are for any real orbit.
+So $\Delta\phi = 6\pi GM/(c^2 p)$ per orbit.
 
-What has and hasn't been proved: `prove` checked the *algebra* of each step. The *physics* (Einstein's equation, and
+What Galileo did and didn't do here: it carried out the *algebra* of each step. The *physics* (Einstein's equation, and
 the approximations "drop $x^2$" and "first order in $\epsilon$") is ours. A computer algebra system makes the steps
 reliable; it doesn't make the assumptions true.
 
 %md
-## 4. Numbers for Mercury
+## 3. Numbers for Mercury
 
 Mercury: $a = 0.3871$ AU, $e = 0.2056$, period 0.2408467 years [3]. With $GM/c^2 = 1476.6$ m and
 1 AU $= 1.495978707 \times 10^{11}$ m:
@@ -141,7 +114,7 @@ eval(dphi*180/pi*3600*100/0.2408467)
 Einstein found this number in November 1915 he wrote that he was beside himself with joy for days [4].
 
 %md
-## 5. A prediction with no free constant
+## 4. A prediction with no free constant
 
 In part 3, `check` fitted the constant $k$ in $w = k/p$ to the data. General relativity leaves nothing to fit:
 $k = 6\pi GM/c^2$ in arcsec·AU per orbit is fixed by the Sun's mass and the speed of light.
@@ -168,7 +141,7 @@ observations, the curve is Einstein's prediction $0.03838/p$.
 legend(labels(show(scatter(pw, [p w], sw), plot(0.03838/p, p, 0.3, 1.05)), "semi-latus rectum p (AU)", "perihelion turn per orbit (arcsec)"), "observed (Mercury, Icarus, Venus, Earth)", "general relativity: 6 pi GM/(c^2 p)")
 
 %md
-## 6. What discovery can and cannot do
+## 5. What discovery can and cannot do
 
 Looking back over the four lessons:
 
@@ -180,7 +153,7 @@ Looking back over the four lessons:
   would hint at. What data *can* do is decide between theories, as `check` did here: Einstein's has no free constant
   and passes; a Newtonian "Vulcan" or an arbitrary $1/r^4$ force would need a constant tuned for the purpose, and then
   makes wrong predictions elsewhere.
-* **Proved:** that the algebra from Einstein's orbit equation to $6\pi GM/(c^2p)$ is right, under stated assumptions.
+* **Derived:** the algebra from Einstein's orbit equation to $6\pi GM/(c^2p)$, under stated approximations.
 
 This is how physics actually works: patterns in data (Kepler), an explanation that unifies them (Newton), a crack in the
 explanation found by better data (Le Verrier), a pattern in the crack (the $1/p$ scaling), and a new theory that

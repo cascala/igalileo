@@ -441,7 +441,7 @@
     let m = t.match(/^Matrix:(\d+)\(r\),(\d+)\(c\)$/);
     if (m) return m[1] === '1' || m[2] === '1' ? `a list of ${Math.max(+m[1], +m[2])} numbers or expressions` : `a table of ${m[1]} rows × ${m[2]} columns`;
     return { Scalar: 'a number', Expression: 'an expression', Variable: 'a name', Boolean: 'true or false', String: 'text',
-      Figure: 'a plot', Figure3D: 'a 3D plot', Discovery: 'a discover result', Check: 'a check result', Proof: 'a proof' }[t] || ('a ' + t);
+      Figure: 'a plot', Figure3D: 'a 3D plot', Discovery: 'a discover result', Check: 'a check result' }[t] || ('a ' + t);
   }
   // A short note under a cell whose results were hidden, so running it visibly did something
   async function quietNote(code, res, box) {
