@@ -1,6 +1,6 @@
 {
   "name": "@galileo/jupyterlite-kernel",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "private": true,
   "description": "Galileo kernel for JupyterLite: the Rust engine compiled to WebAssembly, running in a web worker",
   "license": "Apache-2.0",
