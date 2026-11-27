@@ -201,8 +201,8 @@ which is why we need a sieve.
 two numbers whose product is $N$, smaller first (when $N$ has more than two prime factors, they need not be prime). Its cost is counted in **work units**, basic operations, as in
 lesson 6: they compare runs fairly on any computer. With `explain = "teach"` its
 explanation walks through every step with this run's own numbers: the polynomial, the factor bases, real relations
-you can check, the matrix, the two square roots and the gcd. (`explain = true` gives the short log instead, and
-`explain = false` hides explanations.)
+you can check, the matrix, the two square roots and the gcd. (`explain = "brief"` gives the short log instead, and
+`explain = "off"` hides explanations.)
 
 %code
 explain = "teach";
@@ -271,7 +271,7 @@ $a^d$. The explanation lists both sizes for each degree. Try degree 4 on the sam
 units with the run in section 5:
 
 %code
-explain = true;
+explain = "brief";
 gnfs(2^128 + 1, x^4 + 1, 2^32)
 
 %md
@@ -341,7 +341,7 @@ wins in the end. But "in the end" is far away. Here is the general number field 
 the scoreboard of lesson 6 with both methods:
 
 %code
-explain = true;
+explain = "brief";
 gnfs(semiprime(30, 1))
 
 %code

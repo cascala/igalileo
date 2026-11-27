@@ -100,7 +100,7 @@ test at a point; with `explain = "teach"` its note also shows $D$ with the numbe
 explain = "teach"
 classify(f, [x y], [0 0])
 classify(f, [x y], [1 1])
-explain = true
+explain = "brief"
 
 %md
 And on the map: the X-shaped crossing at the origin, closed curves around $(1, 1)$:

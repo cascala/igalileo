@@ -31,7 +31,8 @@ prime factors of 360:
 factor(360)
 
 %md
-`explain = false` switches explanations off for the rest of the session, and `explain = true` switches them back on.
+`explain = "off"` switches explanations off for the rest of the session, and `explain = "brief"` switches them back on
+(`explain = "teach"` gives longer, step-by-step ones).
 A `;` at the end of a line hides the answer and its explanation.
 
 Multiplication is written `*` and happens before addition, as in school: $2 + 3 \cdot 4 = 14$. Use brackets to change

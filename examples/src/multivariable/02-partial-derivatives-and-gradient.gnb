@@ -172,7 +172,7 @@ grad(1/r, [r theta phi], "spherical")
 
 %md
 $\nabla(1/r) = [-1/r^2, 0, 0]$: pointing inward along $\hat r$, with strength falling off as $1/r^2$. The electric
-field is $E = -\nabla V$, pointing outward: Coulomb's law. With `explain = true` (the default) Galileo's note under
+field is $E = -\nabla V$, pointing outward: Coulomb's law. With `explain = "brief"` (the default) Galileo's note under
 the result reminds you of the scale factors it used.
 
 %md

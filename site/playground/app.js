@@ -128,7 +128,7 @@
       }
       const d = o.data;
       if (o.notes) {
-        // an explanation, shown apart from the result; switch off with: explain = false
+        // an explanation, shown apart from the result; switch off with: explain = "off"
         const n = el('div', 'notes');
         n.innerHTML = markdown((d['text/markdown'] || '').replace(/^> ?/gm, ''));
         box.appendChild(n);
