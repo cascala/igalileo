@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Falling objects</title>
+<!-- Galileo: every <pre class="galileo"> below becomes a block readers can edit and run -->
+<script src="https://cascala.github.io/igalileo/embed/galileo.js" defer></script>
+<style>
+  body { max-width: 46rem; margin: 2rem auto; padding: 0 1rem; font: 17px/1.6 Georgia, serif; }
+</style>
+</head>
+<body>
+<h1>Falling objects</h1>
+
+<!-- a hidden block: runs before the others, readers do not see it -->
+<pre class="galileo" data-hidden>g = 9.81;</pre>
+
+<p>A ball dropped from rest falls a distance <i>h</i>(<i>t</i>) = ½ <i>g t</i>². How far has it fallen after 3 seconds?</p>
+
+<pre class="galileo" data-autorun>h(t) := g*t^2/2
+h(3)</pre>
+
+<p>Its speed is the derivative of the distance:</p>
+
+<pre class="galileo">deriv(h(t), t)</pre>
+
+<p>When does it hit the ground from a 50 m tower? Change the height and run it again.</p>
+
+<pre class="galileo">solve(h(t) == 50, t)</pre>
+
+<pre class="galileo">plot(h(t), t, 0, 4)</pre>
+</body>
+</html>
