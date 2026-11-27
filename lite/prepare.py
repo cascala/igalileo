@@ -34,6 +34,8 @@ GROUPS = [
      "Three lessons: Euler's bridges and tours, shortest routes, spanning trees, flows and matchings, then scheduling by coloring, PageRank, the rise of the Medici and random graphs.", None),
     ("random-processes", "Random processes",
      "Three lessons: Markov chains and the gambler's ruin, random walks and Brownian motion, then noisy differential equations, option prices and the phase transition of a magnet.", None),
+    ("pde", "Partial differential equations",
+     "Three lessons: how a rod cools and why simulations can explode, waves on a guitar string and its overtones, then steady temperatures, soap films and membranes.", None),
     ("group-theory", "Group theory",
      "Ten lessons: symmetry, cyclic groups, permutations and Lagrange's theorem, groups as objects, rings and finite fields, Galois theory and quaternions, counting with symmetry, polynomials over finite fields, ruler and compass, and error-correcting codes.", None),
     ("chaos", "Chaos and fractals",
