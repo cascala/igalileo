@@ -11,7 +11,7 @@ positions. You will learn
 
 * how to change a table with `transform` (units, angles, $1/r$),
 * how to give `discover` your own building blocks, such as $\cos\phi$,
-* how `discover` finds a law involving a **rate of change**, written with a prime: $\phi'$ or $u''$,
+* how `discover` finds a law involving a **rate of change**, written with `d`: `d(phi, t)` for $\phi'$ or `d(u, phi, 2)` for $u''$,
 * how the inverse-square law and the orbit equation drop out of the data.
 
 %md
@@ -99,14 +99,14 @@ and 1.52371 AU [3]. Everything about the orbit's shape was in the data.
 ## 3. Equal areas: a law about a rate
 
 Mars sped up near the Sun. How fast does its direction change? That is the **rate** $\phi' = d\phi/dt$, in radians per
-day. We don't have it in the table, but `discover` can estimate it: write the name with a prime in the list of
-columns, `[t phi' r]`. That means: the first column is time $t$; the second column holds $\phi$, and the quantity to
+day. We don't have it in the table, but `discover` can estimate it: write its derivative with `d` in the list of
+columns, `[t d(phi, t) r]`. That means: the first column is time $t$; the second column holds $\phi$, and the quantity to
 explain is its rate $\phi'$, estimated from each row and its neighbours (by fitting a smooth curve through five rows);
 the third column is $r$.
 
 %code
 k2 = transform(mars, [t lon r], [t lon*pi/180 r]);
-discover(k2, [t phi' r])
+discover(k2, [t d(phi, t) r])
 
 %md
 The answer: $\phi' = 0.021141/r^2$, or
@@ -165,11 +165,11 @@ lesson](../general-relativity/05-orbits.ipynb) for the derivation): an inverse-s
 $$u'' + u = \frac{GM}{h^2}, \qquad u'' = \frac{d^2u}{d\phi^2}.$$
 
 Can we find this equation in the data, without assuming it? We ask `discover` for $u''$, the second rate of change of
-$u$ with respect to $\phi$, as a sum of powers of $u$. In `[phi u'']`, the first column $\phi$ is the variable we
-differentiate by, and `u''` means: the second column holds $u$, explain its second derivative.
+$u$ with respect to $\phi$, as a sum of powers of $u$. In `[phi d(u, phi, 2)]`, the first column $\phi$ is the variable we
+differentiate by, and `d(u, phi, 2)` means: the second column holds $u$, explain its second derivative.
 
 %code
-discover(orbit, [phi u''], [1 u u^2 u^3])
+discover(orbit, [phi d(u, phi, 2)], [1 u u^2 u^3])
 
 %md
 $u'' = 0.662 - u$, so $u'' + u = 0.662$: the Binet equation. Estimating a second derivative from rounded data costs

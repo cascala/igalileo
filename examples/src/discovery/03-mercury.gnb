@@ -176,7 +176,7 @@ The plot shows the orbit, $x = r\cos\phi$ and $y = r\sin\phi$ with $r = 1/u$, in
 ellipse turning a little each time. Now ask for $u''$ in terms of powers of $u$:
 
 %code
-discover(tab, [phi u'' v], [1 u u^2 u^3])
+discover(tab, [phi d(u, phi, 2) v], [1 u u^2 u^3])
 
 %md
 Exactly right: $u'' = 1 - u + 0.05u^2$. On perfect data, `discover` finds the extra term.
@@ -185,7 +185,7 @@ Now the trap that part 2 warned about. Take an orbit *without* the extra term, a
 
 %code
 newton = odedata([v, 1 - u], [u v], phi, [1.4 0], 0, 30, 600);
-discover(newton, [phi u'' v], [1 u u^2 cos(phi)])
+discover(newton, [phi d(u, phi, 2) v], [1 u u^2 cos(phi)])
 
 %md
 The best formula is $u'' = -\tfrac25\cos\phi$, and it is true: this orbit is $u = 1 + 0.4\cos\phi$, so on it

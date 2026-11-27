@@ -62,7 +62,7 @@ labels(title(p, "Secants turn into the tangent as h shrinks"), "x", "y")
 %md
 ### Rules
 
-`deriv(f, x)` (or `f'(x)` for a function you defined) computes derivatives with the usual rules: the power rule
+`deriv(f, x)` or `d(f, x)` (also for a function you defined) computes derivatives with the usual rules: the power rule
 $(x^n)' = nx^{n-1}$, the product rule $(uv)' = u'v + uv'$, the chain rule $f(g(x))' = f'(g(x))\,g'(x)$:
 
 %code
@@ -70,7 +70,7 @@ deriv(x^5, x)
 deriv(sin(x)*exp(x), x)
 deriv(sin(x^2), x)
 deriv(log(x), x)
-f'(x)
+d(f, x)
 
 %md
 ## 3. Maxima and minima
@@ -85,7 +85,7 @@ height $h$ follows from the volume $\pi r^2 h = 1000$, and the area of metal is 
 h = 1000/(pi*r^2);
 A(r) := 2*pi*r^2 + 2*pi*r*h;
 A(r)
-solve(A'(r) == 0, r)
+solve(d(A, r) == 0, r)
 eval(ans)
 
 %md
@@ -199,7 +199,7 @@ eval(e)
 ## Summary
 
 * `limit(f, x, a)`: what $f$ approaches; `inf` for infinity.
-* The derivative is the limit of secant slopes; `deriv(f, x)` and `f'(x)`. Maxima and minima: solve $f'(x) = 0$.
+* The derivative is the limit of secant slopes; `deriv(f, x)` and `d(f, x)`. Maxima and minima: solve $f'(x) = 0$.
 * The integral is the limit of sums of rectangles; `integrate(f, x, a, b)`, and `integrate(f, x)` for antiderivatives.
 * Fundamental theorem: $\int_a^b f = F(b) - F(a)$ where $F' = f$.
 * `taylor(f, x, a, n)` approximates $f$ by a polynomial.

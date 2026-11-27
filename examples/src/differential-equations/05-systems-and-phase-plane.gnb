@@ -34,7 +34,7 @@ $$x' = v, \qquad v' = -2x - 3v.$$
 `dsolve` takes a list of first-order equations and a list of unknowns:
 
 %code
-dsolve([x' == v, v' == -2*x - 3*v], [x, v], t, 0, [1, 0])
+dsolve([d(x, t) == v, d(v, t) == -2*x - 3*v], [x, v], t, 0, [1, 0])
 
 %md
 The first entry is the position, the second the velocity (and indeed it is the derivative of the first). Behind the
@@ -43,7 +43,7 @@ $-1$ and $-2$, are the roots of the characteristic equation of lesson 3. A const
 equilibrium:
 
 %code
-dsolve([x' == -x + 2*y + 1, y' == -2*x - y], [x, y], t)
+dsolve([d(x, t) == -x + 2*y + 1, d(y, t) == -2*x - y], [x, y], t)
 
 %md
 The solutions spiral (the $\cos 2t$, $\sin 2t$) into the point $(1/5, -2/5)$, where both right-hand sides vanish.
@@ -202,7 +202,7 @@ Next: [series solutions](06-series-solutions.ipynb), for linear equations whose 
 %md
 ## Hints and answers
 
-* **Section 1, Try this.** `dsolve([y' == v, v' == -y], [y, v], t, 0, [0, 1])` gives $[\sin t, \cos t]$.
+* **Section 1, Try this.** `dsolve([d(y, t) == v, d(v, t) == -y], [y, v], t, 0, [0, 1])` gives $[\sin t, \cos t]$.
 * **Section 2, Try this.** $T = -2$, $D = 5 > T^2/4 = 1$: a stable spiral (eigenvalues $-1 \pm 2i$).
 * **Section 3, Try this.** It ends at $(0, 2)$: the sheep win, so it lies on the sheep's side of the incoming line of
   the saddle, even though it starts with as many rabbits as sheep.

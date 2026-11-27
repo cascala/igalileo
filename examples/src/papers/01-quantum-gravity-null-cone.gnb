@@ -187,7 +187,7 @@ Check this for a matter pulse $\phi = \sin(\pi u)$, so $(\phi')^2 = \pi^2\cos^2(
 equation directly and evaluating the integral formula:
 
 %code
-dsolve(y'' == -pi^2*(1 + cos(2*pi*x))/2, y, x, 0, [0 0])
+dsolve(d(y, x, 2) == -pi^2*(1 + cos(2*pi*x))/2, y, x, 0, [0 0])
 integrate(-(x - u)*pi^2*cos(pi*u)^2, u, 0, x)
 
 %md
@@ -219,7 +219,7 @@ The shear term is never negative, so gravitational waves focus light just as mat
 $(\partial_u\bar q)^2 = 8k^2$ the equation is $\varrho'' = -k^2\varrho$:
 
 %code
-dsolve(y'' + k^2*y == 0, y, x, 0, [1 0])
+dsolve(d(y, x, 2) + k^2*y == 0, y, x, 0, [1 0])
 p = plot(cos(x), x, 0, pi/2);
 p = show(p, plot(1, x, 0, pi/2));
 p = legend(p, "area radius with shear (k = 1)", "no shear");

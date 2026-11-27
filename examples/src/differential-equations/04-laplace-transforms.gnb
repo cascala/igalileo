@@ -62,11 +62,11 @@ come along automatically.
 %md
 ## 2. Solving an initial value problem
 
-Solve $y'' + 3y' + 2y = 1$ with $y(0) = 1$, $y'(0) = 0$. Transform both sides; write $y(t)$, $y'(t)$, $y''(t)$ so that
+Solve $y'' + 3y' + 2y = 1$ with $y(0) = 1$, $y'(0) = 0$. Transform both sides; write `y(t)`, `d(y, t)` and `d(y, t, 2)` so that
 `laplace` knows $y$ is the unknown function:
 
 %code
-laplace(y''(t) + 3*y'(t) + 2*y(t), t, s)
+laplace(d(y, t, 2) + 3*d(y, t) + 2*y(t), t, s)
 
 %md
 With $y(0) = 1$, $y'(0) = 0$ and $\mathcal L\{1\} = 1/s$, the differential equation has become an **algebraic**
@@ -85,7 +85,7 @@ $\frac{1}{s + 1} \mapsto e^{-t}$, $\frac{-1/2}{s + 2} \mapsto -\frac12e^{-2t}$. 
 
 %code
 ilaplace(Y, s, t)
-dsolve(y'' + 3*y' + 2*y == 1, y, t, 0, [1, 0])
+dsolve(d(y, t, 2) + 3*d(y, t) + 2*y == 1, y, t, 0, [1, 0])
 
 %md
 The method never needed a guess, and the start values were built in from the beginning.

@@ -34,7 +34,7 @@ becomes $(r^2 - 5r + 6)e^{rt} = 0$. So $r$ must solve the **characteristic equat
 $r = 3$. Both $e^{2t}$ and $e^{3t}$ are solutions, and since the equation is linear, so is every combination:
 
 %code
-dsolve(y'' - 5*y' + 6*y == 0, y, t)
+dsolve(d(y, t, 2) - 5*d(y, t) + 6*y == 0, y, t)
 
 %md
 A second-order equation needs **two** constants, fixed by two start values $y(0)$ and $y'(0)$ (position and velocity).
@@ -50,7 +50,7 @@ The complex case comes from $e^{(\alpha + i\beta)t} = e^{\alpha t}(\cos\beta t +
 parts are both real solutions.
 
 %code
-dsolve(y'' + 2*y' + 5*y == 0, y, t, 0, [1, 0])
+dsolve(d(y, t, 2) + 2*d(y, t) + 5*y == 0, y, t, 0, [1, 0])
 
 %md
 Roots $-1 \pm 2i$: the solution oscillates with angular frequency 2 inside an envelope $e^{-t}$.
@@ -59,7 +59,7 @@ Roots $-1 \pm 2i$: the solution oscillates with angular frequency 2 inside an en
 from?
 
 %code
-dsolve(y'' + 6*y' + 9*y == 0, y, t, 0, [1, 0])
+dsolve(d(y, t, 2) + 6*d(y, t) + 9*y == 0, y, t, 0, [1, 0])
 
 %md
 ## 2. The damped oscillator
@@ -72,9 +72,9 @@ $r = (-c \pm \sqrt{c^2 - 16})/2$, so everything depends on the sign of $c^2 - 16
 * $c > 4$: two negative real roots, **overdamped**: it creeps back slowly.
 
 %code
-y1 = dsolve(y'' + y' + 4*y == 0, y, t, 0, [1, 0]);
-y2 = dsolve(y'' + 4*y' + 4*y == 0, y, t, 0, [1, 0]);
-y3 = dsolve(y'' + 10*y' + 4*y == 0, y, t, 0, [1, 0]);
+y1 = dsolve(d(y, t, 2) + d(y, t) + 4*y == 0, y, t, 0, [1, 0]);
+y2 = dsolve(d(y, t, 2) + 4*d(y, t) + 4*y == 0, y, t, 0, [1, 0]);
+y3 = dsolve(d(y, t, 2) + 10*d(y, t) + 4*y == 0, y, t, 0, [1, 0]);
 p = plot(y1, y2, y3, t, 0, 8);
 p = legend(p, "c = 1: underdamped", "c = 4: critically damped", "c = 10: overdamped");
 labels(title(p, "y'' + c y' + 4 y = 0, released from y = 1 at rest"), "time t", "position y")
@@ -93,7 +93,7 @@ Push the undamped spring with a periodic force: $y'' + 4y = \cos t$. The general
 $y_p'' + 4y_p = -A\cos t + 4A\cos t = 3A\cos t$, so $A = 1/3$. Starting at rest:
 
 %code
-dsolve(y'' + 4*y == cos(t), y, t, 0, [0, 0])
+dsolve(d(y, t, 2) + 4*y == cos(t), y, t, 0, [0, 0])
 
 %md
 The guesses for common inputs:
@@ -109,8 +109,8 @@ The guesses for common inputs:
 matches the natural frequency $\omega = 2$:
 
 %code
-dsolve(y'' + 4*y == cos(2*t), y, t, 0, [0, 0])
-dsolve(y'' + 4*y == cos(9*t/5), y, t, 0, [0, 0])
+dsolve(d(y, t, 2) + 4*y == cos(2*t), y, t, 0, [0, 0])
+dsolve(d(y, t, 2) + 4*y == cos(9*t/5), y, t, 0, [0, 0])
 
 %md
 At $\omega = 2$ the answer $\tfrac t4\sin 2t$ grows without bound: **resonance**. At $\omega = 1.8$, close to 2, the
@@ -126,7 +126,7 @@ labels(title(p, "y'' + 4y = cos(omega t), starting at rest"), "time t", "positio
 **Try this.** Solve $y'' - 3y' + 2y = e^t$. Why does the particular solution contain $te^t$ and not $e^t$?
 
 %code
-dsolve(y'' - 3*y' + 2*y == exp(t), y, t)
+dsolve(d(y, t, 2) - 3*d(y, t) + 2*y == exp(t), y, t)
 
 %md
 ## 4. The amplitude response
@@ -140,7 +140,7 @@ found by putting $y_p = a\cos\omega t + b\sin\omega t$ into the equation. `dsolv
 a letter:
 
 %code
-dsolve(y'' + y' + 4*y == cos(w*t), y, t)
+dsolve(d(y, t, 2) + d(y, t) + 4*y == cos(w*t), y, t)
 
 %md
 The amplitude is largest where $(4 - \omega^2)^2 + \omega^2$ is smallest:
@@ -173,8 +173,8 @@ $x^2y'' = r(r - 1)x^r$ and $xy' = rx^r$, so $r(r - 1) + br + c = 0$. Example: $x
 $r^2 - 3r + 2 = 0$, so $r = 1, 2$:
 
 %code
-dsolve(x^2*y'' - 2*x*y' + 2*y == 0, y, x)
-dsolve(x^2*y'' + x*y' + 4*y == 0, y, x)
+dsolve(x^2*d(y, x, 2) - 2*x*d(y, x) + 2*y == 0, y, x)
+dsolve(x^2*d(y, x, 2) + x*d(y, x) + 4*y == 0, y, x)
 
 %md
 Complex roots $r = \pm 2i$ give $x^{2i} = e^{2i\log x}$, so $\cos(2\log x)$ and $\sin(2\log x)$. The substitution
@@ -186,7 +186,7 @@ section 1 with $t$ replaced by $\log x$. These equations appear when you separat
 $t e^{rt}$ of section 1?
 
 %code
-dsolve(x^2*y'' - 3*x*y' + 4*y == 0, y, x)
+dsolve(x^2*d(y, x, 2) - 3*x*d(y, x) + 4*y == 0, y, x)
 
 %md
 ## Summary

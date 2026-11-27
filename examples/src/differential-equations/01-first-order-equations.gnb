@@ -35,7 +35,7 @@ so its slope is $f$. `window(p, x0, x1, y0, y1)` keeps the picture to the square
 `dsolve` finds the formula, with a constant `C1` for the family of solutions:
 
 %code
-sol = dsolve(y' == x - y, y, x)
+sol = dsolve(d(y, x) == x - y, y, x)
 
 %md
 Check it by substitution, which is always possible and always worth it: $y = C_1e^{-x} + x - 1$ gives
@@ -72,8 +72,8 @@ Example: $y' = xy$. Then $\int dy/y = \int x\,dx$, so $\log|y| = x^2/2 + C$ and 
 $\pm e^C$ is renamed $C_1$). `dsolve` does the same steps, and with `explain` on its note shows them:
 
 %code
-dsolve(y' == x*y, y, x)
-dsolve(y' == -x/y, y, x, 0, 2)
+dsolve(d(y, x) == x*y, y, x)
+dsolve(d(y, x) == -x/y, y, x, 0, 2)
 
 %md
 The second equation has slopes perpendicular to the radius vector $[x, y]$, so its solutions are circles:
@@ -84,7 +84,7 @@ $x = \pm2$, where the slope becomes vertical: a solution need not live for all $
 obeys $h' = -k\sqrt{h}$. With $k = 1/2$ and $h(0) = 4$:
 
 %code
-h = dsolve(h' == -sqrt(h)/2, h, t, 0, 4)
+h = dsolve(d(h, t) == -sqrt(h)/2, h, t, 0, 4)
 
 %md
 So $h = (8 - t)^2/16$ until the tank is empty at $t = 8$; after that $h = 0$. A tank empties in finite time, unlike
@@ -97,7 +97,7 @@ $y = 0$, which is the member $C_1 = 0$ of the family. Not always: see section 5.
 **Try this.** Solve $y' = y\cos x$ with $y(0) = 1$ by hand, then check with `dsolve`.
 
 %code
-dsolve(y' == y*cos(x), y, x, 0, 1)
+dsolve(d(y, x) == y*cos(x), y, x, 0, 1)
 
 %md
 ## 3. The logistic equation
@@ -110,7 +110,7 @@ $$P' = rP\left(1 - \frac{P}{K}\right).$$
 It is separable. With $r = 1/2$ and $K = 1000$ and 100 fish at the start:
 
 %code
-fish = dsolve(P' == P*(1 - P/1000)/2, P, t, 0, 100)
+fish = dsolve(d(P, t) == P*(1 - P/1000)/2, P, t, 0, 100)
 
 %md
 That is $P(t) = \dfrac{1000\,e^{t/2}}{e^{t/2} + 9}$. By hand: partial fractions give
@@ -118,8 +118,8 @@ $\dfrac{1}{P(1 - P/K)} = \dfrac1P + \dfrac{1}{K - P}$, so $\log P - \log(K - P) 
 $P = K/(1 + Ae^{-rt})$ with $A = (K - P_0)/P_0 = 9$. Different starts, below and above $K$:
 
 %code
-fish2 = dsolve(P' == P*(1 - P/1000)/2, P, t, 0, 1500);
-fish3 = dsolve(P' == P*(1 - P/1000)/2, P, t, 0, 20);
+fish2 = dsolve(d(P, t) == P*(1 - P/1000)/2, P, t, 0, 1500);
+fish3 = dsolve(d(P, t) == P*(1 - P/1000)/2, P, t, 0, 20);
 p = plot(fish, fish2, fish3, 1000, t, 0, 20);
 p = legend(p, "start 100", "start 1500 (overstocked)", "start 20", "carrying capacity K = 1000");
 labels(title(p, "Logistic growth: every positive start ends at K"), "time t (years)", "fish P")
@@ -176,7 +176,7 @@ check with `solve` and `deriv`.
 Two surprises that the slope field does not show. First, a solution can go to infinity in finite time:
 
 %code
-dsolve(y' == y^2, y, x, 0, 1)
+dsolve(d(y, x) == y^2, y, x, 0, 1)
 
 %md
 $y = 1/(1 - x)$ starts at 1 and is infinite at $x = 1$. The growth rate $y^2$ grows faster than $y$ itself, and the
@@ -185,7 +185,7 @@ solution runs away. (Compare $y' = y$, which only reaches $e^x$.)
 Second, a solution need not be unique. $y' = \sqrt{y}$ with $y(0) = 0$ has the solution $y = 0$, but also:
 
 %code
-dsolve(y' == sqrt(y), y, x, 0, 0)
+dsolve(d(y, x) == sqrt(y), y, x, 0, 0)
 
 %md
 Both $y = 0$ and $y = x^2/4$ (for $x \ge 0$) satisfy the equation and the start value; in fact $y$ can sit at 0 for any
@@ -233,7 +233,7 @@ factor.
 * **Section 5, Try this.** $f = x^2 + y^2$ and $\partial f/\partial y = 2y$ are continuous everywhere: unique.
   (The solution exists only up to about $x = 2.0$, where it blows up.)
 * **Exercise 1.** $y = 0$ unstable ($f'(0) = 1$), $y = 1$ stable ($f'(1) = -1$).
-* **Exercise 2.** `dsolve(y' == 1 + y^2, y, x, 0, 0)` gives $\tan x$, which blows up at $x = \pi/2$.
+* **Exercise 2.** `dsolve(d(y, x) == 1 + y^2, y, x, 0, 0)` gives $\tan x$, which blows up at $x = \pi/2$.
 * **Exercise 3.** $T = 20 + 70e^{-t/10}$; $60 = 20 + 70e^{-t/10}$ gives $t = 10\log(7/4) \approx 5.6$ minutes.
 * **Exercise 4.** $P^2 - P + h = 0$ has $P = (1 \pm \sqrt{1 - 4h})/2$, real exactly when $h \le 1/4$.
 * **Exercise 5.** $v^2/2 = GM/r + C$; $v^2 = v_0^2 - 2GM/R + 2GM/r$, which tends to $v_0^2 - 2GM/R$. Zero when

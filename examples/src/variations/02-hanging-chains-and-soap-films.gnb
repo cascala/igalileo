@@ -37,13 +37,13 @@ $$A[y] = \int_{-1}^{1} 2\pi\, y \sqrt{1 + y'^2}\; dx.$$
 Its Euler–Lagrange equation:
 
 %code
-eulerlagrange(y*sqrt(1 + y'^2), y, x)
+eulerlagrange(y*sqrt(1 + d(y, x)^2), y, x)
 
 %md
 $L$ does not contain $x$, so the energy (Beltrami's identity from lesson 1) is constant:
 
 %code
-energy(y*sqrt(1 + y'^2), y, x)
+energy(y*sqrt(1 + d(y, x)^2), y, x)
 
 %md
 So $y/\sqrt{1 + y'^2} = c$, a constant. The function $y = c\cosh(x/c)$ solves it: its slope is $\sinh(x/c)$, and since
@@ -59,8 +59,8 @@ Two catenaries fit, a fat one ($c \approx 1.70$) and a thin one ($c \approx 0.47
 option: no film between the rings at all, just two flat discs filling them, area $2\pi R^2$:
 
 %code
-eval(action(2*pi*y*sqrt(1 + y'^2), y, x, 1.6967*cosh(x/1.6967), -1, 1), 4)
-eval(action(2*pi*y*sqrt(1 + y'^2), y, x, 0.4702*cosh(x/0.4702), -1, 1), 4)
+eval(action(2*pi*y*sqrt(1 + d(y, x)^2), y, x, 1.6967*cosh(x/1.6967), -1, 1), 4)
+eval(action(2*pi*y*sqrt(1 + d(y, x)^2), y, x, 0.4702*cosh(x/0.4702), -1, 1), 4)
 eval(2*pi*2^2, 4)
 
 %md
@@ -68,7 +68,7 @@ The fat catenoid has the smallest area; it is the film you see. The thin one is 
 equation, but a saddle: bend it slightly and its area goes down. `extremal` finds the fat one directly:
 
 %code
-s = extremal(2*pi*y*sqrt(1 + y'^2), y, x, -1, 1, 2, 2);
+s = extremal(2*pi*y*sqrt(1 + d(y, x)^2), y, x, -1, 1, 2, 2);
 eval(s.J, 4)
 labels(legend(plot(s.x, s.y), "profile of the film"), "x", "radius")
 
@@ -97,7 +97,7 @@ For rings of radius below $1.5089$ (times the half-distance) there is **no caten
 stretched further than that snaps, and the soap ends up as two flat discs, one in each ring (the **Goldschmidt
 solution**, found by Benjamin Goldschmidt in 1831). It has corners where the film meets the rings, so it is not a smooth
 curve, and the Euler–Lagrange equation cannot see it. Asked for a film between rings of radius 1.4,
-`extremal(y*sqrt(1 + y'^2), y, x, -1, 1, 1.4, 1.4)` reports that its search ran off and that no smooth path makes
+`extremal(y*sqrt(1 + d(y, x)^2), y, x, -1, 1, 1.4, 1.4)` reports that its search ran off and that no smooth path makes
 the area stationary.
 
 Even before that point the film is in danger. For $R = 1.6$ a catenoid exists, but its area is *larger* than the two
@@ -105,7 +105,7 @@ discs:
 
 %code
 c4 = fsolve(c*cosh(1/c) - 1.6, c, 1.2)
-eval(action(2*pi*y*sqrt(1 + y'^2), y, x, c4*cosh(x/c4), -1, 1), 4)
+eval(action(2*pi*y*sqrt(1 + d(y, x)^2), y, x, c4*cosh(x/c4), -1, 1), 4)
 eval(2*pi*1.6^2, 4)
 
 %md
@@ -127,7 +127,7 @@ $\int (y + \lambda)\sqrt{1 + y'^2}\,dx$ without constraint. Then choose $\lambda
 comes out right.
 
 %code
-eulerlagrange((y + lam)*sqrt(1 + y'^2), y, x)
+eulerlagrange((y + lam)*sqrt(1 + d(y, x)^2), y, x)
 
 %md
 This is the soap-film equation for $y + \lambda$ instead of $y$: the chain is a catenary again,
@@ -135,7 +135,7 @@ $y = c\cosh(x/c) - \lambda$, shifted down. Its length from $-1$ to $1$ is $2c\si
 
 %code
 k = fsolve(2*c*sinh(1/c) - 3, c, 1)
-eval(action(sqrt(1 + y'^2), y, x, k*cosh(x/k), -1, 1), 6)
+eval(action(sqrt(1 + d(y, x)^2), y, x, k*cosh(x/k), -1, 1), 6)
 
 %md
 The chain hangs as $y = k\cosh(x/k) - k\cosh(1/k)$, which is 0 at the hooks. Here it is next to a parabola that sags
@@ -153,7 +153,7 @@ is the ideal shape for an arch that carries only its own weight, pure compressio
 Robert Hooke wrote in 1675 "as hangs the flexible line, so but inverted will stand the rigid arch". The Gateway Arch in
 St. Louis is a (slightly flattened) catenary.
 
-**Try this.** How long is the parabola with the same sag? Use `action(sqrt(1 + y'^2), y, x, sag*(x^2 - 1), -1, 1)`.
+**Try this.** How long is the parabola with the same sag? Use `action(sqrt(1 + d(y, x)^2), y, x, sag*(x^2 - 1), -1, 1)`.
 
 %md
 ## 4. Dido's problem
@@ -166,7 +166,7 @@ Take the coast as the $x$-axis and the strip as a curve $y(x)$ from $(-1, 0)$ to
 $\int y\,dx$ with the length $\int \sqrt{1 + y'^2}\,dx$ fixed. With a multiplier:
 
 %code
-eulerlagrange(y + lam*sqrt(1 + y'^2), y, x)
+eulerlagrange(y + lam*sqrt(1 + d(y, x)^2), y, x)
 
 %md
 The left side divided by $(1 + y'^2)^{3/2}$ is the **curvature** of the curve, so the curvature is the constant $1/\lambda$:
@@ -174,7 +174,7 @@ the best curve is an arc of a circle. With the strip of length $\pi$ between $-1
 $y = \sqrt{1 - x^2}$, with this length and area:
 
 %code
-eval(action(sqrt(1 + y'^2), y, x, sqrt(1 - x^2), -1, 1), 6)
+eval(action(sqrt(1 + d(y, x)^2), y, x, sqrt(1 - x^2), -1, 1), 6)
 action(y, y, x, sqrt(1 - x^2), -1, 1)
 
 %md

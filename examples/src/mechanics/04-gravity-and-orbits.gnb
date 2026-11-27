@@ -233,7 +233,7 @@ Next: [Lagrangian mechanics](05-lagrangian-mechanics.ipynb), a way to get equati
 * **Exercise 2.** $GM = 4\pi^2(1\,\mathrm{AU})^3/(1\,\mathrm{yr})^2$, giving $M \approx 1.99\cdot10^{30}$ kg.
 * **Exercise 3.** $\tfrac12\cdot2 - 1 = 0$. With speed 1.5 the energy is positive and the orbit is a hyperbola: the
   planet leaves for good.
-* **Exercise 4.** `dsolve(u'' + u == k, u, th)` gives $u = k + C_1\cos\theta + C_2\sin\theta$, so
+* **Exercise 4.** `dsolve(d(u, th, 2) + u == k, u, th)` gives $u = k + C_1\cos\theta + C_2\sin\theta$, so
   $r = 1/(k + C\cos(\theta - \theta_0))$: an ellipse, parabola or hyperbola.
 * **Exercise 5.** $a \approx 195\,000$ km, so about 5 days. (Apollo, on a faster path, took 3.)
 * **Exercise 6.** About $-1.287$, the same at both ends to many digits.

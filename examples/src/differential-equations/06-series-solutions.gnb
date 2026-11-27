@@ -32,7 +32,7 @@ This **recurrence** gives every coefficient from $a_0 = y(0)$ and $a_1 = y'(0)$:
 so on. `seriessolve(ode, y, x, n)` does this up to $x^n$:
 
 %code
-seriessolve(y'' + y == 0, y, x, 8)
+seriessolve(d(y, x, 2) + y == 0, y, x, 8)
 
 %md
 The series multiplying $a_0$ is $1 - x^2/2! + x^4/4! - \cdots = \cos x$, and the one multiplying $a_1$ is $\sin x$.
@@ -41,7 +41,7 @@ The method found the solutions of lesson 3 without knowing about sines and cosin
 **Try this.** Solve $y' = 2xy$, $y(0) = 1$ by series, and compare with `taylor(exp(x^2), x, 0, 8)`.
 
 %code
-seriessolve(y' == 2*x*y, y, x, 8, [1])
+seriessolve(d(y, x) == 2*x*y, y, x, 8, [1])
 
 %md
 ## 2. Airy's equation: a new function
@@ -54,7 +54,7 @@ $$a_2 = 0, \qquad a_{n+2} = \frac{a_{n-1}}{(n + 2)(n + 1)}:$$
 the coefficients come in steps of three.
 
 %code
-ai = seriessolve(y'' == x*y, y, x, 15)
+ai = seriessolve(d(y, x, 2) == x*y, y, x, 15)
 
 %md
 Neither series is a function you have met; together they define the **Airy functions**. For $x < 0$ the equation
@@ -85,7 +85,7 @@ is $a_{k+2} = \frac{2(k - n)}{(k + 2)(k + 1)}a_k$: when $k = n$ the factor $k - 
 $n = 3$ the odd series is a polynomial:
 
 %code
-seriessolve(y'' - 2*x*y' + 6*y == 0, y, x, 8)
+seriessolve(d(y, x, 2) - 2*x*d(y, x) + 6*y == 0, y, x, 8)
 hermite(3, x)
 
 %md
@@ -97,7 +97,7 @@ Legendre's equation $(1 - x^2)y'' - 2xy' + \ell(\ell + 1)y = 0$ comes from the L
 electrostatics, the hydrogen atom). For $\ell = 3$:
 
 %code
-seriessolve((1 - x^2)*y'' - 2*x*y' + 12*y == 0, y, x, 8)
+seriessolve((1 - x^2)*d(y, x, 2) - 2*x*d(y, x) + 12*y == 0, y, x, 8)
 legendre(3, x)
 
 %md
@@ -114,7 +114,7 @@ The series for $\cos x$ converges everywhere. Others do not: for $(1 + x^2)y'' +
 $y'(0) = 1$:
 
 %code
-seriessolve((1 + x^2)*y'' + 2*x*y' == 0, y, x, 11, [0, 1])
+seriessolve((1 + x^2)*d(y, x, 2) + 2*x*d(y, x) == 0, y, x, 11, [0, 1])
 
 %md
 That is $x - x^3/3 + x^5/5 - \cdots = \arctan x$, which converges only for $|x| \le 1$, even though $\arctan x$ is
@@ -169,7 +169,7 @@ Next: [Fourier series](07-fourier-series.ipynb), which expand in sines and cosin
   $P_2 = (3x^2 - 1)/2$.
 * **Section 4, Try this.** Singular points $x = \pm2$: radius 2.
 * **Exercise 1.** $a_{n+2} = -a_n/(n + 2)$: $a_2 = -1/2$, $a_4 = 1/8$, $a_6 = -1/48$, the series of $e^{-x^2/2}$.
-  `seriessolve(y'' + x*y' + y == 0, y, x, 8, [1, 0])`.
+  `seriessolve(d(y, x, 2) + x*d(y, x) + y == 0, y, x, 8, [1, 0])`.
 * **Exercise 2.** The even series stops: $1 - 2x^2$, which is $-T_2 = -(2x^2 - 1)$.
 * **Exercise 3.** Roots $x = -1 \pm i$, at distance $\sqrt2$: radius $\sqrt2$.
 * **Exercise 4.** $x + x^4/12 + x^7/504$.

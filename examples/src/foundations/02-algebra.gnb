@@ -182,12 +182,12 @@ ring(1, 2)
 factor(ring(r, R))
 
 %md
-Galileo can also differentiate your function: `f'(x)` is the derivative (the slope, see
+Galileo can also differentiate your function: `d(f, x)` is the derivative (the slope, see
 [calculus](07-calculus.ipynb)):
 
 %code
-f'(x)
-solve(f'(x), x)
+d(f, x)
+solve(d(f, x), x)
 
 %md
 `ans` is always the last answer. Using it in a definition stores the answer as it is *now*, so you can turn a result

@@ -86,7 +86,7 @@ are (we come back to that in [calculus](07-calculus.ipynb)):
 
 %code
 solve(f(x), x)
-solve(f'(x), x)
+solve(d(f, x), x)
 
 %md
 ## 2. Where a function is not defined

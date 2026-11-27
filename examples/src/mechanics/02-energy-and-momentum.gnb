@@ -128,7 +128,7 @@ momentum conservation does the rest. In a time $dt$ the rocket of mass $M$ eject
 and gains speed $dv$: $M\,dv = -u\,dM$. As a differential equation for $v$ as a function of the mass:
 
 %code
-dsolve(v' == -u/M, v, M, M0, 0)
+dsolve(d(v, M) == -u/M, v, M, M0, 0)
 
 %md
 This is **Tsiolkovsky's rocket equation** (1903): $\Delta v = u\log(M_0/M_1)$. The speed grows only with the logarithm

@@ -115,8 +115,8 @@ A person of 70 kg weighs about 686.5 N. (Weight is a force; the mass is what the
 Without air the only force is gravity, $\mathbf F = (0, -mg)$, so $x'' = 0$ and $y'' = -g$. Galileo solves them:
 
 %code
-dsolve(x'' == 0, x, t, 0, [0 vx])
-dsolve(y'' == -g, y, t, 0, [0 vy])
+dsolve(d(x, t, 2) == 0, x, t, 0, [0 vx])
+dsolve(d(y, t, 2) == -g, y, t, 0, [0 vy])
 
 %md
 That is the $\mathbf r(t)$ of section 2. The ball lands when $y = 0$ again, at $T = 2v_y/g$, and has then travelled

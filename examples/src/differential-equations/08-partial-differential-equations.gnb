@@ -41,7 +41,7 @@ The $X$ problem has a nonzero solution only for special $\lambda$. `dsolve` give
 boundary conditions do the rest:
 
 %code
-dsolve(X'' + lam*X == 0, X, x)
+dsolve(d(X, x, 2) + lam*X == 0, X, x)
 
 %md
 (Galileo assumes $\lambda > 0$ here; $\lambda \le 0$ gives only $X = 0$.) $X(0) = 0$ forces $C_1 = 0$, and

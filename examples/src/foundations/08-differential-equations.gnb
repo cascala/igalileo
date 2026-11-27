@@ -39,17 +39,17 @@ value of $y$ at the start, $y(0) = y_0$. Then $C = y_0$.
 ## 2. Solving with `dsolve`
 
 `dsolve(equation, y, t)` solves an equation for the unknown function $y$ of the variable $t$. Write the derivatives
-with primes: `y'` is $y'$, `y''` is $y''$. The answer contains the free constants `C1`, `C2`, ...
+with `d`: `d(y, t)` is $y'$, `d(y, t, 2)` is $y''$. The answer contains the free constants `C1`, `C2`, ...
 
 %code
-dsolve(y' == k*y, y, t)
+dsolve(d(y, t) == k*y, y, t)
 
 %md
 With initial conditions add two more arguments: the starting time $t_0$, and a list with the starting values
 $[y(t_0), y'(t_0), \ldots]$ (one value for each order of the equation):
 
 ```
-dsolve(equation, y, t, t0, [y(t0), y'(t0), ...])
+dsolve(equation, y, t, t0, [y(t0), d(y, t0), ...])
 ```
 
 ### Radioactive decay
@@ -59,7 +59,7 @@ $N' = -k N$ with $k = \log 2/5730$ per year. Start with 100 grams at $t = 0$:
 
 %code
 k = log(2)/5730;
-N = dsolve(N' == -k*N, N, t, 0, [100])
+N = dsolve(d(N, t) == -k*N, N, t, 0, [100])
 eval(subs(N, t, 5730))
 eval(subs(N, t, 20000))
 solve(N == 25, t)
@@ -83,7 +83,7 @@ A cup of coffee at 90 °C stands in a room at 20 °C. It cools at a rate proport
 $T' = -k(T - 20)$. Galileo keeps $k$ as a symbol:
 
 %code
-T = dsolve(T' == -k*(T - 20), T, t, 0, [90])
+T = dsolve(d(T, t) == -k*(T - 20), T, t, 0, [90])
 
 %md
 The difference with the room, $70e^{-kt}$, decays exponentially. Measured: after 10 minutes the coffee is at 60 °C.
@@ -115,8 +115,8 @@ $$y'' + \omega^2 y = 0.$$
 A second-order equation needs two initial conditions: where the mass starts, $y(0)$, and how fast, $y'(0)$.
 
 %code
-dsolve(y'' + w^2*y == 0, y, t)
-dsolve(y'' + 4*y == 0, y, t, 0, [1, 0])
+dsolve(d(y, t, 2) + w^2*y == 0, y, t)
+dsolve(d(y, t, 2) + 4*y == 0, y, t, 0, [1, 0])
 
 %md
 Without friction the spring oscillates forever, with angular frequency $\omega$ (here 2, so the period is
@@ -132,9 +132,9 @@ constant $c$. The **characteristic equation** $r^2 + c r + 4 = 0$ (put $y = e^{r
 * $c^2 > 16$: two negative real roots, a slow creep back (**overdamped**).
 
 %code
-under = dsolve(y'' + 2*y' + 4*y == 0, y, t, 0, [1, 0])
-critical = dsolve(y'' + 4*y' + 4*y == 0, y, t, 0, [1, 0])
-over = dsolve(y'' + 5*y' + 4*y == 0, y, t, 0, [1, 0])
+under = dsolve(d(y, t, 2) + 2*d(y, t) + 4*y == 0, y, t, 0, [1, 0])
+critical = dsolve(d(y, t, 2) + 4*d(y, t) + 4*y == 0, y, t, 0, [1, 0])
+over = dsolve(d(y, t, 2) + 5*d(y, t) + 4*y == 0, y, t, 0, [1, 0])
 
 %md
 All three start at $y = 1$ at rest. The horizontal axis is time, the vertical axis the position of the mass (0 is
@@ -155,8 +155,8 @@ different frequency than the spring, the motion stays bounded. If it has exactly
 $\Omega = 2$, every push adds to the swing and the amplitude grows without limit: **resonance**.
 
 %code
-off = dsolve(y'' + 4*y == cos(t), y, t, 0, [0, 0])
-res = dsolve(y'' + 4*y == cos(2*t), y, t, 0, [0, 0])
+off = dsolve(d(y, t, 2) + 4*y == cos(t), y, t, 0, [0, 0])
+res = dsolve(d(y, t, 2) + 4*y == cos(2*t), y, t, 0, [0, 0])
 p = plot(off, res, t, 0, 30);
 p = legend(p, "pushed at frequency 1: bounded", "pushed at frequency 2: resonance, grows like t/4");
 labels(title(p, "Forced spring y'' + 4y = cos(W t)"), "time t", "position y")
@@ -251,8 +251,8 @@ which `dsolve` solves exactly. How good is that approximation? Compare both for 
 and a large one (2.5 rad). `show` overlays the plots:
 
 %code
-small = dsolve(th'' + g/L*th == 0, th, t, 0, [0.2, 0]);
-big = dsolve(th'' + g/L*th == 0, th, t, 0, [2.5, 0]);
+small = dsolve(d(th, t, 2) + g/L*th == 0, th, t, 0, [0.2, 0]);
+big = dsolve(d(th, t, 2) + g/L*th == 0, th, t, 0, [2.5, 0]);
 p1 = odeplot([w, -g/L*sin(th)], [th w], t, [0.2 0; 2.5 0], 0, 6, [t th]);
 p = show(p1, plot(small, big, t, 0, 6));
 p = legend(p, "exact, 0.2 rad", "exact, 2.5 rad", "small-angle formula, 0.2 rad", "small-angle formula, 2.5 rad");
@@ -291,7 +291,7 @@ labels(title(legend(p, "start at the bottom with 7 rad/s"), "Spinning over the t
 ## Summary
 
 * A differential equation relates a function to its derivatives; check a solution by substituting it.
-* `dsolve(eq, y, t)` solves linear equations exactly; `dsolve(eq, y, t, t0, [y0, y'0, ...])` adds initial conditions.
+* `dsolve(eq, y, t)` solves linear equations exactly; `dsolve(eq, y, t, t0, [y(t0), d(y, t0), ...])` adds initial conditions.
 * Exponential growth and decay, cooling, the spring: damping and resonance follow from the characteristic equation.
 * Nonlinear equations: write them as first-order systems and use `odesolve` (end values) and `odeplot` (pictures),
   with arguments: right-hand sides, unknowns, time variable, start values, start time, end time, what to draw.

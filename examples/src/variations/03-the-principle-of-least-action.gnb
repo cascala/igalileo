@@ -35,10 +35,10 @@ it leaves the hand at $t = 0$ and comes back at $t = 2$. The true path is the pa
 Compare its action with some other paths with the same start and end:
 
 %code
-eval(action(y'^2/2 - 9.81*y, y, t, 9.81*t*(2 - t)/2, 0, 2), 5)
-eval(action(y'^2/2 - 9.81*y, y, t, 0.8*9.81*t*(2 - t)/2, 0, 2), 5)
-eval(action(y'^2/2 - 9.81*y, y, t, 1.2*9.81*t*(2 - t)/2, 0, 2), 5)
-eval(action(y'^2/2 - 9.81*y, y, t, 9.81*t*(2 - t)/2 + sin(pi*t), 0, 2), 5)
+eval(action(d(y, t)^2/2 - 9.81*y, y, t, 9.81*t*(2 - t)/2, 0, 2), 5)
+eval(action(d(y, t)^2/2 - 9.81*y, y, t, 0.8*9.81*t*(2 - t)/2, 0, 2), 5)
+eval(action(d(y, t)^2/2 - 9.81*y, y, t, 1.2*9.81*t*(2 - t)/2, 0, 2), 5)
+eval(action(d(y, t)^2/2 - 9.81*y, y, t, 9.81*t*(2 - t)/2 + sin(pi*t), 0, 2), 5)
 
 %md
 The true path has the smallest action; going a bit lower or a bit higher costs more. A path that flies higher gains
@@ -46,7 +46,7 @@ potential energy (which lowers $S$) but has to move faster (which raises it); th
 `extremal` finds it without being told about parabolas:
 
 %code
-s = extremal(y'^2/2 - 9.81*y, y, t, 0, 2, 0, 0);
+s = extremal(d(y, t)^2/2 - 9.81*y, y, t, 0, 2, 0, 0);
 Y = s.y;
 eval(Y(51), 4)
 eval(9.81/2, 4)
@@ -61,13 +61,13 @@ The Euler–Lagrange equation of $L = T - V$ is the equation of motion. For a ma
 and $V = \tfrac12 k x^2$:
 
 %code
-eulerlagrange(m*x'^2/2 - k*x^2/2, x, t)
+eulerlagrange(m*d(x, t)^2/2 - k*x^2/2, x, t)
 
 %md
 That is Hooke's law with Newton's $F = ma$: $m x'' = -kx$. For the ball, $m y'' = -mg$:
 
 %code
-eulerlagrange(m*y'^2/2 - m*g*y, y, t)
+eulerlagrange(m*d(y, t)^2/2 - m*g*y, y, t)
 
 %md
 In general, with $L = \tfrac12 m x'^2 - V(x)$, the equation $\frac{d}{dt}(m x') = -V'(x)$ is exactly "mass times
@@ -79,7 +79,7 @@ The real strength of the method shows for a **pendulum**: a mass $m$ on a rod of
 the vertical. Its speed is $l\theta'$ and its height $-l\cos\theta$, so
 
 %code
-eulerlagrange(m*l^2*th'^2/2 + m*g*l*cos(th), th, t)
+eulerlagrange(m*l^2*d(th, t)^2/2 + m*g*l*cos(th), th, t)
 
 %md
 No forces in the rod, no components along and across: just write down the energies in the coordinate you like and
@@ -95,7 +95,7 @@ The note under the pendulum's equation says that $L$ does not contain $t$, so `e
 Lagrangians that quantity is exactly kinetic plus potential energy:
 
 %code
-energy(m*l^2*th'^2/2 + m*g*l*cos(th), th, t)
+energy(m*l^2*d(th, t)^2/2 + m*g*l*cos(th), th, t)
 
 %md
 $\tfrac12 m l^2 \theta'^2 - m g l\cos\theta = T + V$. Conservation of energy is a consequence of the laws not changing in
@@ -105,8 +105,8 @@ time.
 from rest at a small angle and at a large one, 3 radians (almost upside down):
 
 %code
-small = motion(th'^2/2 + 9.81*cos(th), th, t, 0.2, 0, 10);
-big = motion(th'^2/2 + 9.81*cos(th), th, t, 3, 0, 10);
+small = motion(d(th, t)^2/2 + 9.81*cos(th), th, t, 0.2, 0, 10);
+big = motion(d(th, t)^2/2 + 9.81*cos(th), th, t, 3, 0, 10);
 p = legend(plot(small.t, small.q), "start at 0.2");
 p = show(p, legend(plot(big.t, big.q), "start at 3"));
 labels(p, "time t", "angle")
@@ -126,7 +126,7 @@ A planet moves in the plane around the sun. In polar coordinates $(r, \varphi)$ 
 $r'^2 + r^2\varphi'^2$, and the potential is $-k/r$:
 
 %code
-eulerlagrange(m*(r'^2 + r^2*f'^2)/2 + k/r, [r f], t)
+eulerlagrange(m*(d(r, t)^2 + r^2*d(f, t)^2)/2 + k/r, [r f], t)
 
 %md
 The note says that $L$ does not contain the angle $\varphi$ (here written `f`) itself, so $m r^2 \varphi'$ is
@@ -139,7 +139,7 @@ Simulate an orbit with $m = k = 1$, starting at distance 1 with sideways speed 1
 along the way:
 
 %code
-orbit = motion((r'^2 + r^2*f'^2)/2 + 1/r, [r f], t, [1 0], [0 1.2], 20);
+orbit = motion((d(r, t)^2 + r^2*d(f, t)^2)/2 + 1/r, [r f], t, [1 0], [0 1.2], 20);
 Q = orbit.q;
 V = orbit.v;
 R = Q(1);
@@ -167,8 +167,8 @@ Deriving its equations of motion by hand takes a page; `motion` does it for you.
 position: the lower arm at $2$ and at $2.000001$:
 
 %code
-d1 = motion(a'^2 + b'^2/2 + a'*b'*cos(a - b) + 2*9.81*cos(a) + 9.81*cos(b), [a b], t, [2 2], [0 0], 15, 6000);
-d2 = motion(a'^2 + b'^2/2 + a'*b'*cos(a - b) + 2*9.81*cos(a) + 9.81*cos(b), [a b], t, [2 2.000001], [0 0], 15, 6000);
+d1 = motion(d(a, t)^2 + d(b, t)^2/2 + d(a, t)*d(b, t)*cos(a - b) + 2*9.81*cos(a) + 9.81*cos(b), [a b], t, [2 2], [0 0], 15, 6000);
+d2 = motion(d(a, t)^2 + d(b, t)^2/2 + d(a, t)*d(b, t)*cos(a - b) + 2*9.81*cos(a) + 9.81*cos(b), [a b], t, [2 2.000001], [0 0], 15, 6000);
 A1 = d1.q;
 A2 = d2.q;
 p = legend(plot(d1.t, A1(2)), "lower arm, start 2");
@@ -200,7 +200,7 @@ path, where free particles follow geodesics, the paths of stationary length in c
 ## Exercises
 
 1. **Free fall, minimised.** A stone is at height 10 at $t = 0$ and at height 0 at $t = 1$. Find its path with
-   `extremal(y'^2/2 - 9.81*y, y, t, 0, 1, 10, 0)` and read off its height at $t = 1/2$ (point 51). Compare with
+   `extremal(d(y, t)^2/2 - 9.81*y, y, t, 0, 1, 10, 0)` and read off its height at $t = 1/2$ (point 51). Compare with
    $y = 10 + v_0 t - \tfrac g2 t^2$: what was the starting speed $v_0$?
 2. **Spring energy.** For $L = \tfrac12 x'^2 - \tfrac12 x^2$, start `motion` at $x = 1$ at rest and run to $t = 2\pi$.
    Where is the mass? What does the note say about the energy?

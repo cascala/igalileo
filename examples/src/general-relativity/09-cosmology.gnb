@@ -51,7 +51,7 @@ so a galaxy 100 Mpc away moves away from us at about 6 770 km/s.
 
 What decides how $a(t)$ grows? Einstein's equations $G_{ab} = 8\pi G\,T_{ab}$ (part 3), with the universe filled evenly
 with "stuff" of **density** $\rho$ (energy per volume) and **pressure** $p$. Galileo computes the left side for any
-$a(t)$; `a(t)` is an unknown function and `a'(t)` its derivative:
+$a(t)$; `a(t)` is an unknown function and `d(a, t)` its derivative:
 
 %code
 frw = metric([t x y z], [-1 0 0 0; 0 a(t)^2 0 0; 0 0 a(t)^2 0; 0 0 0 a(t)^2])

@@ -47,7 +47,7 @@ directions, the middle spring works hard, and the frequency is $\sqrt3$ times hi
 Every motion is a sum of the two. Pull only the left mass to $x = 1$ and let go:
 
 %code
-s = dsolve([x' == u, y' == v, u' == -2*x + y, v' == x - 2*y], [x, y, u, v], t, 0, [1, 0, 0, 0])
+s = dsolve([d(x, t) == u, d(y, t) == v, d(u, t) == -2*x + y, d(v, t) == x - 2*y], [x, y, u, v], t, 0, [1, 0, 0, 0])
 
 %code
 p = plot(s(1), t, 0, 20);
@@ -68,7 +68,7 @@ Now let the middle spring be weak, a tenth of the others: $\ddot x = -1.1x + 0.1
 two modes have frequencies $1$ and $\sqrt{1.2} \approx 1.095$, close together:
 
 %code
-s = dsolve([x' == u, y' == v, u' == -11/10*x + y/10, v' == x/10 - 11/10*y], [x, y, u, v], t, 0, [1, 0, 0, 0])
+s = dsolve([d(x, t) == u, d(y, t) == v, d(u, t) == -11/10*x + y/10, d(v, t) == x/10 - 11/10*y], [x, y, u, v], t, 0, [1, 0, 0, 0])
 
 %code
 p = plot(s(1), t, 0, 70);

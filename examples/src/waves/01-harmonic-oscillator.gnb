@@ -28,7 +28,7 @@ A mass $m$ on a spring of stiffness $k$ obeys $m\ddot x = -kx$, or $\ddot x + \o
 $\omega_0 = \sqrt{k/m}$. Pulled to $x = A$ and let go:
 
 %code
-dsolve(x'' + w^2*x == 0, x, t, 0, [A, 0])
+dsolve(d(x, t, 2) + w^2*x == 0, x, t, 0, [A, 0])
 
 %md
 A cosine with **angular frequency** $\omega_0$: it repeats every $T = 2\pi/\omega_0$, that is $f = \omega_0/2\pi$
@@ -56,9 +56,9 @@ with $\gamma = c/m$. Trying $x = e^{st}$ gives $s^2 + \gamma s + \omega_0^2 = 0$
 the roots are complex. With $\omega_0^2 = 9$ and three amounts of friction:
 
 %code
-dsolve(x'' + 2*x' + 9*x == 0, x, t, 0, [1, 0])
-dsolve(x'' + 6*x' + 9*x == 0, x, t, 0, [1, 0])
-dsolve(x'' + 10*x' + 9*x == 0, x, t, 0, [1, 0])
+dsolve(d(x, t, 2) + 2*d(x, t) + 9*x == 0, x, t, 0, [1, 0])
+dsolve(d(x, t, 2) + 6*d(x, t) + 9*x == 0, x, t, 0, [1, 0])
+dsolve(d(x, t, 2) + 10*d(x, t) + 9*x == 0, x, t, 0, [1, 0])
 
 %code
 p = plot(exp(-t)*(cos(2*sqrt(2)*t) + sin(2*sqrt(2)*t)/(2*sqrt(2))), t, 0, 5);
@@ -92,7 +92,7 @@ Now push periodically: $\ddot x + \gamma\dot x + \omega_0^2x = \cos\omega t$. St
 light damping $\gamma = 0.2$, and push exactly at the natural frequency:
 
 %code
-dsolve(x'' + 0.2*x' + x == cos(t), x, t, 0, [0, 0])
+dsolve(d(x, t, 2) + 0.2*d(x, t) + x == cos(t), x, t, 0, [0, 0])
 
 %code
 p = plot(5*sin(t) - 5.025*exp(-0.1*t)*sin(0.995*t), t, 0, 60);
@@ -181,7 +181,7 @@ Next: [coupled oscillators](02-coupled-oscillators.ipynb), where several oscilla
 ## Hints and answers
 
 * **Section 1, Try this.** Four times the tension.
-* **Section 2, Try this.** `dsolve(x'' + 20/3*x' + 100*x == 0, x, t, 0, [1, 0])`: oscillation at
+* **Section 2, Try this.** `dsolve(d(x, t, 2) + 20/3*d(x, t) + 100*x == 0, x, t, 0, [1, 0])`: oscillation at
   $\sqrt{100 - 100/9} \approx 9.4$ per second inside $e^{-10t/3}$; the envelope falls to 5% in about 0.9 s, about
   one and a half bounces.
 * **Section 3, Try this.** 6.8 against 10 at resonance: a third of the response lost.
