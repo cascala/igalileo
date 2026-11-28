@@ -146,8 +146,8 @@ second) and tilted 30° from upright.
 %code
 mgd = 0.1*9.81*0.04;
 L0 = 4e-5*200;
-Om = mgd/L0
-tau = Om*cross([Lx, Ly, Lz], [0, 0, -1])
+Om = simplify(mgd/L0)
+tau = simplify(Om*cross([Lx, Ly, Lz], [0, 0, -1]))
 
 %md
 Solve $dL/dt = \tau$ numerically for 2.56 s and look at $L$ from above:

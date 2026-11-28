@@ -1,0 +1,112 @@
+%md
+# Partial differential equations 0: Held, simplify, eval
+
+*Learning path: partial differential equations, start here.* [Index](README.md) · Next: [The heat equation](01-the-heat-equation.ipynb)
+
+Galileo shows what you type exactly as you typed it. Nothing is rewritten behind your back: $1/3 + 2/6$ stays
+$1/3 + 2/6$ until you ask for something else. Two commands do the asking:
+
+* `simplify(x)` writes `x` in one fixed simplest form, exactly;
+* `eval(x)` gives `x` in digits.
+
+This short lesson shows both, and how they fit with everything else in this path.
+
+%md
+## 1. What you type is kept
+
+Run the cell. Each answer is what you typed, tidied only in its spacing.
+
+%code
+1/3 + 2/6
+2*3
+0.5
+
+%md
+Keeping your input lets you check that Galileo read it the way you meant, and it never rounds anything: $1/3$ is
+one third, and $0.5$ is exactly one half.
+
+%md
+## 2. `simplify`: one fixed simplest form
+
+%code
+simplify(1/3 + 2/6)
+simplify((x^2 - 1)/(x - 1))
+simplify(simplify((x^2 - 1)/(x - 1)))
+
+%md
+`simplify` adds fractions, cancels common factors and multiplies out products, so every way of writing the same
+expression ends in the same form. Simplifying twice changes nothing.
+
+%md
+## 3. `eval`: digits
+
+%code
+eval(1/3 + 2/6)
+eval(pi, 30)
+sin(pi/5)
+eval(sin(pi/5))
+
+%md
+`eval(x)` gives about 16 significant digits, and `eval(x, n)` gives `n` of them. Functions of exact numbers, like
+$\sin(\pi/5)$, stay exact until you call `eval`.
+
+Decimals you type are exact numbers too, so there is no rounding error until you ask for digits:
+
+%code
+0.1 + 0.2 == 0.3
+0.1*x + 0.2*x == 0.3*x
+
+%md
+## 4. Commands work out their input
+
+Commands such as `solve`, `factor`, `inv`, `diff` and `integrate` simplify what you give them, so you never need to
+call `simplify` first:
+
+%code
+solve(x^2 == 2, x)
+factor(2*3*10)
+diff(x^3*sin(x), x)
+
+%md
+A variable holds what you assigned, as typed, and gets worked out wherever it is used:
+
+%code
+a = 1/3 + 2/6
+3*a
+simplify(3*a)
+
+%md
+## 5. In this path
+
+Integrals are commands, so they work out their answers. Arithmetic you type around them stays as typed until you simplify.
+
+%code
+c1 = 2*integrate(x*(1 - x)*sin(pi*x), x, 0, 1)
+simplify(c1)
+eval(c1)
+
+%md
+This is the first Fourier sine coefficient of the starting temperature $x(1 - x)$: exactly $8/\pi^3$, about 0.258.
+
+%md
+## 6. Tidying as you type
+
+If you prefer every answer worked out as you type, as on a calculator, switch it on with `simplify = true`, and off
+again with `simplify = false`:
+
+%code
+simplify = true
+1/3 + 2/6
+simplify = false
+1/3 + 2/6
+
+%md
+## Summary
+
+* Galileo keeps what you type exactly as you typed it.
+* `simplify(x)` gives the one fixed simplest form of `x`, exactly; simplifying again changes nothing.
+* `eval(x)` gives digits; `eval(x, n)` gives `n` of them.
+* Commands such as `solve`, `factor` and `inv` work out their input themselves.
+* `simplify = true` tidies every answer as you type; `simplify = false` keeps input as typed.
+
+Next: [The heat equation](01-the-heat-equation.ipynb).

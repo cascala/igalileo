@@ -7,6 +7,7 @@ finds the answer exactly where possible and numerically where not, and compares 
 
 | # | Notebook | What you learn |
 |---|---|---|
+| 0 | [Held, simplify, eval](00-held-simplify-eval.ipynb) | why answers come back as you typed them, `simplify` for the exact simplest form, `eval` for digits |
 | 1 | [Shortest paths and the fastest slide](01-shortest-paths-and-the-fastest-slide.ipynb) | functionals and Lagrangians, the Euler–Lagrange equation, straight lines as shortest paths, Bernoulli's brachistochrone and the cycloid, conserved quantities (Beltrami's identity), numerical extremals |
 | 2 | [Hanging chains and soap films](02-hanging-chains-and-soap-films.ipynb) | the catenary and the catenoid, two solutions or none, when a soap film snaps, constraints with a Lagrange multiplier, the hanging chain versus the parabola, Dido's problem and the circle |
 | 3 | [The principle of least action](03-the-principle-of-least-action.ipynb) | $L = T - V$ and the action, Newton's law from the Euler–Lagrange equation, the pendulum, energy conservation, Noether's theorem and Kepler orbits, chaos in the double pendulum |

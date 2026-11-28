@@ -19,17 +19,17 @@ Any name without a value is a symbol. Galileo collects like terms as you type, j
 $3x + 2x = 5x$ and $x \cdot x = x^2$.
 
 %code
-3*x + 2*x - y
-x*x*x
-a*b + b*a
+simplify(3*x + 2*x - y)
+simplify(x*x*x)
+simplify(a*b + b*a)
 
 %md
 It also keeps $x - x = 0$ and $x/x = 1$. Fractions of expressions are combined only when you ask, though, because the
 "simplest" form depends on what you want to do next.
 
 %code
-x - x
-(2*x)/x
+simplify(x - x)
+simplify((2*x)/x)
 1/x + 1/y
 
 %md
@@ -82,7 +82,7 @@ Assigning a value to the letter does the same thing for every later line, until 
 
 %code
 x = 5;
-p
+simplify(p)
 clear
 
 %md
@@ -93,7 +93,7 @@ you would on paper, doing the same thing to both sides. Subtract 7, then divide 
 
 %code
 eq = 3*x + 7 == 22
-(22 - 7)/3
+simplify((22 - 7)/3)
 
 %md
 `solve(equation, x)` does all of that in one step. It returns every solution in a row:

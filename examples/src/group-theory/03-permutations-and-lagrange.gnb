@@ -145,7 +145,7 @@ The same for the subgroup of rotations $\{e, s, s^2, s^3\}$ of the square inside
 
 %code
 size(generate(perm("(1 2 3 4)", 4)))
-24/4
+simplify(24/4)
 
 %md
 ### Consequences
@@ -184,10 +184,10 @@ $8!\cdot 3^7$ (the corners: their positions and twists, the last twist fixed by 
 $|S_{48}| = 48!$, a 62-digit number:
 
 %code
-cube = factorial(8)*3^7*factorial(12)*2^11/2
+cube = simplify(factorial(8)*3^7*factorial(12)*2^11/2)
 factor(cube)
 factorial(48)
-factorial(48)/cube
+simplify(factorial(48)/cube)
 
 %md
 ## Summary

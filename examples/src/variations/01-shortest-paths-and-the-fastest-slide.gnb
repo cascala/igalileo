@@ -1,7 +1,7 @@
 %md
 # Calculus of variations 1: Shortest paths and the fastest slide
 
-*Learning path: calculus of variations, part 1 of 3.* [Index](README.md) · Next: [Hanging chains and soap films](02-hanging-chains-and-soap-films.ipynb)
+*Learning path: calculus of variations, part 1 of 3.* [Index](README.md) · Previous: [Held, simplify, eval](00-held-simplify-eval.ipynb) · Next: [Hanging chains and soap films](02-hanging-chains-and-soap-films.ipynb)
 
 In June 1696 Johann Bernoulli challenged "the sharpest mathematicians in the world" with a puzzle. A bead slides
 without friction along a wire from a point A down to a lower point B, not straight below it. Which shape of wire

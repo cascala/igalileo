@@ -4,6 +4,7 @@ Ten lessons on symmetry and the structures that describe it. Lessons 1 to 3 buil
 
 | # | Notebook | What you learn |
 |---|---|---|
+| 0 | [Held, simplify, eval](00-held-simplify-eval.ipynb) | why answers come back as you typed them, `simplify` for the exact simplest form, `eval` for digits |
 | 1 | [Symmetry](01-symmetry.ipynb) | symmetries of a triangle and a square as permutations, composing, the group axioms, group tables, orders |
 | 2 | [Cyclic groups](02-cyclic-groups.ipynb) | rotations and addition mod $n$, isomorphism, generators and orders, subgroups, multiplication mod $n$, the Klein four-group, roots of unity |
 | 3 | [Permutations and Lagrange's theorem](03-permutations-and-lagrange.ipynb) | the symmetric group, cycles and orders, perfect card shuffles, even and odd permutations, the 15 puzzle, cosets, Lagrange's theorem, Fermat's little theorem |

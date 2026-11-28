@@ -7,6 +7,7 @@ each lesson.
 
 | # | Notebook | What you learn |
 |---|---|---|
+| 0 | [Held, simplify, eval](00-held-simplify-eval.ipynb) | why answers come back as you typed them, `simplify` for the exact simplest form, `eval` for digits |
 | 1 | [Complex functions and how to picture them](01-complex-functions.ipynb) | complex numbers in polar form, real and imaginary parts, maps of a grid with `cmap`, domain coloring with `cplot`, zeros and poles |
 | 2 | [Analytic functions](02-analytic-functions.ipynb) | the complex derivative, the Cauchy–Riemann equations, functions that are not analytic, harmonic functions and harmonic conjugates |
 | 3 | [Contour integrals](03-contour-integrals.ipynb) | integrals along paths with `cint`, path dependence, the integral of $z^n$ around a circle, winding numbers, the ML estimate |

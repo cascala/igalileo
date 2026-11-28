@@ -59,7 +59,7 @@ $x(t) = e^{At}x(0)$ solves $x' = Ax$ for **every** starting vector at once. `exp
 
 %code
 E = expm(A, t)
-E*[1; 0]
+simplify(E*[1; 0])
 simplify(deriv(E, t) - A*E)
 
 %md
@@ -139,7 +139,7 @@ so $e^{Ct} = e^{-t}e^{Nt} = e^{-t}(I + Nt)$: the series for $e^{Nt}$ stops after
 
 %code
 N = C + eye(2);
-N^2
+simplify(N^2)
 
 %md
 **Try this.** Check that $y = t\,e^{-t}$ solves $y'' = -y - 2y'$ by differentiating it by hand.
@@ -158,7 +158,7 @@ diagonalizable. For $C$:
 
 %code
 [P, J] = jordan(C)
-P*J*inv(P)
+simplify(P*J*inv(P))
 
 %md
 A bigger example, with eigenvalues 1, 2 and 4, where 4 appears twice but has only one eigenvector:
@@ -171,8 +171,8 @@ A4 = [5 4 2 1; 0 1 -1 -1; -1 -1 3 0; 1 1 -1 2];
 Column 3 of $P$ is the eigenvector for 4, and column 4 the generalized eigenvector:
 
 %code
-(A4 - 4*eye(4))*column(P, 3)
-(A4 - 4*eye(4))*column(P, 4)
+simplify((A4 - 4*eye(4))*column(P, 3))
+simplify((A4 - 4*eye(4))*column(P, 4))
 
 %md
 $A - 4I$ sends column 3 to 0 and column 4 to column 3: a chain of length 2, one $2\times2$ block. The exponential of a Jordan block has $e^{\lambda t}$, $t\,e^{\lambda t}$, $t^2e^{\lambda t}/2, \ldots$ above the

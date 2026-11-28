@@ -144,8 +144,8 @@ Galileo writes $a + bi + cj + dk$ as `quat(a, b, c, d)`. The price is commutativ
 %code
 qi = quat(0, 1, 0, 0)
 qj = quat(0, 0, 1, 0)
-qi * qj
-qj * qi
+simplify(qi * qj)
+simplify(qj * qi)
 
 %md
 Every nonzero quaternion still has an inverse, $q^{-1} = \bar q / |q|^2$ with the conjugate
@@ -156,7 +156,7 @@ The eight units $\pm 1, \pm i, \pm j, \pm k$ form the group `group("Q8")` from l
 %code
 q = quat(1, 2, 3, 4)
 conj(q)
-q * q^-1
+simplify(q * q^-1)
 norm(q)
 
 %md

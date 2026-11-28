@@ -30,7 +30,7 @@ have images crossing at the same angle: the map is **conformal** wherever $f' \n
 
 %code
 subs(diff(z^2, z), z, 1 + i)
-abs(2 + 2*i)
+simplify(abs(2 + 2*i))
 arg(2 + 2*i)
 
 %md
@@ -54,7 +54,7 @@ and lines. The most useful one is the **Cayley map** $w = (z - i)/(z + i)$, whic
 unit disc: a point $z$ with $\operatorname{Im} z > 0$ is closer to $i$ than to $-i$, so $|w| < 1$.
 
 %code
-abs(subs((z - i)/(z + i), z, 2 + 3*i))
+simplify(abs(subs((z - i)/(z + i), z, 2 + 3*i)))
 subs((z - i)/(z + i), z, i)
 p = cmap((z - i)/(z + i), z, -4, 4, 0.02, 4);
 p = show(p, parametric(cos(t), sin(t), t, 0, 2*pi));
@@ -100,7 +100,7 @@ bottom:
 
 %code
 solve(1 - 1/z^2, z)
-abs(subs(1 - 1/z^2, z, i))
+simplify(abs(subs(1 - 1/z^2, z, i)))
 
 %md
 **Try this.** Check that $\psi = y - y/(x^2 + y^2)$ is harmonic with `laplacian`.

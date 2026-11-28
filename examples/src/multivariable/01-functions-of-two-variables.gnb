@@ -1,7 +1,7 @@
 %md
 # Multivariable calculus 1: Functions of two variables
 
-*Learning path: multivariable calculus, part 1 of 7.* [Index](README.md) · Next: [Partial derivatives and the gradient](02-partial-derivatives-and-gradient.ipynb)
+*Learning path: multivariable calculus, part 1 of 7.* [Index](README.md) · Previous: [Held, simplify, eval](00-held-simplify-eval.ipynb) · Next: [Partial derivatives and the gradient](02-partial-derivatives-and-gradient.ipynb)
 
 A hiking map shows a mountain on flat paper. It does it with **contour lines**: each line joins the points at one
 height. Hikers read steepness from how close the lines are, and peaks and passes from their shapes. This lesson is

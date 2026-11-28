@@ -4,6 +4,9 @@
   const $ = id => document.getElementById(id);
   const PLOTLY_URL = 'vendor/plotly.min.js';
   const EXAMPLES = [
+    '1/3 + 2/6',
+    'simplify(1/3 + 2/6)',
+    'eval(1/3 + 2/6)',
     'diff(sin(x)^2, x)',
     'expand((a + b)^5)',
     'simplify(sin(y)^2 + cos(y)^2)',

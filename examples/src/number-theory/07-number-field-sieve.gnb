@@ -62,7 +62,7 @@ all even. So $32 \cdot 200 = 6400 = 80^2$ is a square, and
 $$(41 \cdot 43)^2 \equiv 32 \cdot 200 = 80^2 \pmod{1649}.$$
 
 %code
-X = 41*43
+X = simplify(41*43)
 Y = 80
 mod(X^2 - Y^2, N)
 gcd(X - Y, N)
@@ -178,7 +178,7 @@ $\sqrt N$. For $N = 2^{128} + 1$ there is a neat polynomial: $2 (2^{128} + 1) = 
 and $m = 2^{43}$. Here is the pair $a = -100$, $b = 1$ in both worlds:
 
 %code
-m = 2^43
+m = simplify(2^43)
 a = -100; b = 1;
 factor(a - b*m)
 factor(a^3 + 2*b^3)

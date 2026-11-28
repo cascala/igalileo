@@ -71,7 +71,7 @@ For a pendulum of length $l$, with the angle $\theta$ measured from straight dow
 %code
 L = m*l^2*w^2/2 + m*g*l*cos(th);
 dt(F) := diff(F, th)*w + diff(F, w)*a;
-EL = dt(diff(L, w)) - diff(L, th)
+EL = simplify(dt(diff(L, w)) - diff(L, th))
 solve(EL == 0, a)
 
 %md

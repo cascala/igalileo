@@ -1,7 +1,7 @@
 %md
 # Statistics 1: Describing data
 
-*Learning path: probability and statistics, part 1 of 8.* [Index](README.md) · Next: [Probability and simulation](02-probability-and-simulation.ipynb)
+*Learning path: probability and statistics, part 1 of 8.* [Index](README.md) · Previous: [Held, simplify, eval](00-held-simplify-eval.ipynb) · Next: [Probability and simulation](02-probability-and-simulation.ipynb)
 
 A newspaper says the average household income in a city is 64,000, but most households earn less than that. A class
 reports the mean exam score, and one student wants to know whether 71 is good. A doctor reads that a child's height is
@@ -41,7 +41,7 @@ tally(x)
 $x_i - \bar x$, add up to zero.
 
 %code
-d = x - mean(x)
+d = simplify(x - mean(x))
 sum(d)
 
 %md
@@ -63,7 +63,7 @@ $$s^2 = \frac{1}{n - 1}\sum_{i=1}^n (x_i - \bar x)^2, \qquad s = \sqrt{s^2}.$$
 The sum of squares is a dot product of the deviations with themselves, $d\,d^T$:
 
 %code
-d*d'
+simplify(d*d')
 var(x)
 std(x)
 

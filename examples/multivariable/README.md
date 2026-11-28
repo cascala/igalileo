@@ -7,6 +7,7 @@ answers close each lesson.
 
 | # | Notebook | What you learn |
 |---|---|---|
+| 0 | [Held, simplify, eval](00-held-simplify-eval.ipynb) | why answers come back as you typed them, `simplify` for the exact simplest form, `eval` for digits |
 | 1 | [Functions of two variables](01-functions-of-two-variables.ipynb) | graphs as surfaces, slices, level curves and contour maps, peaks, pits and saddles, implicit curves, level surfaces |
 | 2 | [Partial derivatives and the gradient](02-partial-derivatives-and-gradient.ipynb) | partial derivatives as slopes, Clairaut's theorem, tangent planes and linear approximation, directional derivatives, the gradient and steepest ascent, gradients in polar and spherical coordinates, the chain rule |
 | 3 | [Optimization](03-optimization.ipynb) | the closed interval method, critical points, the Hessian and the second derivative test, least squares line fitting, numeric minimization (BFGS) |

@@ -33,7 +33,7 @@ For a frame turning about the $z$ axis, per unit mass:
 
 %code
 W = [0, 0, Om];
--2*cross(W, [vx, vy, 0]) - cross(W, cross(W, [x, y, 0]))
+simplify(-2*cross(W, [vx, vy, 0]) - cross(W, cross(W, [x, y, 0])))
 
 %md
 The centrifugal part $\Omega^2(x, y)$ pushes outward, growing with distance from the axis. The Coriolis part
@@ -134,7 +134,7 @@ $\ddot\omega_1 = \frac{(I_2 - I_3)(I_1 - I_2)}{I_1I_3}\omega_2^2\,\omega_1$. The
 the middle, so the wobble grows exponentially; it is negative for the other two axes, and the wobble just oscillates:
 
 %code
-[(2 - 3)*(1 - 2)/(1*3), (1 - 2)*(3 - 1)/(2*3)]
+simplify([(2 - 3)*(1 - 2)/(1*3), (1 - 2)*(3 - 1)/(2*3)])
 
 %md
 **Try this.** For the middle axis, $\omega_1$ grows like $e^{\sqrt{1/3}\,t}$. Starting from 0.01, about when does it

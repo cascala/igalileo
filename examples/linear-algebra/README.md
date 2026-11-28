@@ -7,6 +7,7 @@ exercises with hints and answers close each lesson.
 
 | # | Notebook | What you learn |
 |---|---|---|
+| 0 | [Held, simplify, eval](00-held-simplify-eval.ipynb) | why answers come back as you typed them, `simplify` for the exact simplest form, `eval` for digits |
 | 1 | [Vectors and matrices](01-vectors-and-matrices.ipynb) | vectors, linear combinations, length, dot product and angles, matrices as transformations, rotations, reflections, shears, products, the inverse |
 | 2 | [Linear systems and elimination](02-linear-systems.ipynb) | row and column pictures, elimination matrices, back substitution, reduced row echelon form, free variables, balancing chemical equations, $A = LU$ |
 | 3 | [Vector spaces, bases and dimension](03-vector-spaces.ipynb) | span, subspaces, linear independence, basis, coordinates, dimension, the four fundamental subspaces, rank–nullity, polynomials and matrices as vectors, the Kronecker product |

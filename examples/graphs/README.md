@@ -8,6 +8,7 @@ lesson.
 
 | # | Notebook | What you learn |
 |---|---|---|
+| 0 | [Held, simplify, eval](00-held-simplify-eval.ipynb) | why answers come back as you typed them, `simplify` for the exact simplest form, `eval` for digits |
 | 1 | [Graphs, degrees and tours](01-graphs-and-tours.ipynb) | graphs as edge lists, degrees and the handshake lemma, counting walks with the adjacency matrix, Euler's bridges of Königsberg, Hamiltonian cycles, connected and bipartite graphs |
 | 2 | [Shortest paths, trees, flows and matchings](02-paths-trees-and-flows.ipynb) | Dijkstra's algorithm and breadth-first search, minimum spanning trees and Kirchhoff's tree count, maximum flow and minimum cut, matchings and Hall's theorem |
 | 3 | [Colorings, orderings and real networks](03-colorings-orderings-and-networks.ipynb) | scheduling by coloring, the chromatic number and polynomial, the four color theorem, topological order, betweenness and PageRank, random graphs and the connectivity threshold |

@@ -1,7 +1,7 @@
 %md
 # Number theory 1: Divisibility and primes
 
-*Learning path: number theory, part 1 of 7.* [Index](README.md) · Next: [Prime factoring](02-prime-factoring.ipynb)
+*Learning path: number theory, part 1 of 7.* [Index](README.md) · Previous: [Held, simplify, eval](00-held-simplify-eval.ipynb) · Next: [Prime factoring](02-prime-factoring.ipynb)
 
 Number theory studies the whole numbers $1, 2, 3, \ldots$ For two thousand years it was the purest of pure
 mathematics; since the 1970s it is what keeps every bank transfer and every web page secret. This path builds up to
@@ -25,7 +25,7 @@ $0 \le r < b$. `floor(a/b)` is the quotient (the fraction rounded down) and `mod
 %code
 floor(100/7)
 mod(100, 7)
-14*7 + 2
+simplify(14*7 + 2)
 
 %md
 We say $b$ **divides** $a$, written $b \mid a$, when the remainder is 0. `divisors(n)` lists every divisor of $n$:
@@ -72,7 +72,7 @@ The gcd can always be written as a combination of $a$ and $b$ (**Bézout's ident
 This will matter for dividing with remainders in lesson 4.
 
 %code
--3*1071 + 7*462
+simplify(-3*1071 + 7*462)
 
 %md
 The **least common multiple** is $\operatorname{lcm}(a, b) = ab/\gcd(a, b)$: two gears with 12 and 18 teeth line up
@@ -98,7 +98,7 @@ $N = p_1 p_2 \cdots p_k + 1$ leaves remainder 1 when divided by each of them, so
 it with the first six primes:
 
 %code
-N = 2*3*5*7*11*13 + 1
+N = simplify(2*3*5*7*11*13 + 1)
 mod(N, 13)
 factor(N)
 
@@ -177,7 +177,7 @@ Because the answer is a matrix, you can compute with it. `f(i, j)` is the entry 
 %code
 f = factor(360);
 f(1, 1)
-f(3, 1)^f(3, 2)
+simplify(f(3, 1)^f(3, 2))
 rows(f)
 
 %md

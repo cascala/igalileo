@@ -32,7 +32,7 @@ $$\Gamma^a{}_{bc} = \tfrac12\, g^{ad}\left(\partial_b g_{dc} + \partial_c g_{db}
 For example $\Gamma^r{}_{\phi\phi} = -\tfrac12\,g^{rr}\,\partial_r g_{\phi\phi} = -\tfrac12\,\partial_r (r^2)$:
 
 %code
--1/2*deriv(r^2, r)
+simplify(-1/2*deriv(r^2, r))
 
 %md
 On the sphere of radius $r$:

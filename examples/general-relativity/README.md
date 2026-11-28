@@ -6,6 +6,7 @@ result is computed by Galileo from a metric, and every number is checked against
 
 | # | Notebook | What you learn |
 |---|---|---|
+| 0 | [Held, simplify, eval](00-held-simplify-eval.ipynb) | why answers come back as you typed them, `simplify` for the exact simplest form, `eval` for digits |
 | 1 | [Spacetime and special relativity](01-spacetime.ipynb) | the Minkowski metric, light cones, Lorentz boosts, proper time, muons, the twin paradox |
 | 2 | [The equivalence principle](02-equivalence-principle.ipynb) | gravity in an accelerating rocket, Newton's law from $g_{tt}$, clocks at different heights, tides as curvature |
 | 3 | [Einstein's equations](03-einstein-equations.ipynb) | $G_{ab} + \Lambda g_{ab} = 8\pi G T_{ab}$, finding Schwarzschild by guess and check, charge, $\Lambda$, Einstein's static universe |

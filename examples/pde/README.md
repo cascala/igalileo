@@ -7,6 +7,7 @@ grid the way a computer does, and checks the result against an exact solution. E
 
 | # | Notebook | What you learn |
 |---|---|---|
+| 0 | [Held, simplify, eval](00-held-simplify-eval.ipynb) | why answers come back as you typed them, `simplify` for the exact simplest form, `eval` for digits |
 | 1 | [The heat equation](01-the-heat-equation.ipynb) | where $u_t = k u_{xx}$ comes from, the explicit scheme as a matrix step, instability and the condition $r \le 1/2$, Crank–Nicolson, fixed and insulated ends, heat sources, Fourier's series solution |
 | 2 | [Waves on a string](02-waves-on-a-string.ipynb) | the wave equation from beads on a string, d'Alembert's travelling waves, reflection at fixed and free ends, pitch and overtones of a plucked string, the Courant condition, damping |
 | 3 | [Laplace and Poisson](03-laplace-and-poisson.ipynb) | steady states in a plate, the five-point formula and the maximum principle, superposition, separation of variables, Jacobi and over-relaxation, a membrane under pressure, a hot spot |

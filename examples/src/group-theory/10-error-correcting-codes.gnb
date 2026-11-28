@@ -63,7 +63,7 @@ Now flip bit 6 on the way. The receiver computes the **syndrome** $s = Hr$:
 r = c;
 r(6) = 1 - r(6);
 s = mod(H*r', 2)'
-s(1) + 2*s(2) + 4*s(3)
+simplify(s(1) + 2*s(2) + 4*s(3))
 
 %md
 Since $Hc = 0$, the syndrome of $r = c + e$ is $He$: the column of $H$ at the error's position, which is that position

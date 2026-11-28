@@ -1,7 +1,7 @@
 %md
 # Complex analysis 1: Complex functions and how to picture them
 
-*Learning path: complex analysis, part 1 of 8.* [Index](README.md) · Next: [Analytic functions](02-analytic-functions.ipynb)
+*Learning path: complex analysis, part 1 of 8.* [Index](README.md) · Previous: [Held, simplify, eval](00-held-simplify-eval.ipynb) · Next: [Analytic functions](02-analytic-functions.ipynb)
 
 A real function $y = f(x)$ is a curve in the plane. A complex function $w = f(z)$ takes a point of one plane to a point of
 another, so its graph would need four dimensions. How do you look at something you cannot draw? This lesson gives two
@@ -31,7 +31,7 @@ in polar form. Galileo writes $i$ as `i`:
 
 %code
 w = 1 + i*sqrt(3);
-abs(w)
+simplify(abs(w))
 arg(w)
 polar(w)
 expand(w^3)
@@ -67,7 +67,7 @@ For the exponential, Euler's formula gives $e^{x + iy} = e^x e^{iy} = e^x(\cos y
 %code
 real(exp(x + i*y))
 imag(exp(x + i*y))
-abs(exp(x + i*y))
+simplify(abs(exp(x + i*y)))
 
 %md
 So $|e^z| = e^x$ depends only on the real part, and the imaginary part $y$ is an angle: $e^z$ is periodic with period

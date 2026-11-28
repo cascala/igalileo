@@ -65,7 +65,7 @@ De Méré's first bet: at least one six in 4 throws of one die. No six in one th
 independent throws $(5/6)^4$; so
 
 %code
-1 - (5/6)^4
+simplify(1 - (5/6)^4)
 eval(1 - (5/6)^4)
 
 %md
@@ -83,7 +83,7 @@ in each column, and the games with at least one six are those with a count above
 %code
 A = randint(1, 6, 4, 10000);
 sixes = ones(1, 4)*(A > 5.5);
-sum(sixes > 0.5)/10000
+simplify(sum(sixes > 0.5)/10000)
 
 %md
 $2563/5000 = 0.513$ of the simulated games had a six, close to the exact 0.518.
@@ -133,7 +133,7 @@ Picture 10,000 people: 100 are sick and 95 of them test positive; 9900 are healt
 anyway. Of the $95 + 495 = 590$ positives, only 95 are sick:
 
 %code
-95/(95 + 495)
+simplify(95/(95 + 495))
 eval(95/(95 + 495))
 
 %md

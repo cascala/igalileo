@@ -27,7 +27,7 @@ Plan about an hour and a quarter.
 Arbuthnot's calculation:
 
 %code
-(1/2)^82
+simplify((1/2)^82)
 eval((1/2)^82)
 
 %md
@@ -60,7 +60,7 @@ count how often the result is 10 or more away from 50:
 %code
 seed(3);
 x = randbin(100, 1/2, 10000);
-sum(abs(x - 50) >= 10)/10000
+simplify(sum(abs(x - 50) >= 10)/10000)
 
 %md
 **Try this.** What is the p-value for 65 heads in 100 tosses?

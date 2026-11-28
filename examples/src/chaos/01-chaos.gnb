@@ -1,7 +1,7 @@
 %md
 # Chaos and fractals 1: Chaos
 
-*Learning path: chaos and fractals, part 1 of 2.* [Index](README.md) · Next: [Fractals](02-fractals.ipynb)
+*Learning path: chaos and fractals, part 1 of 2.* [Index](README.md) · Previous: [Held, simplify, eval](00-held-simplify-eval.ipynb) · Next: [Fractals](02-fractals.ipynb)
 
 A rule can be completely fixed, with no randomness at all, and still produce behaviour that is impossible to predict.
 This is **chaos**, found by Poincaré in the three-body problem around 1890 and rediscovered with computers in the 1960s

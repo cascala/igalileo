@@ -28,7 +28,7 @@ given. Compared with Newton's Binet equation there is one extra term, $\epsilon 
 Sun, $GM/c^2 = 1.4766$ km [2]:
 
 %code
-eps_gr = 3*1.4766
+eps_gr = simplify(3*1.4766)
 
 %md
 $\epsilon = 4.43$ km. The data in part 3 gave $4.44$ km. Before going further, that agreement alone is remarkable.
@@ -70,7 +70,7 @@ angle $2\pi/\omega$.
 $\epsilon$:
 
 %code
-taylor(2*pi/sqrt(1 - 2*epsilon*u0), epsilon, 0, 1) - 2*pi
+simplify(taylor(2*pi/sqrt(1 - 2*epsilon*u0), epsilon, 0, 1) - 2*pi)
 
 %md
 $\Delta\phi = 2\pi\epsilon u_0 \approx 2\pi\epsilon A$, since $u_0 = A$ to first order (the difference is of order

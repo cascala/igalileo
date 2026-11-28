@@ -28,9 +28,9 @@ along the diagonal:
 
 %code
 A = [2 1; 1 2];
-A*[1; 1]
-A*[-1; 1]
-A*[1; 0]
+simplify(A*[1; 1])
+simplify(A*[-1; 1])
+simplify(A*[1; 0])
 
 %md
 $A[1\ 1] = 3\,[1\ 1]$ and $A[-1\ 1] = 1\cdot[-1\ 1]$: these arrows keep their direction and are stretched by 3 and by 1.
@@ -106,9 +106,9 @@ eigenvalue, $V$ assembles the result. Then powers are easy, because the $V^{-1}V
 $A^n = V D^n V^{-1}$, and $D^n$ just has $\lambda_1^n$ and $\lambda_2^n$ on the diagonal.
 
 %code
-V*D*inv(V)
-V*D^5*inv(V)
-A^5
+simplify(V*D*inv(V))
+simplify(V*D^5*inv(V))
+simplify(A^5)
 
 %md
 For large $n$ the largest eigenvalue wins: $A^n v$ points more and more along the eigenvector with $\lambda = 3$,
@@ -129,7 +129,7 @@ top right entry of $M^n$ (the row $[1\ 0]$ times $M^n$ times the column $[0;\ 1]
 
 %code
 M = [1 1; 1 0];
-M^10
+simplify(M^10)
 F(n) := [1 0]*M^n*[0; 1];
 table([n, F(n)], n, 1, 12)
 

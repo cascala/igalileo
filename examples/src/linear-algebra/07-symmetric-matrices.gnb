@@ -42,7 +42,7 @@ diagonalized by an orthogonal matrix*, with real eigenvalues. No complex numbers
 
 %code
 Q = gramschmidt(V)
-Q*D*transpose(Q)
+simplify(Q*D*transpose(Q))
 
 %md
 Why perpendicular? If $Sx = \lambda x$ and $Sy = \mu y$ with $\lambda \ne \mu$, then
@@ -56,7 +56,7 @@ $$S = \lambda_1 q_1q_1^T + \lambda_2 q_2q_2^T + \cdots.$$
 %code
 q1 = column(Q, 1);
 q2 = column(Q, 2);
-1*q1*transpose(q1) + 6*q2*transpose(q2)
+simplify(1*q1*transpose(q1) + 6*q2*transpose(q2))
 
 %md
 **Try this.** Find the eigenvalues and perpendicular eigenvectors of $[0\ 1;\ 1\ 0]$ by hand. (It swaps the two
@@ -139,7 +139,7 @@ definite.
 
 %code
 L = chol(S)
-L*transpose(L)
+simplify(L*transpose(L))
 chol(K)
 
 %md

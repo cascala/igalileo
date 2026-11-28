@@ -1,7 +1,7 @@
 %md
 # Foundations 1: Numbers and arithmetic
 
-*Learning path: foundations, part 1 of 9.* [Index](README.md) · Next: [Algebra](02-algebra.ipynb)
+*Learning path: foundations, part 1 of 9.* [Index](README.md) · Previous: [Held, simplify, eval](00-held-simplify-eval.ipynb) · Next: [Algebra](02-algebra.ipynb)
 
 This first lesson shows how to type calculations into Galileo and how it treats numbers. You will learn
 
@@ -21,8 +21,13 @@ in these lessons can be changed and run again, so experiment freely.
 
 %code
 2 + 3*4
+simplify(2 + 3*4)
 
 %md
+The first line comes back as you typed it: Galileo keeps your input until you ask it to work something out.
+`simplify` works it out exactly, and `eval` gives digits ([lesson 0](00-held-simplify-eval.ipynb) shows both).
+In this lesson most calculations are wrapped in `simplify(...)` for that reason.
+
 The answer is always something you could type into Galileo yourself. When a command does more than arithmetic, an
 **explanation** follows the answer, set apart from it (in grey, or as lines starting with `//`). Try it with the
 prime factors of 360:
@@ -39,16 +44,16 @@ Multiplication is written `*` and happens before addition, as in school: $2 + 3 
 the order:
 
 %code
-(2 + 3)*4
+simplify((2 + 3)*4)
 
 %md
 The five arithmetic operators are `+`, `-`, `*`, `/` and `^` (power). Several lines in one cell are computed one
 after the other, and each answer is shown:
 
 %code
-7 - 10
-2^10
-10/4
+simplify(7 - 10)
+simplify(2^10)
+simplify(10/4)
 
 %md
 Look at the last answer: $10/4$ came out as $5/2$, not $2.5$. That is the first big idea of this lesson.
@@ -59,9 +64,9 @@ A calculator works with decimals and rounds after every step. Galileo keeps whol
 it reduces fractions to lowest terms and never rounds.
 
 %code
-1/3 + 1/6
-1/3 + 1/3 + 1/3
-2/3 * 9/4
+simplify(1/3 + 1/6)
+simplify(1/3 + 1/3 + 1/3)
+simplify(2/3 * 9/4)
 
 %md
 On a calculator $1/3$ becomes $0.3333333$, and three of those add up to $0.9999999$, not $1$. Exact arithmetic
@@ -71,9 +76,9 @@ Square roots stay exact too. Galileo simplifies them by taking square factors ou
 $\sqrt{12} = \sqrt{4 \cdot 3} = 2\sqrt{3}$.
 
 %code
-sqrt(12)
-sqrt(2)*sqrt(2)
-sqrt(50)/sqrt(2)
+simplify(sqrt(12))
+simplify(sqrt(2)*sqrt(2))
+simplify(sqrt(50)/sqrt(2))
 
 %md
 ### Getting a decimal
@@ -92,8 +97,8 @@ Typing a decimal point also asks for a decimal answer. Numbers with a decimal po
 combined with an approximate number becomes approximate:
 
 %code
-1/3 + 0.5
-2.0^10
+simplify(1/3 + 0.5)
+simplify(2.0^10)
 
 %md
 **Rule of thumb:** type whole numbers and fractions when you want exact answers; add `eval(...)` at the end when you
@@ -105,9 +110,9 @@ want to know "about how much".
 $a^{-1} = 1/a$ and $a^{1/2} = \sqrt{a}$, $a^{1/3} = \sqrt[3]{a}$.
 
 %code
-2^-3
-8^(1/3)
-16^(3/4)
+simplify(2^-3)
+simplify(8^(1/3))
+simplify(16^(3/4))
 
 %md
 Whole numbers have no size limit, so you can see every digit of large powers and factorials.
@@ -115,7 +120,7 @@ Whole numbers have no size limit, so you can see every digit of large powers and
 number of ways to shuffle a deck of cards:
 
 %code
-2^100
+simplify(2^100)
 factorial(52)
 
 %md
@@ -126,10 +131,10 @@ addition and subtraction (left to right). A minus sign in front binds more loose
 $-(2^2) = -4$, just as in algebra:
 
 %code
--2^2
-(-2)^2
-2^3^2
-24/4/2
+simplify(-2^2)
+simplify((-2)^2)
+simplify(2^3^2)
+simplify(24/4/2)
 
 %md
 Powers are evaluated from the right: $2^{3^2} = 2^9 = 512$. Division goes from the left: $24/4/2 = 6/2 = 3$. When in
@@ -159,7 +164,7 @@ denominator `lcm(12, 18)`, and to simplify $\frac{12}{18}$ you divide by `gcd(12
 %code
 gcd(12, 18)
 lcm(12, 18)
-1/12 + 1/18
+simplify(1/12 + 1/18)
 
 %md
 Every whole number above 1 is a product of **primes** (numbers with no divisors except 1 and themselves) in exactly one
@@ -183,7 +188,7 @@ computed but its answer is not shown, which is useful for setting values:
 %code
 price = 24;
 tax = 8/100;
-price*(1 + tax)
+simplify(price*(1 + tax))
 
 %md
 The answer is exact: $648/25$. As a decimal that is
@@ -203,7 +208,7 @@ Here `price` was replaced by 24, but `rate` has no value, so it stays a letter. 
 
 %code
 rate = 1/4;
-total
+simplify(total)
 
 %md
 `who` lists the variables you have defined, and `clear` removes them all:

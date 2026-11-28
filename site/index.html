@@ -89,7 +89,7 @@ footer { border-top: 1px solid var(--line); color: var(--muted); font-size: 14px
       <p>Galileo is a small, free computer algebra system. Solve equations, take derivatives, factor big numbers, draw fractals and 3D surfaces, and learn as you go with interactive lessons. Nothing to install: everything runs on your own device.</p>
       <div class="cta">
         <a class="btn primary" href="playground/">Open the playground</a>
-        <a class="btn" href="playground/#lesson/foundations/01-numbers">Start the first lesson</a>
+        <a class="btn" href="playground/#lesson/foundations/00-held-simplify-eval">Start the first lesson</a>
       </div>
       <p class="try">Try: <a href="playground/?code=WyJzb2x2ZSh4XjIgLSB4IC0gMSwgeCkiXQ">solve(x^2 - x - 1, x)</a> · <a href="playground/?code=WyJmYWN0b3IoMl42NyAtIDEpIl0">factor(2^67 - 1)</a> · <a href="playground/?code=WyJNID0gbWFuZGVsYnJvdCgtMi4yLCAwLjgsIC0xLjIsIDEuMiwgMTgwKTsiLCJzY2F0dGVyKE0sIFtyZSBpbV0pIl0">mandelbrot(…)</a> · <a href="playground/?code=WyJwbG90M2Qoc2luKHgpKmNvcyh5KSwgeCwgLXBpLCBwaSwgeSwgLXBpLCBwaSkiXQ">plot3d(sin(x)*cos(y), …)</a></p>
     </div>
@@ -100,6 +100,9 @@ footer { border-top: 1px solid var(--line); color: var(--muted); font-size: 14px
     <h2>What it does</h2>
     <p class="sub">Type math the way you would write it. Answers are exact, and every result is shown.</p>
     <div class="grid">
+      <div class="card"><h3>Exact until you ask</h3><p>What you type stays as you typed it. <code>simplify</code> gives the exact simplest form, <code>eval</code> gives digits.</p><pre>1/3 + 2/6
+simplify(1/3 + 2/6)
+eval(1/3 + 2/6)</pre></div>
       <div class="card"><h3>Algebra and calculus</h3><p>Exact fractions, derivatives, expansion, factoring and simplification.</p><pre>deriv(x^3*sin(x), x)
 simplify(sin(y)^2 + cos(y)^2)</pre></div>
       <div class="card"><h3>Symbolic matrices</h3><p>Inverses, determinants, LU and solving, with symbols inside.</p><pre>inv([a b; c d])

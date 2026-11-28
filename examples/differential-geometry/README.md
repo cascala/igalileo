@@ -5,6 +5,7 @@ drawn in interactive 3D. Each one takes 15 to 30 minutes, and every cell can be 
 
 | # | Notebook | What you learn |
 |---|---|---|
+| 0 | [Held, simplify, eval](00-held-simplify-eval.ipynb) | why answers come back as you typed them, `simplify` for the exact simplest form, `eval` for digits |
 | 1 | [Curves](01-curves.ipynb) | parametrised curves, velocity, arc length, curvature, osculating circles, the helix |
 | 2 | [Metrics and coordinates](02-metrics.ipynb) | the line element $ds^2$, polar and spherical coordinates, lengths from a metric, the hyperbolic plane |
 | 3 | [Surfaces](03-surfaces.ipynb) | parametrised surfaces, the induced metric, area, cylinder, cone, torus, helicoid |

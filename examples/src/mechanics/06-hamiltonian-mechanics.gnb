@@ -41,7 +41,7 @@ of motion become a symmetric pair, **Hamilton's equations**:
 $$\dot q = \frac{\partial H}{\partial p}, \qquad \dot p = -\frac{\partial H}{\partial q}.$$
 
 %code
-[diff(H, P), -diff(H, th)]
+simplify([diff(H, P), -diff(H, th)])
 
 %md
 The first is $P = ml^2\dot\theta$ again; the second is the pendulum's Newton's law. Two first-order equations instead

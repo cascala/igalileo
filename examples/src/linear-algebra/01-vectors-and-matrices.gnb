@@ -1,7 +1,7 @@
 %md
 # Linear algebra 1: Vectors and matrices
 
-*Learning path: linear algebra, part 1 of 9.* [Index](README.md) · Next: [Linear systems](02-linear-systems.ipynb)
+*Learning path: linear algebra, part 1 of 9.* [Index](README.md) · Previous: [Held, simplify, eval](00-held-simplify-eval.ipynb) · Next: [Linear systems](02-linear-systems.ipynb)
 
 A computer game turns a 3D world into the picture on your screen; a phone straightens a photo of a page; a robot arm
 works out where its hand is from the angles of its joints. All three do the same thing millions of times a second:
@@ -29,9 +29,9 @@ are added component by component (put the arrows head to tail) and multiplied by
 %code
 u = [3 4];
 v = [4 -2];
-u + v
-2*u
-u - v
+simplify(u + v)
+simplify(2*u)
+simplify(u - v)
 
 %md
 The plot draws $u$, $v$ and $u + v$ as arrows from the origin. Each arrow is a straight segment
@@ -101,9 +101,9 @@ the dot product of a row of $A$ with $x$.
 
 %code
 A = [2 1; 1 2];
-A*[1; 0]
-A*[0; 1]
-A*[3; -1]
+simplify(A*[1; 0])
+simplify(A*[0; 1])
+simplify(A*[3; -1])
 
 %md
 The images of $[1\ 0]$ and $[0\ 1]$ are the **columns** of $A$. That is all you need to know about a linear
@@ -118,7 +118,7 @@ To see what $A$ does to the whole plane, look at what it does to the unit circle
 is the image of the circle point at angle $t$; `w(1)` and `w(2)` are its two components:
 
 %code
-w = A*[cos(t); sin(t)]
+w = simplify(A*[cos(t); sin(t)])
 
 %md
 The plot shows the unit circle and its image, an ellipse, with the images of the two unit arrows. Axes: the two
@@ -154,10 +154,10 @@ R = [cos(t), -sin(t); sin(t), cos(t)];
 F = [1 0; 0 -1];
 H = [1 1; 0 1];
 Px = [1 0; 0 0];
-subs(R, t, pi/2)*[1; 0]
-F*[2; 3]
-H*[2; 3]
-Px*[2; 3]
+simplify(subs(R, t, pi/2)*[1; 0])
+simplify(F*[2; 3])
+simplify(H*[2; 3])
+simplify(Px*[2; 3])
 
 %md
 (In `R` the entries are separated by commas, because inside brackets a space followed by a minus sign starts a new
@@ -195,15 +195,15 @@ of trigonometry:
 
 %code
 Rs = [cos(s), -sin(s); sin(s), cos(s)];
-R*Rs
+simplify(R*Rs)
 
 %md
 The top left entry is $\cos s\cos t - \sin s \sin t = \cos(s + t)$, the bottom left $\sin(s + t)$. Order matters:
 $AB \ne BA$ in general. Shearing then reflecting is not reflecting then shearing:
 
 %code
-F*H
-H*F
+simplify(F*H)
+simplify(H*F)
 
 %md
 Some rules, all following from "first $B$, then $A$": $(AB)C = A(BC)$ (you may regroup); $A(B + C) = AB + AC$; and the
@@ -211,7 +211,7 @@ Some rules, all following from "first $B$, then $A$": $(AB)C = A(BC)$ (you may r
 three shears push three times as far.
 
 %code
-H^3
+simplify(H^3)
 
 %md
 **Try this.** Compute $F^2$ for the reflection. Explain the answer without computing. Then guess $R^n$ for the
@@ -226,7 +226,7 @@ $t$ is rotating by $-t$:
 %code
 inv(H)
 inv(A)
-inv(A)*A
+simplify(inv(A)*A)
 simplify(inv(R))
 
 %md

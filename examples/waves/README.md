@@ -8,6 +8,7 @@ lesson.
 
 | # | Notebook | What you learn |
 |---|---|---|
+| 0 | [Held, simplify, eval](00-held-simplify-eval.ipynb) | why answers come back as you typed them, `simplify` for the exact simplest form, `eval` for digits |
 | 1 | [The harmonic oscillator](01-harmonic-oscillator.ipynb) | frequency from mass and stiffness, underdamped, critical and overdamped motion, shock absorbers, driven oscillations, resonance curves and the quality factor |
 | 2 | [Coupled oscillators](02-coupled-oscillators.ipynb) | normal modes as eigenvectors, beats and energy transfer between weakly coupled pendulums, the vibrations of CO₂, the modes of a chain of masses |
 | 3 | [The wave equation](03-wave-equation.ipynb) | the wave equation for a string, travelling pulses, standing waves and harmonics, the Fourier series of a plucked string and why plucking position changes the tone |

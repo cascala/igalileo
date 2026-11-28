@@ -25,8 +25,8 @@ To use degrees, multiply by $\pi/180$. Storing that factor in a variable `deg` l
 
 %code
 deg = pi/180;
-30*deg
-sin(30*deg)
+simplify(30*deg)
+simplify(sin(30*deg))
 eval(1/deg)
 
 %md
@@ -155,7 +155,7 @@ of the point $(3, 4)$, which `atan2(y, x)` computes:
 
 %code
 trigexpand(R*sin(t + phi))
-R = sqrt(3^2 + 4^2)
+R = simplify(sqrt(3^2 + 4^2))
 phi = atan2(4.0, 3.0)
 p = plot(3*sin(t) + 4*cos(t), R*sin(t + phi), t, 0, 2*pi);
 labels(title(legend(p, "3 sin t + 4 cos t", "5 sin(t + 0.927): the same curve"), "Two waves of the same frequency add to one wave"), "t", "value")
@@ -193,7 +193,7 @@ the law of sines then gives $\alpha$; the three angles add up to $180^\circ$:
 %code
 deg = pi/180;
 a = 5; b = 6; c = 7;
-gam = acos((a^2 + b^2 - c^2)/(2*a*b))
+gam = simplify(acos((a^2 + b^2 - c^2)/(2*a*b)))
 eval(gam/deg)
 alp = asin(a*sin(gam)/c);
 eval(alp/deg)

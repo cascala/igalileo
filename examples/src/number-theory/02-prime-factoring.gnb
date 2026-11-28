@@ -86,7 +86,7 @@ perfect square exactly when `isqrt(m)^2 == m`. A small example first, $8051$:
 
 %code
 isqrt(8051)
-90^2 - 8051
+simplify(90^2 - 8051)
 isqrt(49)
 
 %md
@@ -260,8 +260,8 @@ he computed $2^{67} - 1$ on one side of the blackboard, the product $193707721 \
 two agreed. He later said finding the factors took "three years of Sundays".
 
 %code
-2^67 - 1
-193707721*761838257287
+simplify(2^67 - 1)
+simplify(193707721*761838257287)
 factor(2^67 - 1)
 
 %md
@@ -310,7 +310,7 @@ which Édouard Lucas proved prime by hand in 1876 with a test of this kind; it s
 years:
 
 %code
-2^127 - 1
+simplify(2^127 - 1)
 isprime(2^127 - 1)
 isprime(2^89 - 1)
 isprime(10062757)
@@ -322,7 +322,7 @@ digits, found within hours of the program's first run), $2^{607} - 1$, $2^{1279}
 $2^{2281} - 1$ (687 digits). $2^{523} - 1$, on the other hand, is not prime:
 
 %code
-2^521 - 1
+simplify(2^521 - 1)
 isprime(2^521 - 1)
 isprime(2^2281 - 1)
 isprime(2^523 - 1)
@@ -354,7 +354,7 @@ $10^{10}$ steps; $p - 1$ needs a few thousand multiplications:
 %code
 p = 97767475431570134191;
 factor(p - 1)
-n = p*nextprime(10^30)
+n = simplify(p*nextprime(10^30))
 factor(n)
 
 %md
@@ -373,7 +373,7 @@ is the lcm of its orders mod $p$ and mod $q$. With $p = 1009$ and $q = 2003$, th
 1001 mod $q$, and mod $n$ it is $\operatorname{lcm}(168, 1001) = 24024$:
 
 %code
-p = 1009; q = 2003; n = p*q
+p = 1009; q = 2003; n = simplify(p*q)
 multorder(3, p)
 multorder(3, q)
 multorder(3, n)
@@ -394,8 +394,8 @@ $\varphi(n) = (p - 1)(q - 1)$, then $p + q = n - \varphi(n) + 1$, and $p$ and $q
 $x^2 - (p + q)x + n$:
 
 %code
-phi = (p - 1)*(q - 1)
-s = n - phi + 1
+phi = simplify((p - 1)*(q - 1))
+s = simplify(n - phi + 1)
 solve(x^2 - s*x + n, x)
 
 %md

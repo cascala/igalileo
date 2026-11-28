@@ -64,10 +64,10 @@ temperature is $T = \hbar c^3/(8\pi G M k_B)$. For the Sun's mass:
 
 %code
 G0 = 6.674e-11; c0 = 2.998e8; hbar0 = 1.0546e-34; kB = 1.380649e-23; Msun = 1.989e30;
-rs = 2*G0*Msun/c0^2
+rs = simplify(2*G0*Msun/c0^2)
 area0 = eval(4*pi*rs^2)
-lp2 = hbar0*G0/c0^3
-S0 = area0/(4*lp2)
+lp2 = simplify(hbar0*G0/c0^3)
+S0 = simplify(area0/(4*lp2))
 T0 = eval(hbar0*c0^3/(8*pi*G0*Msun*kB))
 
 %md
@@ -338,7 +338,7 @@ charge" (equation 2.15): the expectation of $\mathcal Q = -i\hbar(u_*\partial_{u
 $2\pi n\hbar\int u_*|h|^4\,du_*$:
 
 %code
-2*pi*integrate(u*(2*sin(pi*u)^2)^2, u, 0, 1)
+simplify(2*pi*integrate(u*(2*sin(pi*u)^2)^2, u, 0, 1))
 
 %md
 That is $3\pi/2$ per unit of $n\hbar$ for this $h$.
@@ -407,7 +407,7 @@ $H_n(x)e^{-x^2/2}$, orthogonal for different $n$ with $\int H_n^2 e^{-x^2}dx = 2
 
 %code
 integrate(hermite(2, x)*hermite(3, x)*exp(-x^2), x, -inf, inf)
-integrate(hermite(3, x)^2*exp(-x^2), x, -inf, inf)/(2^3*6*sqrt(pi))
+simplify(integrate(hermite(3, x)^2*exp(-x^2), x, -inf, inf)/(2^3*6*sqrt(pi)))
 
 %md
 Taking one such factor per mode gives the **Fock space** $\mathcal K_A$ of gravitons and corner excitations at area
@@ -552,7 +552,7 @@ that the boost changes by $\delta_\eta = 0.1$:
 
 %code
 eta1 = 1; de = 1/10;
-wmax = pi*de/(2*eta1)
+wmax = simplify(pi*de/(2*eta1))
 eval(wmax)
 
 %md
@@ -624,9 +624,9 @@ integrate(integrate(ricciscalar(sph)*r^2*sin(th), th, 0, pi), ph, 0, 2*pi)
    (5.58). Since $s_* \propto \ell^2$, a trace growing like $s^p$ means $q/(1 - q) = 2p$:
 
 %code
-p = 106/45 + 1/2
-q = 2*p/(1 + 2*p)
-q/(2*(1 - q))
+p = simplify(106/45 + 1/2)
+q = simplify(2*p/(1 + 2*p))
+simplify(q/(2*(1 - q)))
 
 %md
 So $q = 257/302$ (equation 5.68), and the entropy of a large Schwarzschild black hole is (5.65)
@@ -637,7 +637,7 @@ $$S = \frac{\langle A\rangle}{4G\hbar} + \frac{257}{90}\log\frac{\langle A\rangl
    the measure by $ds_b/s_b^{1/2} \propto dM$, which removes $\tfrac12$ from the coefficient (5.69):
 
 %code
-q/(2*(1 - q)) - 1/2
+simplify(q/(2*(1 - q)) - 1/2)
 
 %md
 The coefficient $106/45$ is what the paper reports as agreeing with Sen's one-loop result for this ensemble (fixed mass,

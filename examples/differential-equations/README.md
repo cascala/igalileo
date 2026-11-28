@@ -7,6 +7,7 @@ with a **Try this**; exercises with hints and answers close each lesson.
 
 | # | Notebook | What you learn |
 |---|---|---|
+| 0 | [Held, simplify, eval](00-held-simplify-eval.ipynb) | why answers come back as you typed them, `simplify` for the exact simplest form, `eval` for digits |
 | 1 | [First-order equations, slope fields and equilibria](01-first-order-equations.ipynb) | slope fields, separable equations, a draining tank, the logistic equation, equilibria and stability, a fishery bifurcation, blow-up and non-uniqueness |
 | 2 | [Linear first-order equations](02-linear-first-order.ipynb) | the integrating factor, mixing tanks, transient and steady state of a driven circuit, Euler's method and its error |
 | 3 | [Second-order equations, oscillations and resonance](03-second-order.ipynb) | the characteristic equation, under-, critically and overdamped springs, undetermined coefficients, resonance and beats, the amplitude response, Cauchy–Euler equations |
