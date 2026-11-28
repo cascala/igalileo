@@ -1,7 +1,7 @@
 %md
-# Foundations 6: Complex numbers
+# Foundations 7: Complex numbers
 
-*Learning path: foundations, part 6 of 9.* [Index](README.md) · Previous: [Trigonometry](05-trigonometry.ipynb) · Next: [Calculus](07-calculus.ipynb)
+*Learning path: foundations, part 7 of 10.* [Index](README.md) · Previous: [Trigonometry](06-trigonometry.ipynb) · Next: [Calculus](08-calculus.ipynb)
 
 The equation $x^2 = -1$ has no real solution, because squares are never negative. Mathematicians invented a number
 that solves it anyway, $i$, and discovered that the new numbers explain rotations, waves and electrical circuits better
@@ -219,7 +219,7 @@ kinds of $c$ is the famous fractal.
 **Try it:** compute $i^i$ with `eval(exp(i*log(i)))`: why is it real? (Hint: $i = e^{i\pi/2}$.) Find the cube roots of
 $8i$. Try `iterate` with $c = -0.75 + 0.1i$ and $c = 0.26$.
 
-Next: [Calculus](07-calculus.ipynb).
+Next: [Calculus](08-calculus.ipynb).
 
 %md
 ## Sources

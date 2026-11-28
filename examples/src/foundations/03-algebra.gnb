@@ -1,7 +1,7 @@
 %md
-# Foundations 2: Algebra
+# Foundations 3: Algebra
 
-*Learning path: foundations, part 2 of 9.* [Index](README.md) · Previous: [Numbers](01-numbers.ipynb) · Next: [Functions and graphs](03-functions-and-graphs.ipynb)
+*Learning path: foundations, part 3 of 10.* [Index](README.md) · Previous: [Numbers](02-numbers.ipynb) · Next: [Functions and graphs](04-functions-and-graphs.ipynb)
 
 Algebra is arithmetic with letters that stand for numbers we do not know yet. Galileo is a *computer algebra system*:
 it calculates with the letters themselves. You will learn
@@ -128,7 +128,7 @@ solve(x^2 + 2*x + 5, x)
 %md
 The first has $D = 1$ (two solutions, 2 and 3), the second $D = 0$ (only $x = 3$), the third $D = -16$. Its solutions
 contain $i = \sqrt{-1}$, the imaginary unit; they are the subject of
-[complex numbers](06-complex-numbers.ipynb).
+[complex numbers](07-complex-numbers.ipynb).
 
 ### Equations with fractions
 
@@ -183,7 +183,7 @@ factor(ring(r, R))
 
 %md
 Galileo can also differentiate your function: `d(f, x)` is the derivative (the slope, see
-[calculus](07-calculus.ipynb)):
+[calculus](08-calculus.ipynb)):
 
 %code
 d(f, x)
@@ -211,7 +211,7 @@ slope(3)
 **Try it:** factor $x^4 - 16$. Solve $x^2 = 2$ and evaluate the answers with `eval`. Find two numbers whose sum is 20
 and whose product is 91.
 
-Next: [Functions and graphs](03-functions-and-graphs.ipynb), where we draw these expressions.
+Next: [Functions and graphs](04-functions-and-graphs.ipynb), where we draw these expressions.
 
 %md
 ## Sources

@@ -1,7 +1,7 @@
 %md
-# Foundations 3: Functions and graphs
+# Foundations 4: Functions and graphs
 
-*Learning path: foundations, part 3 of 9.* [Index](README.md) · Previous: [Algebra](02-algebra.ipynb) · Next: [Polynomials](04-polynomials.ipynb)
+*Learning path: foundations, part 4 of 10.* [Index](README.md) · Previous: [Algebra](03-algebra.ipynb) · Next: [Polynomials](05-polynomials.ipynb)
 
 A graph turns a formula into a picture. This lesson explains Galileo's plotting commands argument by argument, and
 uses them to understand functions. You will learn
@@ -82,7 +82,7 @@ labels(title(plot(f(x), x, -2.5, 2.5), "f(x) = x^3 - 3x"), "x", "f(x)")
 %md
 Reading the graph: $f$ has a local maximum near $x = -1$ (height 2), a local minimum near $x = 1$ (height $-2$), and
 crosses zero three times. `solve` gives the exact zeros, and the derivative tells exactly where the turning points
-are (we come back to that in [calculus](07-calculus.ipynb)):
+are (we come back to that in [calculus](08-calculus.ipynb)):
 
 %code
 solve(f(x), x)
@@ -158,7 +158,7 @@ $\log_{10} 1000 = 3$ because $10^3 = 1000$; Galileo sees that $1000 = 10^3$, so 
 The graph of an inverse function is the mirror image of the original in the diagonal line $y = x$, because swapping
 $x$ and $y$ swaps the roles of input and output. A mirror image only looks like one when both axes use the same
 scale, which `plot` does not promise. `parametric(X, Y, t, from, to)` draws the points $(X, Y)$ as $t$ runs from
-*from* to *to*, with **equal scales** on both axes ([geometry](09-geometry-and-conics.ipynb) uses it a lot). The point
+*from* to *to*, with **equal scales** on both axes ([geometry](10-geometry-and-conics.ipynb) uses it a lot). The point
 $(t, e^t)$ traces $y = e^x$; swapping the coordinates, $(e^t, t)$, traces its mirror image $y = \log x$; and
 `show(...)` overlays plots:
 
@@ -201,7 +201,7 @@ fsolve(cos(x) == x, x, 0.7)
 
 **Try it:** plot $\sin(x)$, $\sin(x) + 1$, $2\sin(x)$ and $\sin(2x)$ together and explain each change.
 
-Next: [Polynomials](04-polynomials.ipynb).
+Next: [Polynomials](05-polynomials.ipynb).
 
 %md
 ## Sources

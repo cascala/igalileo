@@ -17,11 +17,11 @@ with a **Try this**; exercises with hints and answers close each lesson.
 | 7 | [Fourier series](07-fourier-series.ipynb) | orthogonality, coefficients, the Gibbs phenomenon, smoothness and decay, half-range series, $\sum 1/n^2 = \pi^2/6$ |
 | 8 | [Heat, waves and potentials](08-partial-differential-equations.ipynb) | separation of variables, the heat equation on a rod, a plucked string and its harmonics, Laplace's equation on a plate |
 
-Prerequisites: single-variable calculus ([foundations 7](../foundations/07-calculus.ipynb)); complex numbers
-([foundations 6](../foundations/06-complex-numbers.ipynb)) for lesson 3; eigenvalues
+Prerequisites: single-variable calculus ([foundations 7](../foundations/08-calculus.ipynb)); complex numbers
+([foundations 6](../foundations/07-complex-numbers.ipynb)) for lesson 3; eigenvalues
 ([linear algebra 6](../linear-algebra/06-eigenvalues.ipynb)) for lesson 5; partial derivatives
 ([multivariable calculus 2](../multivariable/02-partial-derivatives-and-gradient.ipynb)) for lesson 8.
-[Foundations 8](../foundations/08-differential-equations.ipynb) is a shorter first look.
+[Foundations 9](../foundations/09-differential-equations.ipynb) is a shorter first look.
 
 Commands introduced: `dsolve` (separable, linear, constant coefficients, Cauchy–Euler, systems), `fieldplot` for slope
 fields, `window`, `iterate`, `laplace`, `ilaplace`, `partfrac`, `heaviside`, `dirac`, `sign`, `assume` and `forget`,

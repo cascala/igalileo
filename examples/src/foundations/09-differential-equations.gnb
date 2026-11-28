@@ -1,7 +1,7 @@
 %md
-# Foundations 8: Differential equations
+# Foundations 9: Differential equations
 
-*Learning path: foundations, part 8 of 9.* [Index](README.md) · Previous: [Calculus](07-calculus.ipynb) · Next: [Geometry and conic sections](09-geometry-and-conics.ipynb)
+*Learning path: foundations, part 9 of 10.* [Index](README.md) · Previous: [Calculus](08-calculus.ipynb) · Next: [Geometry and conic sections](10-geometry-and-conics.ipynb)
 
 Most laws of nature do not say what a quantity *is*, but how fast it *changes*: a population grows in proportion to
 its size, a hot cup of coffee cools in proportion to how much hotter it is than the room, a spring pulls back in
@@ -300,7 +300,7 @@ labels(title(legend(p, "start at the bottom with 7 rad/s"), "Spinning over the t
 **Try it:** change the damping constant in the spring to 3.9 and 4.1. Add friction to the pendulum,
 $\omega' = -\frac gL\sin\theta - 0.3\,\omega$, and draw its phase portrait: what happens to the loops?
 
-Next: [Geometry and conic sections](09-geometry-and-conics.ipynb). For much more on this topic, the
+Next: [Geometry and conic sections](10-geometry-and-conics.ipynb). For much more on this topic, the
 [differential equations](../differential-equations/README.md) path is a full first course.
 
 %md

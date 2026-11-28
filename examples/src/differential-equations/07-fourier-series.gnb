@@ -10,7 +10,7 @@ jumps, is such a mix of sines and cosines. Mathematicians of the day did not bel
 uses it. Here we learn to compute the mix and to see how well it converges.
 
 **Who this is for.** You can integrate products like $x\sin nx$ by parts
-([foundations 7](../foundations/07-calculus.ipynb)). Lesson 4's `heaviside` and `assume` reappear.
+([foundations 7](../foundations/08-calculus.ipynb)). Lesson 4's `heaviside` and `assume` reappear.
 
 **What you will be able to do afterwards:**
 

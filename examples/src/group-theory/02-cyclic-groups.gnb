@@ -131,7 +131,7 @@ totient(100)
 ## 5. Roots of unity
 
 The complex numbers $\omega^k$ with $\omega = e^{2\pi i/n}$ are the corners of a regular $n$-gon on the unit circle
-(foundations lesson 6). Multiplying by $\omega$ rotates by $360^\circ/n$, so they form a cyclic group of size $n$ under
+(foundations lesson 7). Multiplying by $\omega$ rotates by $360^\circ/n$, so they form a cyclic group of size $n$ under
 multiplication, isomorphic to $\mathbb{Z}_n$: $\omega^a \omega^b = \omega^{a + b}$, and the exponents add mod $n$. For
 $n = 6$ (`expand` multiplies out the products of square roots):
 

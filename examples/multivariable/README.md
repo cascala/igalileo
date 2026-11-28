@@ -16,8 +16,8 @@ answers close each lesson.
 | 6 | [Vector fields and line integrals](06-vector-fields-and-line-integrals.ipynb) | vector fields, work and arc length, path independence, potentials, the curl test, a field with a hole, gravity |
 | 7 | [Green, Stokes and Gauss](07-the-big-theorems.ipynb) | circulation and Green's theorem, divergence, flux, the divergence theorem and Gauss's law, Stokes' theorem |
 
-Prerequisites: single-variable calculus ([foundations 7](../foundations/07-calculus.ipynb)) and conic sections
-([foundations 9](../foundations/09-geometry-and-conics.ipynb)); vectors and the dot product
+Prerequisites: single-variable calculus ([foundations 7](../foundations/08-calculus.ipynb)) and conic sections
+([foundations 9](../foundations/10-geometry-and-conics.ipynb)); vectors and the dot product
 ([linear algebra 1](../linear-algebra/01-vectors-and-matrices.ipynb)) help. Afterwards,
 [differential geometry](../differential-geometry/README.md) takes curves, surfaces and Stokes' theorem further.
 

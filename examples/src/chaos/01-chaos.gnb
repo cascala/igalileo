@@ -145,7 +145,7 @@ In 1963 the meteorologist Edward Lorenz simplified a model of air convection to 
 $$x' = 10(y - x), \qquad y' = x(28 - z) - y, \qquad z' = xy - \tfrac83 z.$$
 
 He restarted a computer run from printed numbers rounded to 3 decimals and found a completely different weather after
-a while. `odeplot` (explained argument by argument in [foundations lesson 8](../foundations/08-differential-equations.ipynb))
+a while. `odeplot` (explained argument by argument in [foundations lesson 9](../foundations/09-differential-equations.ipynb))
 draws two solutions from starts that differ by $0.001$ in $x$; across is the time $t$, up is $x(t)$:
 
 %code

@@ -9,7 +9,7 @@ why they show up in vibrations, Google's PageRank, population models, the stabil
 
 **Who this is for.** You know matrices as transformations ([lesson 1](01-vectors-and-matrices.ipynb)), null spaces
 ([lesson 3](03-vector-spaces.ipynb)) and determinants ([lesson 4](04-determinants.ipynb)). Section 6 uses complex
-numbers ([foundations 6](../foundations/06-complex-numbers.ipynb)).
+numbers ([foundations 6](../foundations/07-complex-numbers.ipynb)).
 
 **What you will be able to do afterwards:**
 
@@ -199,7 +199,7 @@ What is the new steady state?
 ## 6. Complex eigenvalues, and when diagonalizing fails
 
 A rotation by $90^\circ$ turns every arrow, so no real direction is preserved. Its eigenvalues are complex, $\pm i$:
-multiplying by $i$ is a quarter turn in the complex plane ([foundations lesson 6](../foundations/06-complex-numbers.ipynb)).
+multiplying by $i$ is a quarter turn in the complex plane ([foundations lesson 7](../foundations/07-complex-numbers.ipynb)).
 
 %code
 eig([0 -1; 1 0])

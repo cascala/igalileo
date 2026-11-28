@@ -10,9 +10,9 @@ surface in 3D, and as a map of level curves in the plane.
 
 **Who this is for.** Students starting multivariable calculus (Calculus III). You should know:
 
-* functions of one variable and their graphs ([foundations 3](../foundations/03-functions-and-graphs.ipynb));
-* derivatives of one variable ([foundations 7](../foundations/07-calculus.ipynb));
-* the equation of a circle and an ellipse ([foundations 9](../foundations/09-geometry-and-conics.ipynb)).
+* functions of one variable and their graphs ([foundations 3](../foundations/04-functions-and-graphs.ipynb));
+* derivatives of one variable ([foundations 7](../foundations/08-calculus.ipynb));
+* the equation of a circle and an ellipse ([foundations 9](../foundations/10-geometry-and-conics.ipynb)).
 
 **What you will be able to do afterwards:**
 
@@ -149,7 +149,7 @@ For the second one, which level curve passes through the origin?
 ## 5. Level curves of curves: implicit equations
 
 Every equation $F(x, y) = 0$ is the level curve $0$ of the function $F$. That is how circles, ellipses and hyperbolas
-from [foundations 9](../foundations/09-geometry-and-conics.ipynb) fit in here. `implicitplot` draws just that one
+from [foundations 9](../foundations/10-geometry-and-conics.ipynb) fit in here. `implicitplot` draws just that one
 curve:
 
 %code

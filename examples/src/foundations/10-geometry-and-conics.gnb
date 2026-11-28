@@ -1,7 +1,7 @@
 %md
-# Foundations 9: Geometry and conic sections
+# Foundations 10: Geometry and conic sections
 
-*Learning path: foundations, part 9 of 9.* [Index](README.md) · Previous: [Differential equations](08-differential-equations.ipynb)
+*Learning path: foundations, part 10 of 10.* [Index](README.md) · Previous: [Differential equations](09-differential-equations.ipynb)
 
 Descartes' great idea was to describe shapes by equations in coordinates $x$ and $y$. Then geometry becomes algebra,
 and a computer algebra system becomes a geometry machine. This lesson goes from points and lines to the **conic

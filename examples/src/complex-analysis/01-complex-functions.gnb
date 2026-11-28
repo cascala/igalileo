@@ -10,7 +10,7 @@ that encodes $f(z)$, so that zeros and poles show up as places where all the col
 rest of the path (derivatives, integrals, residues) will be things you can see.
 
 **Who this is for.** You know complex numbers: $a + bi$, the modulus and argument, and Euler's formula
-$e^{i\theta} = \cos\theta + i\sin\theta$ ([foundations 6](../foundations/06-complex-numbers.ipynb) reviews them). You
+$e^{i\theta} = \cos\theta + i\sin\theta$ ([foundations 6](../foundations/07-complex-numbers.ipynb) reviews them). You
 have met functions of two variables ([multivariable calculus 1](../multivariable/01-functions-of-two-variables.ipynb)).
 
 **What you will be able to do afterwards:**

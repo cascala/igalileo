@@ -9,7 +9,7 @@ smallest (or largest)?* In one variable you set $f'(x) = 0$. This lesson does th
 learns to tell a peak from a pit from a pass.
 
 **Who this is for.** You know partial derivatives and the gradient ([lesson 2](02-partial-derivatives-and-gradient.ipynb))
-and how to find extremes of a function of one variable ([foundations 7](../foundations/07-calculus.ipynb)). Lesson 1's
+and how to find extremes of a function of one variable ([foundations 7](../foundations/08-calculus.ipynb)). Lesson 1's
 pictures of peaks, pits and saddles help.
 
 **What you will be able to do afterwards:**

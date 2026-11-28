@@ -17,7 +17,7 @@ GROUPS = [
     ("tours", "Tours", "Two quick tours: the language, and differential geometry with physics.",
      ["galileo-tour", "differential-geometry-tour"]),
     ("foundations", "Foundations",
-     "Nine lessons from arithmetic to calculus, differential equations and conic sections. Start here.", None),
+     "Ten lessons: how Galileo works out answers, then arithmetic to calculus, differential equations and conic sections. Start here.", None),
     ("linear-algebra", "Linear algebra",
      "Nine lessons for a first course: vectors and matrices, elimination and LU, vector spaces, determinants, least squares and QR, eigenvalues, symmetric matrices and Cholesky, the SVD, and the matrix exponential with the Jordan form.", None),
     ("differential-equations", "Differential equations",

@@ -10,8 +10,8 @@ slopes and follow them, solve with a formula when the equation separates, and re
 from $f$ without solving at all.
 
 **Who this is for.** Students starting a first course on differential equations. You should know derivatives and
-integrals of one variable ([foundations 7](../foundations/07-calculus.ipynb)); a first look at
-[foundations 8](../foundations/08-differential-equations.ipynb) helps but is not needed.
+integrals of one variable ([foundations 7](../foundations/08-calculus.ipynb)); a first look at
+[foundations 8](../foundations/09-differential-equations.ipynb) helps but is not needed.
 
 **What you will be able to do afterwards:**
 

@@ -4,7 +4,7 @@
 
 iGalileo is a Jupyter kernel for [Galileo](https://github.com/cascala/galileo), a computer algebra system written in Rust. In a notebook you can do symbolic algebra, calculus, matrices, number theory and differential geometry, with interactive 2D and 3D plots.
 
-**▶ [Try Galileo in your browser](https://cascala.github.io/igalileo/)**: nothing to install. Open the [playground](https://cascala.github.io/igalileo/playground/), start the [first lesson](https://cascala.github.io/igalileo/playground/#lesson/foundations/01-numbers), or use [notebooks in JupyterLite](https://cascala.github.io/igalileo/lab/lab/index.html).
+**▶ [Try Galileo in your browser](https://cascala.github.io/igalileo/)**: nothing to install. Open the [playground](https://cascala.github.io/igalileo/playground/), start the [first lesson](https://cascala.github.io/igalileo/playground/#lesson/foundations/02-numbers), or use [notebooks in JupyterLite](https://cascala.github.io/igalileo/lab/lab/index.html).
 
 **Questions, ideas or something you made with Galileo?** Join the [Discussions](https://github.com/cascala/galileo/discussions).
 

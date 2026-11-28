@@ -1,7 +1,7 @@
 %md
-# Foundations 7: Calculus
+# Foundations 8: Calculus
 
-*Learning path: foundations, part 7 of 9.* [Index](README.md) · Previous: [Complex numbers](06-complex-numbers.ipynb) · Next: [Differential equations](08-differential-equations.ipynb)
+*Learning path: foundations, part 8 of 10.* [Index](README.md) · Previous: [Complex numbers](07-complex-numbers.ipynb) · Next: [Differential equations](09-differential-equations.ipynb)
 
 Calculus is the mathematics of change. It has two halves that turn out to be inverses of each other: the
 **derivative** (how fast something changes) and the **integral** (how much has accumulated). You will learn
@@ -207,7 +207,7 @@ eval(e)
 **Try it:** a rectangle has perimeter 20; which sides give the largest area? Find the area enclosed by $y = \sin x$
 and the $x$-axis between 0 and $2\pi$ (careful with the sign!).
 
-Next: [Differential equations](08-differential-equations.ipynb), where the unknown is a whole function.
+Next: [Differential equations](09-differential-equations.ipynb), where the unknown is a whole function.
 
 %md
 ## Sources

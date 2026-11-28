@@ -8,7 +8,7 @@ straight uphill, and how steep is it? If you walk north-east instead, how fast d
 those questions with one object, the **gradient**, built from ordinary derivatives.
 
 **Who this is for.** You know derivatives of one variable, including the chain rule
-([foundations 7](../foundations/07-calculus.ipynb)), and level curves ([lesson 1](01-functions-of-two-variables.ipynb)).
+([foundations 7](../foundations/08-calculus.ipynb)), and level curves ([lesson 1](01-functions-of-two-variables.ipynb)).
 The dot product of two vectors helps ([linear algebra 1](../linear-algebra/01-vectors-and-matrices.ipynb)); we
 recall what we need.
 

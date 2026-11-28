@@ -19,7 +19,7 @@ exercises with hints and answers close each lesson.
 | 9 | [Linear differential equations, the matrix exponential and the Jordan form](09-jordan-and-matrix-exponential.ipynb) | $x' = Ax$ with eigenvectors, $e^{At}$, stability and phase portraits, critical damping and $t\,e^{\lambda t}$, Jordan blocks and generalized eigenvectors |
 
 Prerequisites: the [foundations](../foundations/README.md) up to trigonometry; complex numbers
-([foundations 6](../foundations/06-complex-numbers.ipynb)) for lessons 6 and 9. Afterwards, the
+([foundations 6](../foundations/07-complex-numbers.ipynb)) for lessons 6 and 9. Afterwards, the
 [multivariable calculus](../multivariable/README.md) path uses gradients, Hessians and Jacobians, and
 [differential geometry](../differential-geometry/README.md) uses matrices as metrics.
 

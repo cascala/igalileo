@@ -17,7 +17,7 @@ each lesson.
 | 7 | [Real integrals by residues](07-real-integrals.ipynb) | rational integrals over the line, Jordan's lemma and Fourier integrals, indented contours and $\int \sin x/x$, integrals over a period |
 | 8 | [Conformal maps and the flow around a wing](08-conformal-maps.ipynb) | angle preservation, Möbius and Cayley maps, complex potentials and streamlines, the Joukowski airfoil |
 
-Prerequisites: complex numbers ([foundations 6](../foundations/06-complex-numbers.ipynb)) and functions of two
+Prerequisites: complex numbers ([foundations 6](../foundations/07-complex-numbers.ipynb)) and functions of two
 variables and line integrals ([multivariable calculus 1 and 6](../multivariable/README.md)). Afterwards, the tools
 return in physics: Fourier integrals in waves, residues in scattering, conformal maps in electrostatics.
 

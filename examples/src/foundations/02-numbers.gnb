@@ -1,9 +1,9 @@
 %md
-# Foundations 1: Numbers and arithmetic
+# Foundations 2: Numbers and arithmetic
 
-*Learning path: foundations, part 1 of 9.* [Index](README.md) · Previous: [Simplify and eval](00-simplify-and-eval.ipynb) · Next: [Algebra](02-algebra.ipynb)
+*Learning path: foundations, part 2 of 10.* [Index](README.md) · Previous: [Simplify and eval](01-simplify-and-eval.ipynb) · Next: [Algebra](03-algebra.ipynb)
 
-This first lesson shows how to type calculations into Galileo and how it treats numbers. You will learn
+This lesson shows how to type calculations into Galileo and how it treats numbers. You will learn
 
 * how to run a cell and read its answer,
 * why Galileo keeps **fractions and roots exact**, and how to get a decimal when you want one,
@@ -222,7 +222,7 @@ clear
 
 **Try it:** what is $2^{64}$? Which is larger, $2^{100}$ or $100!$? Is $2^{31} - 1$ prime?
 
-Next: [Algebra](02-algebra.ipynb), where letters stand for unknown numbers.
+Next: [Algebra](03-algebra.ipynb), where letters stand for unknown numbers.
 
 %md
 ## Sources

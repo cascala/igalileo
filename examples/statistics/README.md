@@ -18,7 +18,7 @@ section ends with a **Try this**; exercises with hints and answers close each le
 | 8 | [Regression and correlation](08-regression-and-correlation.ipynb) | scatter plots, correlation, least squares, residuals, Anscombe's quartet, regression to the mean |
 
 Prerequisites: arithmetic and fractions for lessons 1 to 3; definite integrals
-([foundations 7](../foundations/07-calculus.ipynb)) for lesson 4.
+([foundations 7](../foundations/08-calculus.ipynb)) for lesson 4.
 
 Commands introduced: `mean`, `median`, `mode`, `var`, `std`, `summary`, `tally`, `cumsum`, `hist`, `bar`, `seed`,
 `rand`, `randn`, `randint`, `randbin`, `randpois`, `binopdf`, `binocdf`, `poisspdf`, `poisscdf`, `normpdf`, `normcdf`,

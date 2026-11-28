@@ -1,7 +1,7 @@
 %md
-# Foundations 4: Polynomials
+# Foundations 5: Polynomials
 
-*Learning path: foundations, part 4 of 9.* [Index](README.md) · Previous: [Functions and graphs](03-functions-and-graphs.ipynb) · Next: [Trigonometry](05-trigonometry.ipynb)
+*Learning path: foundations, part 5 of 10.* [Index](README.md) · Previous: [Functions and graphs](04-functions-and-graphs.ipynb) · Next: [Trigonometry](06-trigonometry.ipynb)
 
 Polynomials are sums of powers of $x$ with number coefficients, like $2x^3 - 5x + 1$. They are the simplest functions
 there are, yet they approximate almost every other function. You will learn
@@ -139,7 +139,7 @@ solve(x^5 - x - 1, x)
 
 %md
 The complex roots come in pairs $a \pm bi$ (*conjugates*) whenever the coefficients are real. The
-[complex numbers lesson](06-complex-numbers.ipynb) draws such roots in the plane.
+[complex numbers lesson](07-complex-numbers.ipynb) draws such roots in the plane.
 
 ## 6. A polynomial through given points
 
@@ -174,7 +174,7 @@ title(legend(p, "the parabola (x - 1)^2", "the three given points"), "One parabo
 **Try it:** find all roots of $x^4 - 5x^2 + 4$ by hand (hint: substitute $u = x^2$), then check with `factor`. Fit a
 cubic through $(0, 0)$, $(1, 1)$, $(2, 0)$, $(3, 3)$.
 
-Next: [Trigonometry](05-trigonometry.ipynb).
+Next: [Trigonometry](06-trigonometry.ipynb).
 
 %md
 ## Sources

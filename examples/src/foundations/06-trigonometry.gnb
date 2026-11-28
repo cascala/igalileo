@@ -1,7 +1,7 @@
 %md
-# Foundations 5: Trigonometry
+# Foundations 6: Trigonometry
 
-*Learning path: foundations, part 5 of 9.* [Index](README.md) · Previous: [Polynomials](04-polynomials.ipynb) · Next: [Complex numbers](06-complex-numbers.ipynb)
+*Learning path: foundations, part 6 of 10.* [Index](README.md) · Previous: [Polynomials](05-polynomials.ipynb) · Next: [Complex numbers](07-complex-numbers.ipynb)
 
 Trigonometry started as the measurement of triangles and became the mathematics of everything that turns or
 repeats: wheels, waves, sound, light, alternating current. You will learn
@@ -224,7 +224,7 @@ $6\sqrt6 \approx 14.7$.
 **Try it:** find $\sin 75^\circ$ exactly in two ways (`sin(75*deg)` and `trigexpand(sin(45*deg + 30*deg))`). Plot
 $\sin t + \sin(1.1\,t)$ for $t$ from 0 to 150: what are the slow "beats" you see? (Hint: `trigreduce` in reverse.)
 
-Next: [Complex numbers](06-complex-numbers.ipynb), where the unit circle becomes a number system.
+Next: [Complex numbers](07-complex-numbers.ipynb), where the unit circle becomes a number system.
 
 %md
 ## Sources

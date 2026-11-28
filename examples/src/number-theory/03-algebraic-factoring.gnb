@@ -61,7 +61,7 @@ factor(x^12 - 1)
 $x^{12} - 1$ splits into six pieces with small whole coefficients, and Galileo proves none of them splits further. Each
 piece collects some of the roots of $x^{12} - 1$. Those roots are the **12th roots of unity**, the complex numbers
 $$z_k = \cos\frac{2\pi k}{12} + i \sin\frac{2\pi k}{12}, \qquad k = 0, 1, \ldots, 11,$$
-twelve points evenly spaced on the unit circle (the [complex numbers](../foundations/06-complex-numbers.ipynb) lesson of the foundations path has more). The
+twelve points evenly spaced on the unit circle (the [complex numbers](../foundations/07-complex-numbers.ipynb) lesson of the foundations path has more). The
 **order** of $z_k$ is the smallest $d \ge 1$ with $z_k^d = 1$; it is $12/\gcd(k, 12)$. The **cyclotomic polynomial**
 $\Phi_d(x)$ ("circle dividing", from Greek) has as its roots exactly the roots of unity of order $d$:
 

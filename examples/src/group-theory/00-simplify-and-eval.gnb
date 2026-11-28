@@ -4,11 +4,17 @@
 *Learning path: group theory, start here.* [Index](README.md) · Next: [Symmetry](01-symmetry.ipynb)
 
 Galileo works answers out exactly: $1/3 + 2/6$ is $2/3$, not $0.6666666666666666$. When you want digits, you
-ask for them with `eval`. This short lesson shows how answers are written, how to get digits, and the setting
-`calc` that decides what Galileo does with what you type.
+ask for them with `eval`. This short lesson shows how answers are written, how to get digits, and the two
+settings that shape every answer:
+
+* `calc` decides what Galileo does with what you type. The default is `calc = "simplify"`.
+* `explain` decides how much each command explains. The default is `explain = "brief"`.
 
 %md
 ## 1. Exact answers
+
+Click into a code cell and press **Shift+Enter** to run it; the answer appears underneath. Every cell can be
+changed and run again.
 
 %code
 1/3 + 2/6
@@ -89,7 +95,29 @@ calc = "simplify";
 
 %md
 In every mode, commands such as `solve`, `factor` and `diff` work out their answers, and comparisons give `true`
-or `false`.
+or `false`. `clear` removes your variables but keeps the setting.
+
+%md
+## 6. The `explain` setting
+
+Many commands add a short explanation to their answer, set apart from it (in grey, or as lines starting with `//`).
+The answer itself is always something you could type back into Galileo. `explain` sets how much is added:
+
+* `explain = "brief"`, the default: one or two sentences.
+* `explain = "teach"`: a longer explanation that walks through the method, for learning.
+* `explain = "off"`: answers only.
+
+%code
+clear
+solve(x^2 - 5*x + 6 == 0, x)
+explain = "teach";
+solve(x^2 - 5*x + 6 == 0, x)
+explain = "off";
+solve(x^2 - 5*x + 6 == 0, x)
+explain = "brief";
+
+%md
+A `;` at the end of a line hides both the answer and its explanation.
 
 %md
 ## Summary
@@ -97,7 +125,9 @@ or `false`.
 * Galileo works answers out exactly, in one fixed form; `simplify(x)` gives that form on request.
 * `eval(x)` gives digits; `eval(x, n)` gives `n` of them.
 * `factor` and `expand` give other forms.
-* `calc = "eval"` gives every answer in digits, `calc = "off"` keeps what you type as typed, and
-  `calc = "simplify"` goes back to exact answers.
+* `calc = "simplify"` (the default) works answers out exactly, `calc = "eval"` gives every answer in digits,
+  and `calc = "off"` keeps what you type as typed.
+* `explain = "brief"` (the default) adds a short explanation, `explain = "teach"` a longer one, and
+  `explain = "off"` none.
 
 Next: [Symmetry](01-symmetry.ipynb).

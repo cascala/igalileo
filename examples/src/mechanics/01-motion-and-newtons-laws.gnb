@@ -9,7 +9,7 @@ Where do the missing 80 m go? Into the air. This lesson sets up the language of 
 vectors, Newton's second law), solves the projectile exactly, and then adds air drag, which has no formula but which
 Galileo solves numerically in one line.
 
-**Who this is for.** You know derivatives and integrals ([foundations 7](../foundations/07-calculus.ipynb)) and have
+**Who this is for.** You know derivatives and integrals ([foundations 7](../foundations/08-calculus.ipynb)) and have
 met differential equations ([differential equations 1](../differential-equations/01-first-order-equations.ipynb)).
 No physics course is assumed.
 

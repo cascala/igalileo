@@ -14,7 +14,7 @@ is the model behind car suspensions, electrical circuits, buildings in earthquak
 lesson solves it completely.
 
 **Who this is for.** You have done [lessons 1 and 2](01-first-order-equations.ipynb) and know complex numbers and
-Euler's formula $e^{i\theta} = \cos\theta + i\sin\theta$ ([foundations 6](../foundations/06-complex-numbers.ipynb)).
+Euler's formula $e^{i\theta} = \cos\theta + i\sin\theta$ ([foundations 6](../foundations/07-complex-numbers.ipynb)).
 
 **What you will be able to do afterwards:**
 

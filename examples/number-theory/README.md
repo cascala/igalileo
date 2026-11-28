@@ -14,7 +14,7 @@ cryptography. Every method is written as a short Galileo function, so you can ch
 | 6 | [The factoring lab](06-factoring-lab.ipynb) | RSA-like test numbers, a scoreboard of nine factoring methods with fitted growth laws, scoring your own method, a search for new factoring programs (and why its wins vanish on new numbers), hunting for leaks of $p$ in features of $N$ with corrected p-values |
 | 7 | [The number field sieve](07-number-field-sieve.ipynb) | one number in two worlds ($\mathbb{Z}$ and $\mathbb{Z}[\alpha]$), smooth pairs on both sides, sieving, quadratic characters, the square root in a number field, the special number field sieve on $2^{128} + 1$ and $2^{256} + 1$, polynomials that factor, a race against the quadratic sieve |
 
-Prerequisites: the [Numbers](../foundations/01-numbers.ipynb) lesson of the foundations path.
+Prerequisites: the [Numbers](../foundations/02-numbers.ipynb) lesson of the foundations path.
 
 The notebooks are generated from the plain-text sources in [`../src/number-theory`](../src/number-theory) by
 `python3 examples/src/build.py`, then executed so that results and plots are stored with them.

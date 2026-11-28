@@ -10,7 +10,7 @@ mathematics: go up a dimension, to a **double integral**, and switch to polar co
 tools and then does the trick.
 
 **Who this is for.** You can integrate functions of one variable, including by substitution
-([foundations 7](../foundations/07-calculus.ipynb)), and you know polar coordinates and the Jacobian matrix's idea
+([foundations 7](../foundations/08-calculus.ipynb)), and you know polar coordinates and the Jacobian matrix's idea
 from [lesson 2](02-partial-derivatives-and-gradient.ipynb).
 
 **What you will be able to do afterwards:**

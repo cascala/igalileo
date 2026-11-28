@@ -9,7 +9,7 @@ the path. What is the difference between these two kinds of force, mathematicall
 **vector fields**, **line integrals** and **potentials**.
 
 **Who this is for.** You know gradients ([lesson 2](02-partial-derivatives-and-gradient.ipynb)), the chain rule along
-a path (lesson 2, section 6), and parametrized curves ([foundations 9](../foundations/09-geometry-and-conics.ipynb)).
+a path (lesson 2, section 6), and parametrized curves ([foundations 9](../foundations/10-geometry-and-conics.ipynb)).
 Physics students will recognise work and potential energy; nobody needs them.
 
 **What you will be able to do afterwards:**

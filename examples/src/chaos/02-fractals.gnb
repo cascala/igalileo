@@ -11,7 +11,7 @@ Lorenz attractor of lesson 1 are like that. Benoit Mandelbrot gave them their na
 * how the **Mandelbrot set** is computed, and what its pictures show,
 * **Julia sets**, and how the Mandelbrot set is a map of all of them.
 
-This lesson uses complex numbers ([foundations lesson 6](../foundations/06-complex-numbers.ipynb)), where the
+This lesson uses complex numbers ([foundations lesson 7](../foundations/07-complex-numbers.ipynb)), where the
 Mandelbrot set was first introduced, and `iterate` from lesson 1.
 
 %md
@@ -65,7 +65,7 @@ Britain has $D \approx 1.25$, almost the Koch value.
 
 ## 3. The Mandelbrot set
 
-Pick a complex number $c$ and iterate $z \to z^2 + c$ starting from $z = 0$, as in foundations lesson 6. Either the
+Pick a complex number $c$ and iterate $z \to z^2 + c$ starting from $z = 0$, as in foundations lesson 7. Either the
 values stay bounded, or they run off to infinity (once $|z| > 2$ they always do). The **Mandelbrot set** is the set of
 $c$ for which they stay bounded:
 

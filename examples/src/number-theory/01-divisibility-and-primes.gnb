@@ -14,7 +14,7 @@ computing with remainders, lesson 5 about cryptography. In this lesson you will 
 * how the primes thin out (the **prime number theorem**), and how irregular the gaps between them are,
 * the **fundamental theorem of arithmetic**, and what it tells you about divisors and perfect numbers.
 
-You only need the [Numbers](../foundations/01-numbers.ipynb) lesson of the foundations path.
+You only need the [Numbers](../foundations/02-numbers.ipynb) lesson of the foundations path.
 
 %md
 ## 1. Division with remainder
