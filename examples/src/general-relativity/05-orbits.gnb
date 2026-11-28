@@ -167,7 +167,7 @@ a rosette. The predicted shift per orbit is $\Delta\phi = 6\pi GM/\big(c^2 a(1 -
 semi-latus rectum from above, here $30\,r_s$. In degrees:
 
 %code
-p = simplify(2*h^2/r_s)
+p = 2*h^2/r_s
 eval(3*pi*r_s/p*180/pi)
 
 %md

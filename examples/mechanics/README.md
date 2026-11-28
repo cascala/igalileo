@@ -8,7 +8,7 @@ hints and answers close each lesson.
 
 | # | Notebook | What you learn |
 |---|---|---|
-| 0 | [Held, simplify, eval](00-held-simplify-eval.ipynb) | why answers come back as you typed them, `simplify` for the exact simplest form, `eval` for digits |
+| 0 | [Simplify and eval](00-simplify-and-eval.ipynb) | exact answers, `eval` for digits, and the `calc` setting: work answers out, give digits, or keep input as typed |
 | 1 | [Motion and Newton's laws](01-motion-and-newtons-laws.ipynb) | units and vectors, Newton's three laws, projectiles in a vacuum and with air drag, terminal velocity, an animated flight |
 | 2 | [Energy and momentum](02-energy-and-momentum.ipynb) | work and kinetic energy, braking distances, potential energy and its conservation, elastic and inelastic collisions, the rocket equation and staging |
 | 3 | [Rotation](03-rotation.ipynb) | torque as a cross product, moments of inertia by integration, the race of rolling shapes, angular momentum and the spinning skater, the precession of a top |

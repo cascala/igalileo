@@ -21,10 +21,10 @@ Galileo knows $i$ (also written `j`, as engineers do) with $i^2 = -1$. Square ro
 multiples of $i$:
 
 %code
-simplify(i^2)
-simplify(sqrt(-9))
-simplify(i^3)
-simplify(i^4)
+i^2
+sqrt(-9)
+i^3
+i^4
 
 %md
 The powers of $i$ repeat with period 4: $i, -1, -i, 1, i, \ldots$
@@ -35,9 +35,9 @@ Computing with them follows the usual rules of algebra plus $i^2 = -1$:
 %code
 z = 3 + 4*i;
 w = 1 - 2*i;
-simplify(z + w)
-simplify(z - w)
-simplify(z*w)
+z + w
+z - w
+z*w
 
 %md
 By hand: $(3 + 4i)(1 - 2i) = 3 - 6i + 4i - 8i^2 = 3 - 2i + 8 = 11 - 2i$.
@@ -49,8 +49,8 @@ $z\bar z = a^2 + b^2$. That is the trick for dividing: multiply top and bottom b
 
 %code
 conj(z)
-simplify(z*conj(z))
-simplify(z/w)
+z*conj(z)
+z/w
 
 %md
 By hand: $\dfrac{3 + 4i}{1 - 2i} = \dfrac{(3 + 4i)(1 + 2i)}{(1 - 2i)(1 + 2i)} = \dfrac{-5 + 10i}{5} = -1 + 2i$.
@@ -94,7 +94,7 @@ $$z = r(\cos\varphi + i\sin\varphi).$$
 `abs(z)` and `arg(z)` compute them; `polar(z)` gives both as `[r, phi]`:
 
 %code
-simplify(abs(3 + 4*i))
+abs(3 + 4*i)
 arg(1 + i)
 polar(-1 + sqrt(3)*i)
 polar(3 + 4*i)
@@ -116,7 +116,7 @@ one row per power $z^k$, $k = 0, \ldots, 40$: its real and imaginary parts.
 
 %code
 z = 0.9 + 0.3*i;
-simplify(abs(z))
+abs(z)
 arg(z)
 P = table([real(z^k), imag(z^k)], k, 0, 40);
 p = legend(scatter(P, [re im]), "z^k for k = 0, 1, ..., 40");
@@ -137,8 +137,8 @@ So $e^{i\theta}$ is the point at angle $\theta$ on the unit circle, and every co
 
 %code
 rect(exp(i*x))
-simplify(exp(i*pi/3))
-simplify(exp(i*pi))
+exp(i*pi/3)
+exp(i*pi)
 
 %md
 The last line is **Euler's identity** $e^{i\pi} = -1$, or $e^{i\pi} + 1 = 0$, connecting the five most important
@@ -164,7 +164,7 @@ These are $\cos 2x$ and $\sin 2x$. Powers of complex numbers are easy in polar f
 $\sqrt2^{10} = 32$ and argument $10 \cdot 45^\circ = 450^\circ = 90^\circ$, so it is $32i$:
 
 %code
-simplify((1 + i)^10)
+(1 + i)^10
 
 %md
 ## 5. Roots of unity

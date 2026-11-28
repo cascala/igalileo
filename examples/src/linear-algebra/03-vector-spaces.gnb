@@ -89,7 +89,7 @@ $\mathbb{R}^3$. The coordinates of $[1\ 1\ 1]$ in that basis solve $Vc = [1\ 1\ 
 
 %code
 coords = V\[1; 1; 1]
-simplify(V*coords)
+V*coords
 
 %md
 So $[1\ 1\ 1] = \tfrac13[1\ 2\ 0] + \tfrac13[0\ 1\ 1] + \tfrac23[1\ 0\ 1]$. Different bases give different coordinates for
@@ -149,7 +149,7 @@ the coordinates of the derivatives of the basis vectors: $1' = 0$, $x' = 1$, $(x
 
 %code
 D = [0 1 0; 0 0 2; 0 0 0];
-simplify(D*[5; 3; 2])
+D*[5; 3; 2]
 deriv(5 + 3*x + 2*x^2, x)
 
 %md
@@ -172,7 +172,7 @@ $\mathrm{vec}(AX) = (I \otimes A)\,\mathrm{vec}(X)$ and $\mathrm{vec}(XA) = (A^T
 `kron(P, Q)` replaces every entry $p_{ij}$ of $P$ by the block $p_{ij}Q$:
 
 %code
-K = simplify(kron(eye(2), A2) - kron(transpose(A2), eye(2)))
+K = kron(eye(2), A2) - kron(transpose(A2), eye(2))
 null(K)
 
 %md

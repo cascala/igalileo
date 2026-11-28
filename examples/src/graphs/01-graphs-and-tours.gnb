@@ -1,7 +1,7 @@
 %md
 # Graphs 1: Graphs, degrees and tours
 
-*Learning path: graphs and networks, part 1 of 3.* [Index](README.md) · Previous: [Held, simplify, eval](00-held-simplify-eval.ipynb) · Next: [Paths, trees and flows](02-paths-trees-and-flows.ipynb)
+*Learning path: graphs and networks, part 1 of 3.* [Index](README.md) · Previous: [Simplify and eval](00-simplify-and-eval.ipynb) · Next: [Paths, trees and flows](02-paths-trees-and-flows.ipynb)
 
 In 1736 the people of Königsberg asked a puzzle: can you walk through the city crossing each of its seven bridges
 exactly once? Leonhard Euler answered it without drawing a single route. He noticed that only two things matter: which
@@ -100,8 +100,8 @@ Matrix multiplication counts walks. Entry $(i, j)$ of $A^2$ is $\sum_k A_{ik} A_
 1, so it counts the walks of length 2 from $i$ to $j$. In general $A^k$ counts walks of length $k$.
 
 %code
-simplify(A^2)
-simplify(A^3)
+A^2
+A^3
 
 %md
 The diagonal of $A^2$ is the degree of each vertex (go out along an edge and come straight back). The diagonal of
@@ -109,7 +109,7 @@ $A^3$ counts closed walks of length 3: around the triangle 1, 2, 3 in either dir
 and 0 at vertex 4. The trace of $A^3$ is 6 times the number of triangles.
 
 %code
-simplify(trace(A^3) / 6)
+trace(A^3) / 6
 
 %md
 **Try this.** How many triangles does `complete(5)` have? Compute `trace(adjacency(complete(5))^3) / 6` and compare

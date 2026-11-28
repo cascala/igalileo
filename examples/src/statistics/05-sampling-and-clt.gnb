@@ -139,7 +139,7 @@ The standard error is about 0.016, so by the 95% rule of lesson 4 most polls lan
 Even with a true majority, about one poll in ten shows the candidate losing:
 
 %code
-simplify(sum(v < 0.5)/2000)
+sum(v < 0.5)/2000
 eval(normcdf(0.5, 0.52, sqrt(0.52*0.48/1000)))
 
 %md

@@ -1,7 +1,7 @@
 %md
 # Partial differential equations 1: The heat equation
 
-*Learning path: partial differential equations, part 1 of 3.* [Index](README.md) · Previous: [Held, simplify, eval](00-held-simplify-eval.ipynb) · Next: [Waves on a string](02-waves-on-a-string.ipynb)
+*Learning path: partial differential equations, part 1 of 3.* [Index](README.md) · Previous: [Simplify and eval](00-simplify-and-eval.ipynb) · Next: [Waves on a string](02-waves-on-a-string.ipynb)
 
 Heat one end of a metal rod and the warmth creeps along it. A drop of ink spreads through a glass of water. A rumour
 spreads through a town, a price through a market. All of these follow the **heat equation**, which Joseph Fourier
@@ -75,7 +75,7 @@ Start from the temperature $u(x, 0) = \sin(\pi x)$ at the nine inner points, and
 %code
 xs = linspace(h, 1 - h, n - 1);
 u0 = sin(pi*xs);
-k = simplify((1/10) / (r*h^2))
+k = (1/10) / (r*h^2)
 u = u0 * A^k;
 eval(max(u), 4)
 

@@ -7,7 +7,7 @@ section ends with a **Try this**; exercises with hints and answers close each le
 
 | # | Notebook | What you learn |
 |---|---|---|
-| 0 | [Held, simplify, eval](00-held-simplify-eval.ipynb) | why answers come back as you typed them, `simplify` for the exact simplest form, `eval` for digits |
+| 0 | [Simplify and eval](00-simplify-and-eval.ipynb) | exact answers, `eval` for digits, and the `calc` setting: work answers out, give digits, or keep input as typed |
 | 1 | [Describing data](01-describing-data.ipynb) | mean, median and mode, standard deviation and quartiles, histograms, symmetric and skewed data, z-scores |
 | 2 | [Probability and simulation](02-probability-and-simulation.ipynb) | counting outcomes, complements and products, de Méré's problem, the birthday problem, conditional probability and Bayes' rule |
 | 3 | [Discrete distributions](03-discrete-distributions.ipynb) | random variables, the binomial distribution, expected value and variance, the Poisson distribution and the horse kicks |

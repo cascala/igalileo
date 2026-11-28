@@ -11,7 +11,7 @@ for this path:
 
 | # | Notebook | What you learn |
 |---|---|---|
-| 0 | [Held, simplify, eval](00-held-simplify-eval.ipynb) | why answers come back as you typed them, `simplify` for the exact simplest form, `eval` for digits |
+| 0 | [Simplify and eval](00-simplify-and-eval.ipynb) | exact answers, `eval` for digits, and the `calc` setting: work answers out, give digits, or keep input as typed |
 | 1 | [Kepler's third law](01-kepler.ipynb) | data tables, `scatter`, log-log plots, `discover` and how it picks the best formula, `check`, weighing Jupiter from its moons |
 | 2 | [From Kepler to Newton](02-newton.ipynb) | `transform`, your own building blocks, Mars's ellipse, equal areas from $\phi'$, the inverse-square law, the Binet equation found in data |
 | 3 | [Mercury doesn't fit](03-mercury.ipynb) | the 43″ anomaly, uncertainties and $\chi^2$, comparing hypotheses, the $1/p$ scaling that points to a $u^2$ term, and why positions could never show it |

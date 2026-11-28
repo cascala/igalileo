@@ -45,7 +45,7 @@ This is the same as finding coordinates in an orthonormal basis
 ([linear algebra 5](../linear-algebra/05-orthogonality.ipynb)): a dot product with each basis vector. For $f(x) = x$:
 
 %code
-simplify(int(x*sin(n*x), x, -pi, pi)/pi)
+int(x*sin(n*x), x, -pi, pi)/pi
 
 %md
 $b_n = -2(-1)^n/n = 2(-1)^{n+1}/n$, using $\cos n\pi = (-1)^n$. On an interval $[-L, L]$, replace $nx$ by $n\pi x/L$

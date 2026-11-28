@@ -84,7 +84,7 @@ $n$ has 160 digits (530 bits). Real keys are about four times longer, but the st
 %code
 p = nextprime(10^79)
 q = nextprime(3*10^79)
-n = simplify(p*q)
+n = p*q
 
 %md
 Choose an exponent $e$ that shares no factor with $\varphi(n) = (p - 1)(q - 1)$. Almost everyone uses
@@ -150,7 +150,7 @@ RSA is exactly as strong as factoring $n$. Here is a key with a 19-digit $n$, ma
 sees only the public key $(n, e)$ and the encrypted message (a short one: the message number must be smaller than $n$):
 
 %code
-n2 = simplify(nextprime(10^9)*nextprime(2*10^9))
+n2 = nextprime(10^9)*nextprime(2*10^9)
 c2 = powmod(encode("pin 42"), 65537, n2)
 
 %md

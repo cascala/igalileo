@@ -1,7 +1,7 @@
 %md
 # Mechanics 1: Motion and Newton's laws
 
-*Learning path: mechanics, part 1 of 7.* [Index](README.md) · Previous: [Held, simplify, eval](00-held-simplify-eval.ipynb) · Next: [Energy and momentum](02-energy-and-momentum.ipynb)
+*Learning path: mechanics, part 1 of 7.* [Index](README.md) · Previous: [Simplify and eval](00-simplify-and-eval.ipynb) · Next: [Energy and momentum](02-energy-and-momentum.ipynb)
 
 A good baseball hit leaves the bat at about 45 m/s, roughly 160 km/h. The textbook formula for a projectile says it
 should land almost 200 m away. The longest home runs ever measured travel about 150 m, and a typical one about 120 m.
@@ -38,10 +38,10 @@ Units travel through the arithmetic. A speed times a time is a distance, a mass 
 units of the same kind combine:
 
 %code
-simplify(v*(3 s))
-F = simplify(0.145 kg * 9.81 m/s^2)
+v*(3 s)
+F = 0.145 kg * 9.81 m/s^2
 convert(F, N)
-simplify(1 km + 250 m)
+1 km + 250 m
 
 %md
 Adding a length to a time is an error in Galileo, as it is in physics: only quantities of the same **dimension** can be
@@ -71,7 +71,7 @@ $\mathbf v = d\mathbf r/dt$ and its **acceleration** is $\mathbf a = d\mathbf v/
 $(v_x, v_y)$ from the origin, gravity pulls straight down with acceleration $g$:
 
 %code
-r = simplify([vx*t, vy*t - g*t^2/2])
+r = [vx*t, vy*t - g*t^2/2]
 vel = diff(r, t)
 acc = diff(vel, t)
 

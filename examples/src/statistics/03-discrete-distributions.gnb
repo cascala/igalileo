@@ -84,7 +84,7 @@ $E[X] = \sum_k k\,P(X = k)$. With the values in a row and the probabilities in a
 row and a column, $k\,P^T$:
 
 %code
-simplify(k*P')
+k*P'
 sum(j*binopdf(j, 10, 3/10), j, 0, 10)
 
 %md
@@ -94,7 +94,7 @@ $np(1 - p)$:
 
 %code
 sum((j - 3)^2*binopdf(j, 10, 3/10), j, 0, 10)
-simplify(10*(3/10)*(7/10))
+10*(3/10)*(7/10)
 
 %md
 The expected value is a long-run average. Simulate 2000 seasons of 10 shots with `randbin(n, p, count)` and compare
@@ -129,7 +129,7 @@ Both its mean and its variance are $\lambda$. Here are Bortkiewicz's data: 200 c
 k = [0 1 2 3 4];
 years = [109 65 22 3 1];
 sum(years)
-lambda = simplify(k*years'/200)
+lambda = k*years'/200
 
 %md
 On average 0.61 deaths per corps-year. Multiply the Poisson probabilities by 200 to get the predicted number of

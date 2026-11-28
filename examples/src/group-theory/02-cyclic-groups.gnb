@@ -136,7 +136,7 @@ multiplication, isomorphic to $\mathbb{Z}_n$: $\omega^a \omega^b = \omega^{a + b
 $n = 6$ (`expand` multiplies out the products of square roots):
 
 %code
-w = simplify(exp(2*pi*i/6))
+w = exp(2*pi*i/6)
 expand(w^2*w^3)
 expand(w^5)
 expand(w^6)

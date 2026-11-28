@@ -34,8 +34,8 @@ For $a = [2\ 1]$ and $b = [1\ 3]$: $a\cdot b = 5$ and $a\cdot a = 5$, so $p = a$
 %code
 a = [2; 1];
 b = [1; 3];
-p = simplify(dot(a, b)/dot(a, a)*a)
-e = simplify(b - p)
+p = dot(a, b)/dot(a, a)*a
+e = b - p
 dot(a, e)
 
 %md
@@ -56,9 +56,9 @@ $$P = \frac{a\,a^T}{a^Ta}.$$
 Projecting twice changes nothing, so $P^2 = P$; and $P$ is symmetric.
 
 %code
-P = simplify(a*transpose(a)/dot(a, a))
-simplify(P*b)
-simplify(P*P - P)
+P = a*transpose(a)/dot(a, a)
+P*b
+P*P - P
 
 %md
 **Try this.** Project $b = [1\ 1\ 1]$ onto the line through $a = [1\ 2\ 2]$ by hand. Check that $e = b - p$ is
@@ -79,11 +79,11 @@ is exactly the space perpendicular to $C(A)$, as in lesson 3, section 4.
 %code
 A = [1 0; 1 1; 1 2];
 b = [6; 0; 0];
-simplify(transpose(A)*A)
-simplify(transpose(A)*b)
+transpose(A)*A
+transpose(A)*b
 xhat = (transpose(A)*A)\(transpose(A)*b)
-e = simplify(b - A*xhat)
-simplify(transpose(A)*e)
+e = b - A*xhat
+transpose(A)*e
 
 %md
 The error $e = [1\ {-2}\ 1]$ is perpendicular to both columns. With more equations than unknowns, `A\b` solves the
@@ -151,7 +151,7 @@ projections onto the first two, normalize, and so on.
 
 %code
 Q = gramschmidt([1 1; 1 0; 0 1])
-simplify(transpose(Q)*Q)
+transpose(Q)*Q
 
 %md
 By hand: $a_1 = [1\ 1\ 0]$ has length $\sqrt2$, so $q_1 = [1\ 1\ 0]/\sqrt2$. Then
@@ -170,7 +170,7 @@ $$A = QR, \qquad R_{ij} = q_i\cdot a_j.$$
 
 %code
 [Q, R] = qr(A)
-simplify(Q*R)
+Q*R
 
 %md
 Least squares with $A = QR$: the normal equations $A^TA\hat x = A^Tb$ become $R^TQ^TQR\hat x = R^TQ^Tb$, that is,

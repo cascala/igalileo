@@ -1,7 +1,7 @@
 %md
 # Random processes 1: Markov chains
 
-*Learning path: random processes, part 1 of 3.* [Index](README.md) · Previous: [Held, simplify, eval](00-held-simplify-eval.ipynb) · Next: [Random walks, Brownian motion and arrivals](02-random-walks-and-brownian-motion.ipynb)
+*Learning path: random processes, part 1 of 3.* [Index](README.md) · Previous: [Simplify and eval](00-simplify-and-eval.ipynb) · Next: [Random walks, Brownian motion and arrivals](02-random-walks-and-brownian-motion.ipynb)
 
 Will it rain tomorrow? A simple but surprisingly good forecast says: tomorrow will probably be like today. A
 gambler with 2 dollars bets 1 dollar at a time against a casino: how likely is she to reach 4 dollars before going
@@ -38,7 +38,7 @@ goes through some state $k$ tomorrow: $\sum_k P_{1k} P_{k3}$, which is entry $(1
 the $n$-step chances:
 
 %code
-simplify(P^2)
+P^2
 eval(P^10, 4)
 
 %md

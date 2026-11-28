@@ -1,7 +1,7 @@
 %md
 # Oscillations and waves 1: The harmonic oscillator
 
-*Learning path: oscillations and waves, part 1 of 7.* [Index](README.md) · Previous: [Held, simplify, eval](00-held-simplify-eval.ipynb) · Next: [Coupled oscillators](02-coupled-oscillators.ipynb)
+*Learning path: oscillations and waves, part 1 of 7.* [Index](README.md) · Previous: [Simplify and eval](00-simplify-and-eval.ipynb) · Next: [Coupled oscillators](02-coupled-oscillators.ipynb)
 
 A singer holds a note, and a wine glass across the room shatters. A car drives over a speed bump and bobs once, not
 ten times. A clock pendulum keeps time for a week on one winding. All three are the same system: a mass, a restoring

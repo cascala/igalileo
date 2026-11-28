@@ -55,7 +55,7 @@ elsewhere. `rand` gives uniform numbers between 0 and 1, and the probability of 
 integrate(1/(b - a), x, a, b)
 seed(3);
 u = rand(1, 10000);
-simplify(sum(u < 0.3)/10000)
+sum(u < 0.3)/10000
 
 %md
 The **mean** of a density is $\mu = \int x f(x)\,dx$, the balance point of the area, and the **variance** is
@@ -96,7 +96,7 @@ eval(integrate(f, x, 0, 500))
 bulb survives its first 500:
 
 %code
-simplify(integrate(f, x, 1500, inf)/integrate(f, x, 1000, inf))
+integrate(f, x, 1500, inf)/integrate(f, x, 1000, inf)
 integrate(f, x, 500, inf)
 
 %md

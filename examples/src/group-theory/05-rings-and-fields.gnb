@@ -34,9 +34,9 @@ is that ring as a value, and `Z(9)` is the element 9 in it. Ordinary numbers mix
 
 %code
 Z = zmod(12)
-simplify(Z(9) + 5)
-simplify(Z(7) * 7)
-simplify(Z(3) - 8)
+Z(9) + 5
+Z(7) * 7
+Z(3) - 8
 
 %md
 Each element prints as `zmod(12, 2)`: the call that builds it, so a result can be pasted back in. Read it as
@@ -45,7 +45,7 @@ Each element prints as `zmod(12, 2)`: the call that builds it, so a result can b
 Now something strange happens. Neither 3 nor 4 is zero, yet their product is.
 
 %code
-simplify(Z(3) * Z(4))
+Z(3) * Z(4)
 
 %md
 Two nonzero elements whose product is zero are called **zero divisors**. They make division impossible: if
@@ -53,7 +53,7 @@ $3^{-1}$ existed, then $4 = 3^{-1} \cdot 3 \cdot 4 = 3^{-1} \cdot 0 = 0$, which 
 you why: 3 and 12 share the factor 3.
 
 %code
-simplify(Z(3)^-1)
+Z(3)^-1
 
 %md
 An element with an inverse is a **unit**. In $\mathbb{Z}/n$ the units are exactly the remainders $a$ with
@@ -61,8 +61,8 @@ $\gcd(a, n) = 1$, because then Euclid's algorithm gives $ua + vn = 1$, so $u$ is
 under multiplication; you met it in lesson 4 as `units(12)`.
 
 %code
-simplify(Z(5)^-1)
-simplify(Z(5) * Z(5))
+Z(5)^-1
+Z(5) * Z(5)
 order(units(12))
 
 %md
@@ -82,7 +82,7 @@ exactly when $n$ is prime**. For prime $p$ Galileo also calls it `gf(p)`, the Ga
 isfield(zmod(12))
 isfield(zmod(13))
 F = gf(13)
-simplify(F(1) / 4)
+F(1) / 4
 
 %md
 The last line says that $1/4 = 10$ in $\mathbb{Z}/13$: indeed $4 \cdot 10 = 40 = 3 \cdot 13 + 1$.
@@ -117,7 +117,7 @@ logarithm** problem. `dlog(h, g)` solves it.
 
 %code
 dlog(F(10), g)
-simplify(g^dlog(F(10), g))
+g^dlog(F(10), g)
 
 %md
 For a big prime, computing $g^x$ stays fast (square and multiply: about $\log_2 x$ steps), while no fast method is
@@ -135,8 +135,8 @@ P = gf(2^61 - 1)
 g = generator(P)
 a = 123456789012
 b = 987654321098
-A = simplify(g^a)
-B = simplify(g^b)
+A = g^a
+B = g^b
 B^a == A^b
 
 %md
@@ -181,8 +181,8 @@ elements are $0, 1, a, a + 1$, and arithmetic is polynomial arithmetic with $a^2
 K = gf(4)
 modulus(K)
 elements(K)
-simplify(K(a) * K(a))
-simplify(K(a) * K(a + 1))
+K(a) * K(a)
+K(a) * K(a + 1)
 
 %md
 $a(a + 1) = a^2 + a = (a + 1) + a = 1$, so $a$ and $a + 1$ are inverses: every nonzero element has an inverse, and
@@ -194,7 +194,7 @@ degree $k$ over $\mathbb{F}_p$ (Galileo chooses one whose root $a$ is a generato
 E = gf(256)
 modulus(E)
 u = E(a^7 + a + 1)
-simplify(u * u^-1)
+u * u^-1
 order(u)
 
 %md
@@ -227,8 +227,8 @@ $\mathbb{F}_5$, $x^2 + 1 = (x - 2)(x + 2)$, and the two factors become zero divi
 isfield(quotient(x^2 + 1, x, 3))
 R = quotient(x^2 + 1, x, 5)
 isfield(R)
-simplify(R(x - 2) * R(x + 2))
-simplify(R(x + 2)^-1)
+R(x - 2) * R(x + 2)
+R(x + 2)^-1
 
 %md
 Over $\mathbb{Q}$, $x^2 - 2$ is irreducible, and in $\mathbb{Q}[x]/(x^2 - 2)$ the class of $x$ squares to 2: it
@@ -240,8 +240,8 @@ Dividing is "rationalizing the denominator", done by the extended Euclidean algo
 %code
 Q2 = numfield(x^2 - 2)
 t = Q2(x + 1)
-simplify(t^2)
-simplify(1 / t)
+t^2
+1 / t
 
 %md
 That says $(1 + \sqrt 2)^2 = 3 + 2\sqrt 2$ and $1/(1 + \sqrt 2) = \sqrt 2 - 1$. Three numbers describe an element

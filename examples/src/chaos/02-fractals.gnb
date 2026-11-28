@@ -35,7 +35,7 @@ small triangles, each $1/9$ the area of those of the step before. Starting from 
 geometric series (`sum` with `inf` as upper limit adds infinitely many terms):
 
 %code
-simplify(1 + sum(3*4^(n - 1)/9^n, n, 1, inf))
+1 + sum(3*4^(n - 1)/9^n, n, 1, inf)
 
 %md
 An infinitely long curve around a finite area of $8/5$ of the starting triangle. A coastline behaves the same way:
@@ -70,7 +70,7 @@ values stay bounded, or they run off to infinity (once $|z| > 2$ they always do)
 $c$ for which they stay bounded:
 
 %code
-simplify(abs(iterate(z^2 + (-1), z, 0, 8)))
+abs(iterate(z^2 + (-1), z, 0, 8))
 abs(iterate(z^2 + (0.5), z, 0, 8))
 
 %md

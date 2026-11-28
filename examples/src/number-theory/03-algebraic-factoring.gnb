@@ -34,7 +34,7 @@ big for rho, which would need about $10^{16}$ and $10^{36}$ steps. And the small
 familiar:
 
 %code
-simplify(73*137)
+73*137
 mod(N, 10001)
 
 %md
@@ -256,9 +256,9 @@ For $k = 14$ that is $2^{58} + 1 = (2^{29} - 2^{15} + 1)(2^{29} + 2^{15} + 1)$, 
 line:
 
 %code
-simplify(2^29 - 2^15 + 1)
+2^29 - 2^15 + 1
 factor(2^29 - 2^15 + 1)
-simplify(2^29 + 2^15 + 1)
+2^29 + 2^15 + 1
 isprime(2^29 + 2^15 + 1)
 algfactor(2^58 + 1)
 

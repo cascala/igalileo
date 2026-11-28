@@ -85,7 +85,7 @@ lineint(F, [x y], [t, t^2], t, 0, 1)
 Both give 2. Try a third, crazier path, out along the $x$-axis and back up:
 
 %code
-simplify(lineint(F, [x y], [t, 0], t, 0, 1) + lineint(F, [x y], [1, t], t, 0, 1))
+lineint(F, [x y], [t, 0], t, 0, 1) + lineint(F, [x y], [1, t], t, 0, 1)
 
 %md
 Still 2. And for the vortex? From $(1, 0)$ to $(-1, 0)$ along the upper half circle and along the lower half:
@@ -147,7 +147,7 @@ $$F = \left[\frac{-y}{x^2 + y^2},\ \frac{x}{x^2 + y^2}\right]$$
 is not defined at the origin. Its curl is zero everywhere else:
 
 %code
-G = simplify([-y/(x^2 + y^2), x/(x^2 + y^2)])
+G = [-y/(x^2 + y^2), x/(x^2 + y^2)]
 curl(G, [x y])
 
 %md

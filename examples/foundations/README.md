@@ -7,7 +7,7 @@ each curve is, and what every argument of the command means.
 
 | # | Notebook | What you learn |
 |---|---|---|
-| 0 | [Held, simplify, eval](00-held-simplify-eval.ipynb) | why answers come back as you typed them, `simplify` for the exact simplest form, `eval` for digits |
+| 0 | [Simplify and eval](00-simplify-and-eval.ipynb) | exact answers, `eval` for digits, and the `calc` setting: work answers out, give digits, or keep input as typed |
 | 1 | [Numbers](01-numbers.ipynb) | calculating, exact answers versus decimals, powers and roots, remainders, divisors and primes, variables |
 | 2 | [Algebra](02-algebra.ipynb) | expressions, expanding and factoring, substituting, solving equations by hand and with `solve`, systems, your own functions |
 | 3 | [Functions and graphs](03-functions-and-graphs.ipynb) | reading a plot (axes, labels, titles, legends), where a function is undefined, shifting and stretching graphs, exponentials and logarithms, intersections |

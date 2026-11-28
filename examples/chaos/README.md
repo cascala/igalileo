@@ -4,7 +4,7 @@ Two lessons on simple rules with unpredictable results, and the shapes they make
 
 | # | Notebook | What you learn |
 |---|---|---|
-| 0 | [Held, simplify, eval](00-held-simplify-eval.ipynb) | why answers come back as you typed them, `simplify` for the exact simplest form, `eval` for digits |
+| 0 | [Simplify and eval](00-simplify-and-eval.ipynb) | exact answers, `eval` for digits, and the `calc` setting: work answers out, give digits, or keep input as typed |
 | 1 | [Chaos](01-chaos.ipynb) | iterating a rule, fixed points and their stability, the logistic map, period doubling, the bifurcation diagram, Feigenbaum's constant, sensitive dependence, the Lorenz butterfly |
 | 2 | [Fractals](02-fractals.ipynb) | the Koch snowflake, fractal dimension, the Mandelbrot set and zooming into it, Julia sets |
 

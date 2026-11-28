@@ -5,7 +5,7 @@ cryptography. Every method is written as a short Galileo function, so you can ch
 
 | # | Notebook | What you learn |
 |---|---|---|
-| 0 | [Held, simplify, eval](00-held-simplify-eval.ipynb) | why answers come back as you typed them, `simplify` for the exact simplest form, `eval` for digits |
+| 0 | [Simplify and eval](00-simplify-and-eval.ipynb) | exact answers, `eval` for digits, and the `calc` setting: work answers out, give digits, or keep input as typed |
 | 1 | [Divisibility and primes](01-divisibility-and-primes.ipynb) | division with remainder, Euclid's algorithm, infinitely many primes, the prime number theorem, gaps, the fundamental theorem of arithmetic, perfect numbers |
 | 2 | [Prime factoring](02-prime-factoring.ipynb) | trial division, Fermat's method, Pollard's rho and the birthday paradox, Fermat and Miller–Rabin primality tests, Carmichael numbers, record factorizations |
 | 3 | [Algebraic factoring](03-algebraic-factoring.ipynb) | the $10^{300} + 1$ mystery, cyclotomic polynomials, which primes divide $\Phi_d(b)$, Sophie Germain's identity, Aurifeuillean factors and the Cunningham Project, hunting for new identities with `factorsearch` |

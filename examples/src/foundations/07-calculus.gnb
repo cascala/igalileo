@@ -149,7 +149,7 @@ $F$ is an **antiderivative** of $f$. `integrate(f, x)` (without limits) finds on
 
 %code
 F = integrate(x^2, x)
-simplify(subs(F, x, 1) - subs(F, x, 0))
+subs(F, x, 1) - subs(F, x, 0)
 deriv(F, x)
 integrate(x*exp(x), x)
 deriv(integrate(x*exp(x), x), x)

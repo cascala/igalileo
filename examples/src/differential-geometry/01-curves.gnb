@@ -1,7 +1,7 @@
 %md
 # Differential geometry 1: Curves
 
-*Learning path: differential geometry, part 1 of 7.* [Index](README.md) · Previous: [Held, simplify, eval](00-held-simplify-eval.ipynb) · Next: [Metrics and coordinates](02-metrics.ipynb)
+*Learning path: differential geometry, part 1 of 7.* [Index](README.md) · Previous: [Simplify and eval](00-simplify-and-eval.ipynb) · Next: [Metrics and coordinates](02-metrics.ipynb)
 
 Differential geometry studies shapes using calculus. Before surfaces and curved spaces we start with the simplest
 case: a curve. You will learn
@@ -43,7 +43,7 @@ x = a*cos(t);
 y = b*sin(t);
 deriv(x, t)
 deriv(y, t)
-speed = simplify(sqrt(deriv(x, t)^2 + deriv(y, t)^2))
+speed = sqrt(deriv(x, t)^2 + deriv(y, t)^2)
 
 %md
 The point moves fastest at the ends of the short axis and slowest at the ends of the long axis. For a circle

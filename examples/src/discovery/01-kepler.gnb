@@ -1,7 +1,7 @@
 %md
 # Discovering laws 1: Kepler's third law from planet data
 
-*Learning path: discovering physical laws, part 1 of 4.* [Index](README.md) · Previous: [Held, simplify, eval](00-held-simplify-eval.ipynb) · Next: [From Kepler to Newton](02-newton.ipynb)
+*Learning path: discovering physical laws, part 1 of 4.* [Index](README.md) · Previous: [Simplify and eval](00-simplify-and-eval.ipynb) · Next: [From Kepler to Newton](02-newton.ipynb)
 
 Physics usually goes the other way round in textbooks: here is the law, now compute something. Scientists had to work
 from the other end. Johannes Kepler spent years staring at tables of planet positions before he found, in 1618, that
